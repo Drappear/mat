@@ -15,30 +15,28 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-  @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    http.authorizeHttpRequests(authorize -> authorize
-        .requestMatchers("/", "/assets/**", "/css/**", "/sass/**", "/img/**", "/js/**", "/fonts/**")
-        .permitAll()
-        .requestMatchers("/diner/list").permitAll()
-        .anyRequest().permitAll());
-    // http.formLogin(login -> login.loginPage("/member/login").permitAll()
-    // .defaultSuccessUrl("/mat/list"));
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
+                .anyRequest().permitAll());
+        // http.formLogin(login ->
+        // login.loginPage("/member/login").permitAll().defaultSuccessUrl("/mat/list"));
 
-    // http.sessionManagement(session ->
-    // session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
-    // http.logout(logout -> logout
-    // .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-    // .logoutSuccessUrl("/"));
+        // http.sessionManagement(session ->
+        // session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+        // http.logout(logout -> logout.logoutRequestMatcher(new
+        // AntPathRequestMatcher("/member/logout"))
+        // .logoutSuccessUrl("/"));
+        // http.csrf(csrf -> csrf.disable());
 
-    // http.csrf(csrf -> csrf.disable());
+        return http.build();
+    }
 
-    return http.build();
-  }
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-  }
 }
