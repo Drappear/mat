@@ -1,4 +1,4 @@
-package com.example.mat.service;
+package com.example.mat;
 
 public class MemberService {
     private String name;
