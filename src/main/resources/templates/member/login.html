@@ -21,10 +21,10 @@
           <h2>Log in</h2>
           <form class="wrapper-box" role="form" ng-submit="login()">
             <input
-              type="email"
-              ng-model="email"
-              class="form-control form-control-email"
-              placeholder="Email address"
+              type="text"
+              ng-model="id"
+              class="form-control form-control-id"
+              placeholder="Id"
               required
             />
             <input
@@ -51,16 +51,20 @@
           <form class="wrapper-box" role="form" ng-submit="register()">
             <input
               type="text"
-              ng-model="username"
               class="form-control form-control-username"
               placeholder="Username"
               required
             />
             <input
-              type="email"
-              ng-model="email"
-              class="form-control form-control-email"
-              placeholder="Email address"
+              type="text"
+              class="form-control form-control-nickname"
+              placeholder="Nickname"
+              required
+            />
+            <input
+              type="text"
+              class="form-control form-control-id"
+              placeholder="Id"
               required
             />
             <input
@@ -69,6 +73,12 @@
               class="form-control form-control-password"
               placeholder="Password"
               required
+            />
+            <input
+              type="text"
+              ng-model="text"
+              class="form-control form-control-address"
+              placeholder="Address (선택)"
             />
             <button type="submit" class="btn btn-submit btn-default pull-right">
               Sign up
