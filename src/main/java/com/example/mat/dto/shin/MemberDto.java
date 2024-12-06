@@ -16,11 +16,12 @@ import lombok.NoArgsConstructor;
 public class MemberDto {
     private Long mid;
 
-    private String email;
-
+    private String username;
+    private String userid;
     private String password;
 
     private String nickname;
+    private String address;
 
     private MemberRole role;
 
