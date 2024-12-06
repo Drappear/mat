@@ -7,13 +7,13 @@ import com.example.mat.entity.shin.Member;
 
 public interface MemberSerivce {
     // 닉네임 수정
-    void nickNameUpdate(MemberDto memberDto);
+ 
 
     // 비밀번호 수정
-    void passwordUpdate(PasswordDto passwordDto) throws Exception;
+
 
     // 회원탈퇴
-    void leave(PasswordDto passwordDto) throws Exception;
+  
 
     // 회원가입
     String register(MemberDto memberDto);

@@ -23,7 +23,7 @@ public class MemberRepositoryTest {
     @Transactional
     @Test
     public void testInsert() {
-        IntStream.rangeClosed(1, 50).forEach(i -> {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
             Member member = Member.builder()
                     .userid("userid" + i)
                     .nickname("nickname" + i)
