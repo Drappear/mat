@@ -1,0 +1,38 @@
+.section-realtime-seoul .list-view .paging-lst {
+	position: relative;
+	margin-top: 0;
+}
+
+.section-realtime-seoul .list-view .paging-lst a {
+	position: relative;
+	background: none;
+	border: none;
+	color: #777777;
+	border-radius: 0;
+	width: auto;
+	margin: 0 15px !important;
+	font-size: 16px;
+	height: 28px;
+}
+
+.section-realtime-seoul .list-view .paging-lst a.icon {}
+
+.section-realtime-seoul .list-view .paging-lst a.on {
+	font-size: 16px;
+	color: #0073e3;
+}
+
+.section-realtime-seoul .list-view .paging-lst a.on:after {
+	content: "";
+	border-bottom: 1px solid #0073e3;
+	position: absolute;
+	bottom: 0;
+	left: 0px;
+	width: 120%;
+	height: 1px;
+}
+
+.section-realtime-seoul .list-view .paging-lst a.prev,
+.section-realtime-seoul .list-view .paging-lst a.next {
+	margin: 0 30px;
+}
