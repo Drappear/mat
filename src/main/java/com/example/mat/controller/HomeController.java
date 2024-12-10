@@ -1,6 +1,5 @@
 package com.example.mat.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,6 +12,6 @@ public class HomeController {
   @GetMapping("/")
   public String getHome() {
     log.info("home 요청");
-    return "redirect:/diner/list";
+    return "redirect:/market/list";
   }
 }
