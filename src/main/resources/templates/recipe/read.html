@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/layouts/layout}">
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/recipe_searchbox.css}" />
+  </th:block>
+
+  <div layout:fragment="content">
+    <!-- Categories Section Begin -->
+    <section class="categories">
+      <div class="container">
+        <div class="row">
+          <!-- search box -->
+          <div class="hero__search">
+            <div class="hero__search__form">
+              <form action="#">
+                <input type="text" placeholder="What do yo u need?" />
+                <button type="submit" class="site-btn">SEARCH</button>
+              </form>
+            </div>
+          </div>
+          <!-- main 카테고리 및 card -->
+          <div id="webcrumbs">
+            <div class="w-[1200px] bg-white shadow rounded-lg p-4">
+              <div
+                class="bg-white border-y border-neutral-200 py-2 text-center mb-6"
+              >
+                <span class="text-lime-500 font-title">카테고리 닫기 &gt;</span>
+              </div>
+              <nav class="bg-white flex gap-4 text-lime-950 mb-6 items-center">
+                <span class="text-lg text-lime-500 font-title">종류별</span>
+                <div class="flex gap-4">
+                  <span
+                    class="px-4 py-1 bg-lime-100 text-lime-500 font-title rounded-full"
+                    >전체</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >밑반찬</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >메인반찬</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >국/탕</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >찌개</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >디저트</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >면/만두</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >밥/죽/떡</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >퓨전</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >김치/젓갈/장류</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >양념/소스/잼</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >양식</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >샐러드</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >스프</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >빵</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >과자</span
+                  >
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    >차/음료/술</span
+                  >
+                </div>
+              </nav>
+              <div class="bg-white flex justify-between items-center mb-6">
+                <p class="text-lime-950 text-lg">
+                  총 <span class="text-lime-500">234,946</span>개의 맛있는
+                  레시피가 있습니다.
+                </p>
+                <div class="flex space-x-4">
+                  <span
+                    class="px-4 py-1 bg-neutral-100 text-lime-950 rounded-full"
+                    >최신순</span
+                  >
+                  <span class="px-4 py-1 bg-lime-100 text-lime-500 rounded-full"
+                    >추천순</span
+                  >
+                </div>
+              </div>
+              <div
+                class="bg-neutral-100 p-4 rounded-lg"
+                name="card-group"
+                id="card-group"
+              >
+                <!-- <div
+                  class="grid grid-cols-4 gap-6 bg-white p-6 rounded-lg"
+                  name="card"
+                  id="card"
+                >
+                  {[ { imgSrc: "https://placehold.co/300x300/png", title:
+                  "[슈퍼푸드샐러드] 질리언 앱산 주는 슈퍼푸드 샐러드", author:
+                  "싱글맘대장", profileImg: "https://i.pravatar.cc/40", views:
+                  "조회수 20" }, { imgSrc: "https://placehold.co/300x300/png",
+                  title: "치킨보다 교촌 허니콤보 만들기", author: "태평체질",
+                  profileImg: "https://i.pravatar.cc/40", views: "조회수 1,972"
+                  }, { imgSrc: "https://placehold.co/300x300/png", title:
+                  "일본요리 만들기 일본 겨울 가정식요리 츄우", author:
+                  "일본사는누아", profileImg: "https://i.pravatar.cc/40", views:
+                  "조회수 313" }, { imgSrc: "https://placehold.co/300x300/png",
+                  title: "즉석,오이 부추 무침(백종원임방)", author: "탱글스윗",
+                  profileImg: "https://i.pravatar.cc/40", views: "조회수 3,836"
+                  }, { imgSrc: "https://placehold.co/300x300/png", title:
+                  "이사할때 콩나물무침 레시피/ 하얀 콩나물무침 만들기", author:
+                  "써니지", profileImg: "https://i.pravatar.cc/40", views:
+                  "조회수 2,005" }, { imgSrc:
+                  "https://placehold.co/300x300/png", title: "매운맛콩나물무침
+                  레시피 매일반찬", author: "라피네", profileImg:
+                  "https://i.pravatar.cc/40", views: "조회수 2,275" }, { imgSrc:
+                  "https://placehold.co/300x300/png", title: "시금치무침
+                  (시금치데치기 방법/ 시금치나물 요리 나물반찬 한접시레시피)",
+                  author: "ariel1007", profileImg: "https://i.pravatar.cc/40",
+                  views: "조회수 5,090" }, { imgSrc:
+                  "https://placehold.co/300x300/png", title: "오이고추된장무침
+                  (사계절 먹기좋은 만찬 고추무침 5분 레시피)", author:
+                  "ariel1007", profileImg: "https://i.pravatar.cc/40", views:
+                  "조회수 19,910" } ].map((item, idx) => (
+                  <div
+                    key="{idx}"
+                    class="flex flex-col bg-white border p-4 rounded-md"
+                  >
+                    <img
+                      src="{item.imgSrc}"
+                      alt="{item.title}"
+                      class="w-[300px] h-[300px] rounded-md object-cover mb-2"
+                    />
+                    <p class="text-lime-950 text-sm mb-1">{item.title}</p>
+                    <div
+                      class="flex items-center space-x-2 text-neutral-500 text-xs"
+                    >
+                      <img
+                        src="{item.profileImg}"
+                        alt="{item.author}"
+                        class="w-[20px] h-[20px] rounded-full object-cover"
+                      />
+                      <span>{item.author}</span>
+                      <span>{item.views}</span>
+                    </div>
+                  </div>
+                  ))}
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <!-- 기존 template 코드 -->
+          <div class="categories__slider owl-carousel">
+            <div class="col-lg-3">
+              <div
+                class="categories__item set-bg"
+                data-setbg="img/categories/cat-1.jpg"
+              >
+                <h5><a href="#">Fresh Fruit</a></h5>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div
+                class="categories__item set-bg"
+                data-setbg="img/categories/cat-2.jpg"
+              >
+                <h5><a href="#">Dried Fruit</a></h5>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div
+                class="categories__item set-bg"
+                data-setbg="img/categories/cat-3.jpg"
+              >
+                <h5><a href="#">Vegetables</a></h5>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div
+                class="categories__item set-bg"
+                data-setbg="img/categories/cat-4.jpg"
+              >
+                <h5><a href="#">drink fruits</a></h5>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div
+                class="categories__item set-bg"
+                data-setbg="img/categories/cat-5.jpg"
+              >
+                <h5><a href="#">drink fruits</a></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Categories Section End -->
+
+    <!-- Featured Section Begin -->
+    <section class="featured spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="section-title">
+              <h2>Featured Product</h2>
+            </div>
+            <div class="featured__controls">
+              <ul>
+                <li class="active" data-filter="*">All</li>
+                <li data-filter=".oranges">Oranges</li>
+                <li data-filter=".fresh-meat">Fresh Meat</li>
+                <li data-filter=".vegetables">Vegetables</li>
+                <li data-filter=".fastfood">Fastfood</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row featured__filter">
+          <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-1.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-2.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-3.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-4.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-5.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-6.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-7.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
+            <div class="featured__item">
+              <div
+                class="featured__item__pic set-bg"
+                data-setbg="img/featured/feature-8.jpg"
+              >
+                <ul class="featured__item__pic__hover">
+                  <li>
+                    <a href="#"><i class="fa fa-heart"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-retweet"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="featured__item__text">
+                <h6><a href="#">Crab Pool Security</a></h6>
+                <h5>$30.00</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Featured Section End -->
+
+    <!-- Banner Begin -->
+    <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="banner__pic">
+              <img th:src="@{/assets/img/banner/banner-1.jpg}" alt="" />
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="banner__pic">
+              <img th:src="@{/assets/img/banner/banner-2.jpg}" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Banner End -->
+
+    <!-- Latest Product Section Begin -->
+    <section class="latest-product spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="latest-product__text">
+              <h4>Latest Products</h4>
+              <div class="latest-product__slider owl-carousel">
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="latest-product__text">
+              <h4>Top Rated Products</h4>
+              <div class="latest-product__slider owl-carousel">
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="latest-product__text">
+              <h4>Review Products</h4>
+              <div class="latest-product__slider owl-carousel">
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+                <div class="latest-prdouct__slider__item">
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-1.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-2.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                  <a href="#" class="latest-product__item">
+                    <div class="latest-product__item__pic">
+                      <img
+                        th:src="@{/assets/img/latest-product/lp-3.jpg}"
+                        alt=""
+                      />
+                    </div>
+                    <div class="latest-product__item__text">
+                      <h6>Crab Pool Security</h6>
+                      <span>$30.00</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Latest Product Section End -->
+
+    <!-- Blog Section Begin -->
+    <section class="from-blog spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="section-title from-blog__title">
+              <h2>From The Blog</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="blog__item">
+              <div class="blog__item__pic">
+                <img th:src="@{/assets/img/blog/blog-1.jpg}" alt="" />
+              </div>
+              <div class="blog__item__text">
+                <ul>
+                  <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                  <li><i class="fa fa-comment-o"></i> 5</li>
+                </ul>
+                <h5><a href="#">Cooking tips make cooking simple</a></h5>
+                <p>
+                  Sed quia non numquam modi tempora indunt ut labore et dolore
+                  magnam aliquam quaerat
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="blog__item">
+              <div class="blog__item__pic">
+                <img th:src="@{/assets/img/blog/blog-2.jpg}" alt="" />
+              </div>
+              <div class="blog__item__text">
+                <ul>
+                  <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                  <li><i class="fa fa-comment-o"></i> 5</li>
+                </ul>
+                <h5><a href="#">6 ways to prepare breakfast for 30</a></h5>
+                <p>
+                  Sed quia non numquam modi tempora indunt ut labore et dolore
+                  magnam aliquam quaerat
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="blog__item">
+              <div class="blog__item__pic">
+                <img th:src="@{/assets/img/blog/blog-3.jpg}" alt="" />
+              </div>
+              <div class="blog__item__text">
+                <ul>
+                  <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                  <li><i class="fa fa-comment-o"></i> 5</li>
+                </ul>
+                <h5><a href="#">Visit the clean farm in the US</a></h5>
+                <p>
+                  Sed quia non numquam modi tempora indunt ut labore et dolore
+                  magnam aliquam quaerat
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Blog Section End -->
+  </div>
+  <th:block layout:fragment="js">
+    <!-- <script>
+      const csrfValue = "[[${_csrf.token}]]";
+    </script> -->
+    <script th:src="@{/js/recipe_main.js}"></script>
+    <!-- <script th:src="@{/js/create.js}"></script> -->
+  </th:block>
+</html>
