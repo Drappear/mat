@@ -16,4 +16,9 @@ public class RecipeController {
     log.info("get recipe list 페이지 요청");
   }
 
+  @GetMapping("/create")
+  public void getCreate() { //MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto
+    log.info("recipe 작성 폼 요청");
+  }
+
 }

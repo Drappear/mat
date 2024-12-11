@@ -116,8 +116,12 @@
               <div class="bg-white flex justify-between items-center mb-6">
                 <p class="text-lime-950 text-lg">
                   총 <span class="text-lime-500">234,946</span>개의 맛있는
-                  레시피가 있습니다.
+                  레시피가 있습니다.&nbsp;
+                  <button type="button" class="btn btn-outline-warning">
+                    <i class="fa-solid fa-square-pen"></i>
+                  </button>
                 </p>
+
                 <div class="flex space-x-4">
                   <button
                     type="button"
@@ -156,8 +160,11 @@
                         </p>
                       </div>
                       <div class="card-footer">
-                        <small class="text-body-secondary"
-                          >닉네임 | 조회수 240</small
+                        <small class="text-body-secondary">
+                          <button type="button" class="btn btn-outline-info">
+                            <i class="fa-solid fa-circle-user"></i>
+                          </button>
+                          닉네임 | 조회수 240</small
                         >
                       </div>
                     </div>
@@ -179,6 +186,8 @@
                       </div>
                       <div class="card-footer">
                         <small class="text-body-secondary"
+                          ><a href="#">
+                            <i class="fa-solid fa-circle-user"></i> </a
                           >닉네임 | 조회수 240</small
                         >
                       </div>
@@ -201,6 +210,8 @@
                       </div>
                       <div class="card-footer">
                         <small class="text-body-secondary"
+                          ><a href="#">
+                            <i class="fa-solid fa-circle-user"></i> </a
                           >닉네임 | 조회수 240</small
                         >
                       </div>
@@ -223,6 +234,8 @@
                       </div>
                       <div class="card-footer">
                         <small class="text-body-secondary"
+                          ><a href="#">
+                            <i class="fa-solid fa-circle-user"></i> </a
                           >닉네임 | 조회수 240</small
                         >
                       </div>
@@ -401,3 +414,40 @@
     <!-- <script th:src="@{/js/create.js}"></script> -->
   </th:block>
 </html>
+
+<!-- 요리정보 -->
+<div class="form-section">
+  <div class="p-4 bg-neutral-50 rounded-lg">
+    <div class="flex gap-4 items-center">
+      <label for="cookingInfo" class="form-label text-neutral-950">
+        요리정보
+      </label>
+      <div class="flex gap-4">
+        <select
+          id="servings"
+          class="form-select border-neutral-300 border rounded-md px-3 py-2"
+        >
+          <option value="">인원 선택</option>
+          <option value="1">1인분</option>
+          <option value="2">2인분</option>
+        </select>
+        <select
+          id="time"
+          class="form-select border-neutral-300 border rounded-md px-3 py-2"
+        >
+          <option value="">시간 선택</option>
+          <option value="10">10분 이내</option>
+          <option value="30">30분 이내</option>
+        </select>
+        <select
+          id="difficulty"
+          class="form-select border-neutral-300 border rounded-md px-3 py-2"
+        >
+          <option value="">난이도 선택</option>
+          <option value="쉬움">쉬움</option>
+          <option value="보통">보통</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
