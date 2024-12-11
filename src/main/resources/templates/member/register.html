@@ -15,47 +15,108 @@
     <link rel="stylesheet" th:href="@{/css/login.css}" />
   </head>
   <body>
-    <div class="login-page" ng-app="">
+    <div class="login-page">
       <div class="login-content login-content-signup">
         <div>
           <h2>Sign Up</h2>
           <form
+            th:action="@{/member/register}"
             class="wrapper-box"
-            role="form"
-            ng-submit="register()"
             th:object="${memberDto}"
+            method="post"
           >
-            <input
-              type="text"
-              class="form-control form-control-username"
-              placeholder="Username"
-              required
-            />
-            <input
-              type="text"
-              class="form-control form-control-nickname"
-              placeholder="Nickname"
-              required
-            />
             <input
               type="text"
               class="form-control form-control-id"
               placeholder="Id"
-              required
+              th:value="${memberDto.userid}"
+              th:field="*{userid}"
+              name="userid"
             />
+            <div
+              th:if="${#fields.hasErrors('userid')}"
+              th:errors="*{userid}"
+              class="text-danger"
+            ></div>
             <input
               type="password"
-              ng-model="password"
+              th:field="*{password}"
               class="form-control form-control-password"
               placeholder="Password"
-              required
+              th:value="${memberDto.password}"
+              name="password"
             />
+            <div
+              th:if="${#fields.hasErrors('password')}"
+              th:errors="*{password}"
+              class="text-danger"
+            ></div>
             <input
               type="text"
-              ng-model="text"
-              class="form-control form-control-address"
-              placeholder="Address (선택)"
+              class="form-control form-control-username"
+              placeholder="Username"
+              th:value="${memberDto.username}"
+              th:field="*{username}"
+              name="username"
             />
+            <div
+              th:if="${#fields.hasErrors('username')}"
+              th:errors="*{username}"
+              class="text-danger"
+            ></div>
+            <input
+              type="text"
+              class="form-control form-control-nickname"
+              placeholder="Nickname"
+              th:value="${memberDto.nickname}"
+              th:field="*{nickname}"
+              name="nickname"
+            />
+            <div
+              th:if="${#fields.hasErrors('nickname')}"
+              th:errors="*{nickname}"
+              class="text-danger"
+            ></div>
+            <input
+              type="email"
+              th:field="*{email}"
+              class="form-control form-control-emailname"
+              placeholder="Email"
+              th:value="${memberDto.email}"
+              name="email"
+            />
+            <div
+              th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"
+              class="text-danger"
+            ></div>
+
+            <input
+              type="text"
+              class="form-control form-control-addr"
+              placeholder="Address (선택)"
+              th:value="${memberDto.addr}"
+              th:field="*{addr}"
+              name="addr"
+            />
+            <div
+              th:if="${#fields.hasErrors('addr')}"
+              th:errors="*{addr}"
+              class="text-danger"
+            ></div>
+            <input
+              type="text"
+              class="form-control form-control-detailAddr"
+              placeholder="DetailAddress (선택)"
+              th:value="${memberDto.detailAddr}"
+              th:field="*{detailAddr}"
+              name="detailAddr"
+            />
+            <div
+              th:if="${#fields.hasErrors('detailAddr')}"
+              th:errors="*{detailAddr}"
+              class="text-danger"
+            ></div>
             <button type="submit" class="btn btn-submit btn-default pull-right">
               Sign up
             </button>

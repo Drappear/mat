@@ -1,0 +1,124 @@
+header {
+  width: 100%; /* 헤더는 화면 전체를 차지 */
+
+  padding: 10px 0; /* 적절한 내부 여백 */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 900px; /* 컨텐츠의 최대 너비를 줄임 */
+  margin: 20px auto; /* 가운데 정렬 유지 */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 24px;
+  color: #507c41;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+/* Profile Section */
+.profile-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.profile-photo {
+  position: relative;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.photo-upload-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: #507c41;
+  color: #fff;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.profile-info {
+  flex: 1; /* 프로필 정보 영역을 남은 공간을 차지하도록 설정 */
+}
+
+.profile-info .form-group {
+  margin-bottom: 15px;
+}
+
+.profile-info label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.profile-info input,
+.profile-info textarea {
+  width: 600px; /* 입력 칸의 너비를 320px로 설정 */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.profile-info textarea {
+  width: 600px; /* 텍스트 영역의 너비를 320px로 설정 */
+  resize: none; /* 크기 조절 비활성화 */
+}
+
+.profile-info .form-actions {
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+}
+
+.submit-btn {
+  background-color: #507c41;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #396030;
+}
+
+/* Stats Section */
+.stats {
+  margin-top: 20px;
+}
+
+.stats ul {
+  list-style: none;
+  padding: 0;
+}
+
+.stats li {
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #666;
+}

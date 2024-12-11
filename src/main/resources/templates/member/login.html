@@ -19,20 +19,18 @@
       <div class="login-content login-content-signin" ng-hide="showSignIn">
         <div>
           <h2>Log in</h2>
-          <form class="wrapper-box" role="form" ng-submit="login()">
+          <form class="wrapper-box" th:action="@{/member/login}" method="post">
             <input
               type="text"
-              ng-model="id"
               class="form-control form-control-id"
               placeholder="Id"
-              required
+              name="userid"
             />
             <input
               type="password"
-              ng-model="password"
               class="form-control form-control-password"
               placeholder="Password"
-              required
+              name="password"
             />
             <a class="outer-link pull-left" href="#/forgot">Forgot Password</a>
             <button type="submit" class="btn btn-submit btn-default pull-right">
