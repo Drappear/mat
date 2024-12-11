@@ -2,68 +2,38 @@
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/diner/list.css}" />
   </th:block>
   <div layout:fragment="content">
     <!-- Ranking Carousel Section Begin -->
-    <section class="ranking_carousel">
+    <section class="ranking-carousel-section">
       <div class="container">
         <div class="row">
-          <!-- carousel 영역 -->
           <div class="col-lg-12">
-            <div id="carouselExampleIndicators" class="carousel slide">
-              <div class="carousel-indicators">
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="0"
-                  class="active"
-                  aria-current="true"
-                  aria-label="Slide 1"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="1"
-                  aria-label="Slide 2"
-                ></button>
-                <button
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="2"
-                  aria-label="Slide 3"
-                ></button>
-              </div>
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img src="https://placehold.co/600x200" class="d-block w-100" alt="..." />
-                </div>
-                <div class="carousel-item">
-                  <img src="https://placehold.co/600x200" class="d-block w-100" alt="..." />
-                </div>
-                <div class="carousel-item">
-                  <img src="https://placehold.co/600x200" class="d-block w-100" alt="..." />
+            <!-- carousel 영역 -->
+            <div class="categories__slider owl-carousel">
+              <div class="owl-stage-outer">
+                <div class="owl-stage">
+                  <div class="col-lg-12">
+                    <div
+                      class="categories__item set-bg"
+                      data-setbg="https://placehold.co/1280x600"
+                    ></div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div
+                      class="categories__item set-bg"
+                      data-setbg="https://placehold.co/1280x600"
+                    ></div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div
+                      class="categories__item set-bg"
+                      data-setbg="https://placehold.co/1280x600"
+                    ></div>
+                  </div>
                 </div>
               </div>
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="prev"
-              >
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="next"
-              >
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
             </div>
           </div>
         </div>
@@ -72,12 +42,157 @@
     <!-- Ranking Carousel Section End -->
 
     <!-- Blog Section Begin -->
-    <section class="from-blog spad">
+    <section class="diner-list">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <div class="section-title from-blog__title">
-              <h2>From The Blog</h2>
+            <div class="tag-element">
+              <a class="active" title="목록 항목 선택됨" href="#">전체</a>
+              <a href="#">한식</a>
+              <a href="#">양식</a>
+              <a href="#">중식</a>
+              <a href="#">일식</a>
+              <a href="#">카페&amp;디저트</a>
+              <a href="#">퓨전&amp;기타</a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="sort-element">
+              <div class="float-left">
+                <ul class="sort-menu">
+                  <li class="active">
+                    <a href="#" title="목록 항목 선택됨">추천순</a>
+                  </li>
+                  <li>
+                    <a href="#">업데이트순</a>
+                  </li>
+                  <li>
+                    <a href="#">가나다순</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="float-right">
+                <input type="hidden" id="filter_open_text" value="지역필터 메뉴 열기" />
+                <input type="hidden" id="filter_close_text" value="선택됨 지역필터 메뉴 닫기" />
+                <input type="hidden" id="filter_open_text_sel" value="선택됨 지역필터 메뉴 열기" />
+
+                <div class="select-btn-element">
+                  <a href="#" class="btn-filter" title="지역필터 메뉴 열기"
+                    ><span></span> 지역필터</a
+                  >
+                  <div class="search-layer" style="display: none">
+                    <div class="search-layer-inner">
+                      <ul class="filter-list">
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_2'); return false;"
+                            title="광화문"
+                            >광화문</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_1'); return false;"
+                            title="명동"
+                            >명동</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_3'); return false;"
+                            title="동대문"
+                            >동대문</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_4'); return false;"
+                            title="홍대"
+                            >홍대</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_9'); return false;"
+                            title="이태원"
+                            >이태원</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_5'); return false;"
+                            title="여의도"
+                            >여의도</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_6'); return false;"
+                            title="강남"
+                            >강남</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_7'); return false;"
+                            title="잠실"
+                            >잠실</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onclick="tourAreaSumit('TURSM_AREA_8'); return false;"
+                            title="기타"
+                            >기타</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" id="keyword_open_text" value="키워드검색 메뉴 열기" />
+                <input type="hidden" id="keyword_close_text" value="선택됨 키워드검색 메뉴 닫기" />
+                <input
+                  type="hidden"
+                  id="keyword_open_sel_text"
+                  value="선택됨 키워드검색 메뉴 열기"
+                />
+
+                <input type="hidden" id="list_sel_msg" value="목록 항목 선택됨 페이지 이동" />
+                <input type="hidden" id="page_msg" value="페이지 이동" />
+
+                <div class="select-btn-element">
+                  <a href="#" class="btn-keyword" title="키워드검색 메뉴 열기"
+                    ><span></span> 키워드검색</a
+                  >
+                  <div class="search-layer" style="display: none">
+                    <div class="search-layer-inner">
+                      <div class="keyword-select-element">
+                        <label for="keyword_text" class="hd-element">키워드</label>
+                        <input
+                          type="text"
+                          id="keyword_text"
+                          name="srchWord"
+                          value=""
+                          placeholder="키워드"
+                        />
+                        <button type="button" onclick="javascript:btnSumit();">검색</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -91,46 +206,37 @@
                 <div class="blog__item__text">
                   <ul>
                     <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                  <li><i class="fa fa-comment-o"></i> 5</li>
-                </ul>
-                <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                <p>
-                  Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                  quaerat
-                </p>
+                    <li><i class="fa fa-comment-o"></i> 5</li>
+                  </ul>
+                  <h5><a href="#">Cooking tips make cooking simple</a></h5>
+                  <p>
+                    Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
+                    quaerat
+                  </p>
+                </div>
               </div>
             </div>
-            </div>
-          </th:block>         
+          </th:block>
         </div>
       </div>
     </section>
     <!-- Blog Section End -->
 
-    <section>
+    <section class="section-pagination">
       <div class="container">
         <div class="row">
-          <div class="paging-lst">
-            <a href="#" onclick="return false;" class="icon prev">
-              <i class="ion-chevron-left"></i><i class="ion-chevron-left"></i>
-              <span class="hd-element">처음 페이지</span>
-            </a>
-            <a href="#" onclick="return false;" class="icon prev">
-                <i class="ion-chevron-left"></i>
-                <span class="hd-element">이전 페이지</span>
-            </a>
-            <a href="?curPage=1" class="on" title="현재 페이지">1</a>
-            <a href="?curPage=2" title="">2</a><a href="?curPage=3" title="">3</a>
-            <a href="?curPage=4" title="">4</a><a href="?curPage=5" title="">5</a>
-            <a href="?curPage=6" class="icon next">
-              <i class="ion-chevron-right"></i>
-              <span class="hd-element">다음 페이지</span>
-            </a>
-            <a href="?curPage=121" class="icon next">
-              <i class="ion-chevron-right"></i>
-              <i class="ion-chevron-right"></i>
-              <span class="hd-element">마지막 페이지</span>
-            </a>
+          <div class="col-lg-12">
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
@@ -138,6 +244,49 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+      $(".set-bg").each(function () {
+        var bg = $(this).data("setbg");
+        $(this).css("background-image", "url(" + bg + ")");
+      });
+
+      $(".categories__slider").owlCarousel({
+        loop: true,
+        margin: 0,
+        items: 1,
+        dots: false,
+        nav: true,
+        navText: [
+          "<span class='fa fa-angle-left'><span/>",
+          "<span class='fa fa-angle-right'><span/>",
+        ],
+        animateOut: "fadeOut",
+        animateIn: "fadeIn",
+        smartSpeed: 1200,
+        autoHeight: false,
+        autoplay: true,
+        responsive: {
+          0: {
+            items: 1,
+          },
+
+          480: {
+            items: 1,
+          },
+
+          768: {
+            items: 1,
+          },
+
+          992: {
+            items: 1,
+          },
+        },
+      });
+
+      $(".hero__categories__all").on("click", function () {
+        $(".hero__categories ul").slideToggle(400);
+      });
+    </script>
   </th:block>
 </html>
