@@ -31,4 +31,9 @@ public class MarketController {
         log.info("order 페이지 요청");
     }
 
+    @GetMapping("/orderlist")
+    public void getOrderList() {
+        log.info("orderlist 페이지 요청");
+    }
+
 }

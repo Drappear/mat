@@ -270,10 +270,10 @@
         <div class="row">
           <div class="col-lg-12 text-center">
             <div class="breadcrumb__text">
-              <h2>ORDER</h2>
+              <h2>Order List</h2>
               <div class="breadcrumb__option">
                 <a href="./index.html">Home</a>
-                <span>ORDER</span>
+                <span>Order List</span>
               </div>
             </div>
           </div>
@@ -282,141 +282,54 @@
     </section>
     <!-- Breadcrumb Section End -->
 
-    <!-- Checkout Section Begin -->
-    <section class="checkout spad">
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
       <div class="container">
-        <div class="checkout__form">
-          <h4>주문자 정보</h4>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>이름<span>*</span></p>
-                <input type="text" placeholder="이름" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>휴대폰 번호<span>*</span></p>
-                <input type="text" placeholder="연락처" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>주소<span>*</span></p>
-                <input type="text" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>상세 주소<span>*</span></p>
-                <input type="text" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="checkout__form">
-          <h4>주문 상품</h4>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>이름<span>*</span></p>
-                <input type="text" placeholder="이름" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>휴대폰 번호<span>*</span></p>
-                <input type="text" placeholder="연락처" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>주소<span>*</span></p>
-                <input type="text" />
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>상세 주소<span>*</span></p>
-                <input type="text" />
-              </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="shoping__cart__table">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="shoping__product">주문 상품</th>
+                    <th>주문 날짜</th>
+                    <th>주문 상태</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="shoping__cart__item">
+                      <img src="/assets/img/cart/cart-1.jpg" alt="" />
+                      <h5>Vegetable’s Package</h5>
+                    </td>
+                    <td class="orderlist_date">2024/12/11</td>
+                    <td class="orderlist_status">주문 완료</td>
+                  </tr>
+                  <tr>
+                    <td class="shoping__cart__item">
+                      <img src="/assets/img/cart/cart-2.jpg" alt="" />
+                      <h5>Fresh Garden Vegetable</h5>
+                    </td>
+                    <td class="shoping__cart__price"></td>
+                    <td class="shoping__cart__total"></td>
+                  </tr>
+                  <tr>
+                    <td class="shoping__cart__item">
+                      <img src="/assets/img/cart/cart-3.jpg" alt="" />
+                      <h5>Organic Bananas</h5>
+                    </td>
+                    <td class="shoping__cart__price"></td>
+                    <td class="shoping__cart__total"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-        <div class="checkout__form">
-          <h4 style="display: inline">배송지 정보</h4>
-          <div class="checkout__input__checkbox">
-            <label for="paypal">
-              주문자 정보와 동일
-              <input type="checkbox" id="paypal" />
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <form action="#">
-            <div class="row">
-              <div class="col-lg-8 col-md-6">
-                <div class="row">
-                  <div class="col-lg-6">
-                    <div class="checkout__input">
-                      <p>이름<span>*</span></p>
-                      <input type="text" />
-                    </div>
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="checkout__input">
-                      <p>휴대폰 번호<span>*</span></p>
-                      <input type="text" />
-                    </div>
-                  </div>
-                </div>
-                <div class="checkout__input">
-                  <p>우편번호<span>*</span></p>
-                  <input
-                    type="text"
-                    placeholder="Street Address"
-                    class="checkout__input__add"
-                  />
-                </div>
-                <div class="checkout__input">
-                  <p>주소<span>*</span></p>
-                  <input type="text" />
-                </div>
-                <div class="checkout__input">
-                  <p>상세주소<span>*</span></p>
-                  <input type="text" />
-                </div>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <div class="checkout__input">
-                      <p>Email<span>*</span></p>
-                      <input type="text" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="checkout__order">
-          <h4>최종 주문 금액</h4>
-
-          <div class="checkout__order__products">
-            상품 금액 <span>총 금액</span>
-          </div>
-          <ul>
-            <li>Vegetable’s Package <span>$75.99</span></li>
-            <li>Fresh Vegetable <span>$151.99</span></li>
-            <li>Organic Bananas <span>$53.99</span></li>
-          </ul>
-          <div class="checkout__order__total">총 금액 <span>$750.99</span></div>
-          <form method="post" id="actionForm">
-            <button type="submit" class="site-btn" name="">PLACE ORDER</button>
-            <!-- <a th:href="@{/market/orderlist}" class="primary-btn">ORDER</a> -->
-          </form>
         </div>
       </div>
     </section>
-    <!-- Checkout Section End -->
+    <!-- Shoping Cart Section End -->
 
     <!-- Footer Section Begin -->
     <footer class="footer spad">
@@ -511,6 +424,5 @@
     <script src="/assets/js/mixitup.min.js"></script>
     <script src="/assets/js/owl.carousel.min.js"></script>
     <script src="/assets/js/main.js"></script>
-    <script th:src="@{/market/js/order.js}"></script>
   </body>
 </html>
