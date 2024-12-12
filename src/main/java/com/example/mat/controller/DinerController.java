@@ -21,4 +21,9 @@ public class DinerController {
         log.info("get diner idx 페이지 요청");
     }
 
+    @GetMapping("/read")
+    public void getDinerRead() {
+        log.info("get diner read 페이지 요청");
+    }
+
 }
