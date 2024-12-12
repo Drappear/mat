@@ -1,0 +1,28 @@
+.diner-overview-section {
+  border: 1px solid;
+  padding: 5px;
+  height: 250px;
+  max-height: 300px;
+}
+.diner-overview-section .col-lg-3 {
+  border: 1px solid;
+}
+.diner-overview-section .col-lg-6 {
+  border: 1px solid;
+}
+
+.review-image-section {
+  padding: 5px;
+  border: 1px solid;
+  max-height: 220px;
+}
+
+.review-overview {
+  display: inline;
+}
+.review-reviewer-img {
+  display: inline;
+}
+.review-table {
+  display: inline;
+}

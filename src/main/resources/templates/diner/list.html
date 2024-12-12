@@ -6,34 +6,18 @@
   </th:block>
   <div layout:fragment="content">
     <!-- Ranking Carousel Section Begin -->
-    <section class="ranking-carousel-section">
+    <section class="categories ranking-carousel-section">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12">
-            <!-- carousel 영역 -->
-            <div class="categories__slider owl-carousel">
-              <div class="owl-stage-outer">
-                <div class="owl-stage">
-                  <div class="col-lg-12">
-                    <div
-                      class="categories__item set-bg"
-                      data-setbg="https://placehold.co/1280x600"
-                    ></div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div
-                      class="categories__item set-bg"
-                      data-setbg="https://placehold.co/1280x600"
-                    ></div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div
-                      class="categories__item set-bg"
-                      data-setbg="https://placehold.co/1280x600"
-                    ></div>
-                  </div>
-                </div>
-              </div>
+          <div class="diners__slider owl-carousel">
+            <div class="col-lg-12">
+              <div class="diners__item set-bg" data-setbg="https://placehold.co/1280x480"></div>
+            </div>
+            <div class="col-lg-12">
+              <div class="diners__item set-bg" data-setbg="https://placehold.co/1280x480"></div>
+            </div>
+            <div class="col-lg-12">
+              <div class="diners__item set-bg" data-setbg="https://placehold.co/1280x480"></div>
             </div>
           </div>
         </div>
@@ -244,49 +228,6 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
-    <script>
-      $(".set-bg").each(function () {
-        var bg = $(this).data("setbg");
-        $(this).css("background-image", "url(" + bg + ")");
-      });
-
-      $(".categories__slider").owlCarousel({
-        loop: true,
-        margin: 0,
-        items: 1,
-        dots: false,
-        nav: true,
-        navText: [
-          "<span class='fa fa-angle-left'><span/>",
-          "<span class='fa fa-angle-right'><span/>",
-        ],
-        animateOut: "fadeOut",
-        animateIn: "fadeIn",
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true,
-        responsive: {
-          0: {
-            items: 1,
-          },
-
-          480: {
-            items: 1,
-          },
-
-          768: {
-            items: 1,
-          },
-
-          992: {
-            items: 1,
-          },
-        },
-      });
-
-      $(".hero__categories__all").on("click", function () {
-        $(".hero__categories ul").slideToggle(400);
-      });
-    </script>
+    <script th:src="@{/assets/js/diner/list.js}"></script>
   </th:block>
 </html>

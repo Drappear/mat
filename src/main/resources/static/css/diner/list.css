@@ -164,19 +164,20 @@
 }
 
 /*---------------------
-  Categories
+  Carousel
 -----------------------*/
 
-.categories__item {
-  height: 270px;
+.diners__item {
+  height: 480px;
   position: relative;
 }
 
-.categories__slider .col-lg-12 {
+.diners__slider .col-lg-12 {
   max-width: 100%;
+  height: 480px;
 }
 
-.categories__slider.owl-carousel .owl-nav button {
+.diners__slider.owl-carousel .owl-nav button {
   font-size: 18px;
   color: #1c1c1c;
   height: 70px;
@@ -191,7 +192,7 @@
   background: #ffffff;
 }
 
-.categories__slider.owl-carousel .owl-nav button.owl-next {
+.diners__slider.owl-carousel .owl-nav button.owl-next {
   left: auto;
   right: -35px;
 }
