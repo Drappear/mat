@@ -13,6 +13,81 @@
 
     <!-- Internal CSS -->
     <link rel="stylesheet" th:href="@{/css/login.css}" />
+
+    <script>
+      function checkDuplicateUserid() {
+          const userid = document.getElementById("userid").value;
+  
+           // 입력값이 없으면 메시지 표시
+        if (userid.trim() === "") {
+            const message = document.getElementById("userid-message");
+            message.textContent = "아이디를 입력해주세요.";
+            message.style.color = "red";
+            return;
+        }
+          fetch(`/member/check-duplicate-userid?userid=${userid}`)
+              .then((response) => response.json())
+              .then((isDuplicate) => {
+                  const message = document.getElementById("userid-message");
+                  if (isDuplicate) {
+                      message.textContent = "이미 사용 중인 아이디입니다.";
+                      message.style.color = "red";
+                  } else {
+                      message.textContent = "사용 가능한 아이디입니다.";
+                      message.style.color = "green";
+                  }
+              })
+              .catch((error) => console.error("Error:", error));
+      }
+  
+      function checkDuplicateEmail() {
+          const email = document.getElementById("email").value;
+          if (email.trim() === "") {
+            const message = document.getElementById("email-message");
+            message.textContent = "이메일을 입력해주세요.";
+            message.style.color = "red";
+            return;
+        }
+          fetch(`/member/check-duplicate-email?email=${email}`)
+              .then((response) => response.json())
+              .then((isDuplicate) => {
+                  const message = document.getElementById("email-message");
+                  if (isDuplicate) {
+                      message.textContent = "이미 사용 중인 이메일입니다.";
+                      message.style.color = "red";
+                  } else {
+                      message.textContent = "사용 가능한 이메일입니다.";
+                      message.style.color = "green";
+                  }
+              })
+              .catch((error) => console.error("Error:", error));
+      }
+  
+      function checkDuplicateNickname() {
+          const nickname = document.getElementById("nickname").value;
+   // 입력값이 없으면 메시지 표시
+   if (nickname.trim() === "") {
+            const message = document.getElementById("nickname-message");
+            message.textContent = "닉네임을 입력해주세요.";
+            message.style.color = "red";
+            return;
+        }
+          
+          fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
+              .then((response) => response.json())
+              .then((isDuplicate) => {
+                  const message = document.getElementById("nickname-message");
+                  if (isDuplicate) {
+                      message.textContent = "이미 사용 중인 닉네임입니다.";
+                      message.style.color = "red";
+                  } else {
+                      message.textContent = "사용 가능한 닉네임입니다.";
+                      message.style.color = "green";
+                  }
+              })
+              .catch((error) => console.error("Error:", error));
+      }
+  </script>
   </head>
   <body>
     <div class="login-page">
@@ -24,7 +99,7 @@
             class="wrapper-box"
             th:object="${memberDto}"
             method="post"
-          >
+          ><div class="input-group" >
             <input
               type="text"
               class="form-control form-control-id"
@@ -32,12 +107,20 @@
               th:value="${memberDto.userid}"
               th:field="*{userid}"
               name="userid"
+              id="userid"
+
             />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
+            </span>
+          </div>
             <div
-              th:if="${#fields.hasErrors('userid')}"
-              th:errors="*{userid}"
+            th:if="${#fields.hasErrors('userid')}"
+            th:errors="*{userid}"
               class="text-danger"
+              id="userid-message"
             ></div>
+         
             <input
               type="password"
               th:field="*{password}"
@@ -45,12 +128,14 @@
               placeholder="Password"
               th:value="${memberDto.password}"
               name="password"
+              
             />
             <div
               th:if="${#fields.hasErrors('password')}"
               th:errors="*{password}"
               class="text-danger"
             ></div>
+          
             <input
               type="text"
               class="form-control form-control-username"
@@ -64,6 +149,7 @@
               th:errors="*{username}"
               class="text-danger"
             ></div>
+            <div class="input-group">
             <input
               type="text"
               class="form-control form-control-nickname"
@@ -71,12 +157,19 @@
               th:value="${memberDto.nickname}"
               th:field="*{nickname}"
               name="nickname"
+              id="nickname"
             />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" onclick="checkDuplicateNickname()">중복 확인</button>
+            </span>
+          </div>
             <div
-              th:if="${#fields.hasErrors('nickname')}"
-              th:errors="*{nickname}"
+            th:if="${#fields.hasErrors('nickname')}"
+            th:errors="*{nickname}"
               class="text-danger"
+              id="nickname-message"
             ></div>
+            <div class="input-group">
             <input
               type="email"
               th:field="*{email}"
@@ -84,11 +177,18 @@
               placeholder="Email"
               th:value="${memberDto.email}"
               name="email"
+              id="email"
+     
             />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" onclick="checkDuplicateEmail()">중복 확인</button>
+            </span>
+          </div>
             <div
-              th:if="${#fields.hasErrors('email')}"
-              th:errors="*{email}"
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
               class="text-danger"
+              id="email-message"
             ></div>
 
             <input
@@ -124,16 +224,13 @@
         </div>
       </div>
 
-      <!-- <div class="login-switcher">
-        <div class="login-switcher-signin" ng-show="showSignIn">
+      <div class="login-switcher">
+        <div class="login-switcher-signin">
           <h3>Have an account?</h3>
-          <button ng-click="showSignIn=false">Login</button>
+          <button >
+            <a th:href="@{/member/login}">Sign in</a>
+          </button>
         </div>
-        <div class="login-switcher-signup" ng-hide="showSignIn">
-          <h3>Don't have an account?</h3>
-          <button ng-click="showSignIn=true">Sign Up</button>
-        </div>
-      </div> -->
     </div>
 
     <!-- External JavaScript -->

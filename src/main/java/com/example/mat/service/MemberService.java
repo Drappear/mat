@@ -16,6 +16,13 @@ public interface MemberService {
     // 회원가입
     String register(MemberDto memberDto);
 
+    // 이메일, 아이디, 닉네임 증복검사
+    boolean checkDuplicateUserid(String userid);
+
+    boolean checkDuplicateEmail(String email);
+
+    boolean checkDuplicateNickname(String nickname);
+
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
         return Member.builder()
