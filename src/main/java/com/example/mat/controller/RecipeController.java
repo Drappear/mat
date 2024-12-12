@@ -17,8 +17,15 @@ public class RecipeController {
   }
 
   @GetMapping("/create")
-  public void getCreate() { //MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto
+  public void getCreate() { // MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto
+                            // pageRequestDto
     log.info("recipe 작성 폼 요청");
+  }
+
+  @GetMapping("/modify")
+  public void getModify() { // MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto
+                            // pageRequestDto
+    log.info("recipe 수성 폼 요청");
   }
 
 }
