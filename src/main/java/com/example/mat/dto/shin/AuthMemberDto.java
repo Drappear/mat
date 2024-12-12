@@ -23,7 +23,7 @@ public class AuthMemberDto extends User {
     }
 
     public AuthMemberDto(MemberDto memberDto) {
-        this(memberDto.getEmail(), memberDto.getPassword(),
+        this(memberDto.getUserid(), memberDto.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_" + memberDto.getRole())));
         this.memberDto = memberDto;
     }

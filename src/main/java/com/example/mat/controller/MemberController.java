@@ -1,5 +1,6 @@
 package com.example.mat.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -7,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
@@ -63,9 +65,42 @@ public class MemberController {
         if (result.hasErrors()) {
             return "/member/register";
         }
+        // 사용자 ID 중복 검사
+        if (memberService.checkDuplicateUserid(memberDto.getUserid())) {
+            result.rejectValue("userid", "error.userid", "이미 사용 중인 아이디입니다.");
+            return "/member/register";
+        }
+
+        // 이메일 중복 검사
+        if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
+            result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
+            return "/member/register";
+        }
+        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+            return "/member/register";
+        }
         memberService.register(memberDto);
 
         return "redirect:/member/login";
+    }
+
+    @GetMapping("/check-duplicate-userid")
+    public ResponseEntity<Boolean> checkDuplicateUserid(@RequestParam String userid) {
+        boolean isDuplicate = memberService.checkDuplicateUserid(userid);
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    @GetMapping("/check-duplicate-email")
+    public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String email) {
+        boolean isDuplicate = memberService.checkDuplicateEmail(email);
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    @GetMapping("/check-duplicate-nickname")
+    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
+        boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
+        return ResponseEntity.ok(isDuplicate);
     }
 
     // 개발자용 - Authentication 확인용

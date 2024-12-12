@@ -35,11 +35,12 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         // 로그인 요청
         Optional<Member> result = memberRepository.findByUserid(username);
 
+        log.info("result", result.get());
+
         if (!result.isPresent()) {
             throw new UsernameNotFoundException("아이디 확인");
         }
 
-        // 이메일이 존재한다면 ENTITY => DTO 변경
         Member member = result.get();
 
         MemberDto memberDto = MemberDto.builder()
@@ -78,6 +79,22 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     public void passwordUpdate(PasswordDto passwordDto) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'passwordUpdate'");
+    }
+
+    @Override
+    public boolean checkDuplicateUserid(String userid) {
+        return memberRepository.existsByUserid(userid);
+
+    }
+
+    @Override
+    public boolean checkDuplicateEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean checkDuplicateNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
     }
 
 }
