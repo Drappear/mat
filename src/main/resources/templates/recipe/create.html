@@ -7,7 +7,7 @@
   <div layout:fragment="content">
     <div class="container mt-5">
       <div id="webcrumbs">
-        <div class="w-[900px] bg-white shadow-lg rounded-lg p-8">
+        <div class="w-[1200px] bg-white shadow-lg rounded-lg p-8">
           <div
             class="flex justify-between items-center mb-6 bg-neutral-100 p-4 rounded-md"
           >
@@ -223,6 +223,138 @@
 
             <!-- {/* Divider */} -->
             <div class="border-t border-neutral-300 my-4"></div>
+
+            <!-- step 추가  -->
+            <div class="form-section">
+              <div class="p-4 bg-neutral-50 rounded-lg">
+                <h3 class="text-neutral-950 font-title mb-2">요리 순서</h3>
+                <p class="text-sm text-neutral-500 mt-4">
+                  💡 요리의 맛이 좌우될 수 있는 중요한 부분은 빠짐없이
+                  적어주세요.
+                  <br /><br />
+                  예) 10분간 익혀주세요 ▶ 10분간 약한불로 익혀주세요.<br />
+                  마늘편은 익혀주세요 ▶ 마늘편을 충분히 익혀주셔야 매운 맛이
+                  사라집니다.<br />
+                  꿀을 조금 넣어주세요 ▶ 꿀이 없는 경우, 설탕 1스푼으로 대체
+                  가능합니다.
+                </p>
+                <div class="rounded-md p-4">
+                  <div class="flex items-center gap-4 mb-6">
+                    <div class="text-lime-500 font-semibold text-lg">Step1</div>
+                    <textarea
+                      class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                      placeholder="{`step1`}"
+                    ></textarea>
+                    <div
+                      class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md"
+                    >
+                      <span class="material-symbols-outlined text-neutral-400"
+                        >add</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-4 mb-6">
+                    <div class="text-lime-500 font-semibold text-lg">Step2</div>
+                    <textarea
+                      class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                      placeholder="{`step2`}"
+                    ></textarea>
+                    <div
+                      class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md"
+                    >
+                      <span class="material-symbols-outlined text-neutral-400"
+                        >add</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-4 mb-6">
+                    <div class="text-lime-500 font-semibold text-lg">Step3</div>
+                    <textarea
+                      class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                      placeholder="{`step3`}"
+                    ></textarea>
+                    <div
+                      class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md"
+                    >
+                      <span class="material-symbols-outlined text-neutral-400"
+                        >add</span
+                      >
+                    </div>
+                  </div>
+                <!-- button -->
+                <div class="flex justify-center">
+                  <button
+                    class="bg-lime-500 text-white w-[120px] py-2 rounded-md flex items-center justify-center text-sm gap-2"
+                  >
+                    <span class="material-symbols-outlined">add</span>
+                    Step 추가
+                  </button>
+                </div>
+              </div>
+            </div>
+              <!-- {/* Divider */} -->
+              <div class="border-t border-neutral-300 my-4"></div>
+
+              <!-- 요리 완성 사진 -->
+              <div class="flex items-center gap-4 mb-6 mt-6">
+                <h3 class="text-neutral-950 font-title mb-2">요리 완성 사진</h3>
+                <div class="flex items-center gap-2">
+                  <div class="relative">
+                    <img
+                      src="https://placehold.co/140/png"
+                      alt="uploaded"
+                      class="w-[140px] h-[140px] object-cover rounded-md"
+                    />
+                    <button
+                      class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div class="relative">
+                    <img
+                      src="https://placehold.co/140/png"
+                      alt="uploaded"
+                      class="w-[140px] h-[140px] object-cover rounded-md"
+                    />
+                    <button
+                      class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div
+                    class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md"
+                  >
+                    <span class="material-symbols-outlined text-neutral-400"
+                      >add</span
+                    >
+                  </div>
+                  <div
+                    class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md"
+                  >
+                    <span class="material-symbols-outlined text-neutral-400"
+                      >add</span
+                    >
+                  </div> 
+                </div>
+              </div>
+              <p class="text-sm text-neutral-500 mt-4 mb-4 flex items-center justify-center">
+                최소 사진 1장은 넣어야 합니다. 첫번째 등록한 사진이 대표사진이 됩니다. (최대 등록 사진 4장)
+              </p>
+              <!-- button -->
+              <div class="flex justify-center items-center gap-4">
+                <button
+                  class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm"
+                >
+                  저장 후 공개하기
+                </button>
+                <button
+                  class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm"
+                >
+                  취소
+                </button>
+            </div>
           </form>
         </div>
       </div>
@@ -239,7 +371,7 @@
 
       addIngredientBtn.addEventListener("click", () => {
         const ingredientInput = document.createElement("div");
-        ingredientInput.className = "ingredient-input";
+        ingredientInput.class = "ingredient-input";
 
         ingredientInput.innerHTML = `
         <div class="grid grid-cols-4 gap-4 items-center">
@@ -267,5 +399,97 @@
         });
       }
     });
+  </script>
+  <script>
+    let stepCount = 1;
+    let imageList = [];
+
+    function addStep() {
+      if (stepCount >= 20) return alert("Maximum of 20 steps allowed");
+
+      stepCount++;
+      const stepsContainer = document.getElementById("steps");
+      const newStep = document.createElement("div");
+      newStep.class = "step";
+      newStep.id = `step${stepCount}`;
+      newStep.innerHTML = `
+              <label>Step ${stepCount}</label>
+              <input type="text" placeholder="Describe step ${stepCount}" required />
+              <button class="add-btn" onclick="addStep()">+</button>
+          `;
+      stepsContainer.appendChild(newStep);
+    }
+
+    function uploadImages(event) {
+      const files = event.target.files;
+
+      if (files.length + imageList.length > 4) {
+        alert("You can upload a maximum of 4 images.");
+        return;
+      }
+
+      for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imageList.push(e.target.result);
+          renderImages();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderImages() {
+      const preview = document.getElementById("image-preview");
+      const carousel = document.getElementById("carousel");
+
+      preview.innerHTML = "";
+      carousel.innerHTML = "";
+
+      imageList.forEach((src, index) => {
+        const img = document.createElement("img");
+        img.src = src;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.class = "delete-btn";
+        deleteBtn.innerText = "x";
+        deleteBtn.onclick = () => deleteImage(index);
+
+        const container = document.createElement("div");
+        container.appendChild(img);
+        container.appendChild(deleteBtn);
+
+        preview.appendChild(container);
+
+        const carouselImg = document.createElement("img");
+        carouselImg.src = src;
+        carousel.appendChild(carouselImg);
+      });
+    }
+
+    function deleteImage(index) {
+      imageList.splice(index, 1);
+      renderImages();
+    }
+
+    function submitForm() {
+      const steps = document.querySelectorAll("#steps .step input");
+      const alertBox = document.getElementById("alert");
+
+      if (steps.length < 3 || imageList.length < 1) {
+        alertBox.style.display = "block";
+        alertBox.innerText = "At least 3 steps and 1 image are required.";
+        return;
+      }
+
+      alertBox.style.display = "none";
+      alert("Recipe submitted successfully!");
+      // Redirect or reset logic here
+    }
+
+    function cancelForm() {
+      if (confirm("Are you sure you want to cancel?")) {
+        location.reload();
+      }
+    }
   </script>
 </html>
