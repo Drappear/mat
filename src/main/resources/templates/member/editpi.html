@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개인정보 관리</title>
+    <link rel="stylesheet" th:href="@{/css/personalInformation.css}" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>개인정보 관리</h1>
+    </div>
+
+    <div class="container">
+      <div class="section">
+        <h2>개인정보</h2>
+        <form class="profile-info">
+          <div class="form-group">
+            <label for="userid">아이디</label>
+            <input
+              type="text"
+              id="userid"
+              name="userid"
+              th:value="${#authentication.principal.memberDto.userid}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">이름</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              th:value="${#authentication.principal.memberDto.username}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="nickname">닉네임</label>
+            <input
+              type="text"
+              id="nickname"
+              name="nickname"
+              th:value="${#authentication.principal.memberDto.nickname}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">이메일</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              th:value="${#authentication.principal.memberDto.email}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="address">주소</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              th:value="${#authentication.principal.memberDto.addr}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="detail-address">상세주소</label>
+            <input
+              type="text"
+              id="detail-address"
+              name="detail-address"
+              th:value="${#authentication.principal.memberDto.detailAddr}"
+            />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="save-button">저장하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

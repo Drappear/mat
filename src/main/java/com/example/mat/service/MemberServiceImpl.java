@@ -70,6 +70,22 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     }
 
     @Override
+    public boolean checkDuplicateUserid(String userid) {
+        return memberRepository.existsByUserid(userid);
+
+    }
+
+    // @Override
+    // public boolean checkDuplicateEmail(String email) {
+    // return memberRepository.existsByEmail(email);
+    // }
+
+    @Override
+    public boolean checkDuplicateNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    @Override
     public void nickUpdate(MemberDto memberDto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'nickUpdate'");
@@ -79,22 +95,6 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     public void passwordUpdate(PasswordDto passwordDto) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'passwordUpdate'");
-    }
-
-    @Override
-    public boolean checkDuplicateUserid(String userid) {
-        return memberRepository.existsByUserid(userid);
-
-    }
-
-    @Override
-    public boolean checkDuplicateEmail(String email) {
-        return memberRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean checkDuplicateNickname(String nickname) {
-        return memberRepository.existsByNickname(nickname);
     }
 
 }

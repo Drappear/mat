@@ -19,7 +19,7 @@ public interface MemberService {
     // 이메일, 아이디, 닉네임 증복검사
     boolean checkDuplicateUserid(String userid);
 
-    boolean checkDuplicateEmail(String email);
+    // boolean checkDuplicateEmail(String email);
 
     boolean checkDuplicateNickname(String nickname);
 
