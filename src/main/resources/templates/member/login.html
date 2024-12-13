@@ -15,86 +15,40 @@
     <link rel="stylesheet" th:href="@{/css/login.css}" />
   </head>
   <body>
-    <div class="login-page" ng-app="">
-      <div class="login-content login-content-signin" ng-hide="showSignIn">
+    <div class="login-page">
+      <div class="login-content login-content-signin">
         <div>
           <h2>Log in</h2>
-          <form class="wrapper-box" role="form" ng-submit="login()">
+          <form class="wrapper-box" th:action="@{/member/login}" method="post">
             <input
               type="text"
-              ng-model="id"
               class="form-control form-control-id"
               placeholder="Id"
-              required
+              name="username"
             />
             <input
               type="password"
-              ng-model="password"
               class="form-control form-control-password"
               placeholder="Password"
-              required
+              name="password"
             />
             <a class="outer-link pull-left" href="#/forgot">Forgot Password</a>
             <button type="submit" class="btn btn-submit btn-default pull-right">
               Log in
             </button>
-          </form>
-        </div>
-      </div>
-
-      <div
-        class="login-content login-content-signup ng-hide"
-        ng-show="showSignIn"
-      >
-        <div>
-          <h2>Sign Up</h2>
-          <form class="wrapper-box" role="form" ng-submit="register()">
-            <input
-              type="text"
-              class="form-control form-control-username"
-              placeholder="Username"
-              required
-            />
-            <input
-              type="text"
-              class="form-control form-control-nickname"
-              placeholder="Nickname"
-              required
-            />
-            <input
-              type="text"
-              class="form-control form-control-id"
-              placeholder="Id"
-              required
-            />
-            <input
-              type="password"
-              ng-model="password"
-              class="form-control form-control-password"
-              placeholder="Password"
-              required
-            />
-            <input
-              type="text"
-              ng-model="text"
-              class="form-control form-control-address"
-              placeholder="Address (선택)"
-            />
-            <button type="submit" class="btn btn-submit btn-default pull-right">
-              Sign up
-            </button>
+            <!-- <div th:if="${param.error}" class="text-danger small">
+              아이디나 비밀번호를 확인해주세요
+            </div> -->
           </form>
         </div>
       </div>
 
       <div class="login-switcher">
-        <div class="login-switcher-signin" ng-show="showSignIn">
-          <h3>Have an account?</h3>
-          <button ng-click="showSignIn=false">Login</button>
-        </div>
-        <div class="login-switcher-signup" ng-hide="showSignIn">
+        <div class="login-switcher-signup">
           <h3>Don't have an account?</h3>
-          <button ng-click="showSignIn=true">Sign Up</button>
+          <button>
+            <a th:href="@{/member/register}">Sign Up</a>
+          </button>
         </div>
       </div>
     </div>

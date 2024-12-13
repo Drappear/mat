@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/layouts/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/recipe_modify.css}" />
+</th:block>
+
+<div layout:fragment="content">
+  <div class="container mt-5">
+    <div id="webcrumbs">
+      <div class="w-[1200px] bg-white shadow-lg rounded-lg p-8">
+        <div class="flex justify-between items-center mb-6 bg-neutral-100 p-4 rounded-md">
+          <h2 class="text-lg font-title">레시피 수정</h2>
+          <!-- 모달창 활성화 버튼 -->
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#recipeModal">
+            레시피 등록안내
+          </button>
+          <!-- 모달 -->
+          <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalLabel">
+                    레시피 등록 확인
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">레시피를 등록하시겠습니까?</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    취소
+                  </button>
+                  <button type="button" class="btn btn-primary">등록</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form>
+          <!-- 레시피 제목 및 요약 -->
+          <div class="form-section">
+            <div class="space-y-4">
+              <div class="p-4 bg-neutral-50 rounded-lg">
+                <div class="grid grid-cols-3 gap-4 items-center">
+                  <label for="recipeTitle" class="text-neutral-950 form-label">레시피 제목</label>
+                  <input type="text" id="recipeTitle" placeholder="예) 소고기 만두국 끓이기"
+                    class="col-span-2 border-neutral-300 border rounded-md px-3 py-2 form-control" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="p-4 bg-neutral-50 rounded-lg">
+              <div class="grid grid-cols-3 gap-4 items-center">
+                <label for="recipeDescription" class="text-neutral-950 form-label">요리소개</label>
+                <textarea id="recipeDescription" placeholder="요리에 대한 간단한 설명을 적어주세요."
+                  class="form-control col-span-2 border-neutral-300 border rounded-md px-3 py-2" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카테고리 -->
+          <div class="form-section">
+            <div class="p-4 bg-neutral-50 rounded-lg">
+              <div class="grid grid-cols-3 gap-4 items-center">
+                <label for="category" class="form-label text-neutral-950">카테고리</label>
+                <select id="category" class="form-select col-span-2 border-neutral-300 border rounded-md px-3 py-2">
+                  <option value="">선택</option>
+                  <option value="한식">한식</option>
+                  <option value="양식">양식</option>
+                  <option value="중식">중식</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 요리정보 -->
+          <div class="form-section">
+            <div class="p-4 bg-neutral-50 rounded-lg">
+              <div class="flex gap-4 items-center">
+                <label for="cookingInfo" class="form-label text-neutral-950">요리정보</label>
+                <div class="row">
+                  <div class="col-md-3">
+                    <select id="servings" class="form-select border-neutral-300 border rounded-md px-3 py-2">
+                      <option value="">인원 선택</option>
+                      <option value="1">1인분</option>
+                      <option value="2">2인분</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select id="time" class="form-select border-neutral-300 border rounded-md px-3 py-2">
+                      <option value="">시간 선택</option>
+                      <option value="10">10분 이내</option>
+                      <option value="30">30분 이내</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select id="difficulty" class="form-select border-neutral-300 border rounded-md px-3 py-2">
+                      <option value="">난이도 선택</option>
+                      <option value="쉬움">쉬움</option>
+                      <option value="보통">보통</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- {/* Divider */} -->
+          <div class="border-t border-neutral-300 my-4"></div>
+
+          <!-- 재료 정보 -->
+          <div class="form-section">
+            <div class="p-4 bg-neutral-50 rounded-lg">
+              <h3 class="text-neutral-950 font-title mb-2">재료 정보</h3>
+
+              <div id="ingredientsContainer">
+                <div class="space-y-2">
+                  <div class="ingredient-input">
+                    <div class="grid grid-cols-4 gap-4 items-center">
+                      <input type="text" placeholder="재료 제목" class="border-neutral-300 border rounded-md px-3 py-2" />
+                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="재료명" />
+                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="용량 (예: 10g)" />
+                    </div>
+                  </div>
+                  <div class="ingredient-input">
+                    <div class="grid grid-cols-4 gap-4 items-center">
+                      <input type="text" placeholder="재료 제목" class="border-neutral-300 border rounded-md px-3 py-2" />
+                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="재료명" />
+                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="용량 (예: 10g)" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="addIngredientBtn"
+                class="btn btn-primary mt-2 bg-green-500 text-white px-4 py-2 rounded-md">
+                추가
+              </button>
+              <p class="text-sm text-neutral-500 mt-4">
+                최소 재료 2개는 넣어야 합니다. 추가 버튼 클릭 시 새로운 행이
+                추가됩니다. (최대 50줄)
+              </p>
+            </div>
+          </div>
+
+          <!-- {/* Divider */} -->
+          <div class="border-t border-neutral-300 my-4"></div>
+
+          <!-- step 추가  -->
+          <div class="form-section">
+            <div class="p-4 bg-neutral-50 rounded-lg">
+              <h3 class="text-neutral-950 font-title mb-2">요리 순서</h3>
+              <p class="text-sm text-neutral-500 mt-4">
+                💡 요리의 맛이 좌우될 수 있는 중요한 부분은 빠짐없이
+                적어주세요.
+                <br /><br />
+                예) 10분간 익혀주세요 ▶ 10분간 약한불로 익혀주세요.<br />
+                마늘편은 익혀주세요 ▶ 마늘편을 충분히 익혀주셔야 매운 맛이
+                사라집니다.<br />
+                꿀을 조금 넣어주세요 ▶ 꿀이 없는 경우, 설탕 1스푼으로 대체
+                가능합니다.
+              </p>
+              <div class="rounded-md p-4">
+                <div class="flex items-center gap-4 mb-6">
+                  <div class="text-lime-500 font-semibold text-lg">Step1</div>
+                  <textarea
+                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                    placeholder="{`step1`}"></textarea>
+                  <div
+                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 mb-6">
+                  <div class="text-lime-500 font-semibold text-lg">Step2</div>
+                  <textarea
+                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                    placeholder="{`step2`}"></textarea>
+                  <div
+                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 mb-6">
+                  <div class="text-lime-500 font-semibold text-lg">Step3</div>
+                  <textarea
+                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                    placeholder="{`step3`}"></textarea>
+                  <div
+                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                  </div>
+                </div>
+                <!-- button -->
+                <div class="flex justify-center">
+                  <button
+                    class="bg-lime-500 text-white w-[120px] py-2 rounded-md flex items-center justify-center text-sm gap-2">
+                    <span class="material-symbols-outlined">add</span>
+                    Step 추가
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- {/* Divider */} -->
+            <div class="border-t border-neutral-300 my-4"></div>
+
+            <!-- 요리 완성 사진 -->
+            <div class="flex items-center gap-4 mb-6 mt-6">
+              <h3 class="text-neutral-950 font-title mb-2">요리 완성 사진</h3>
+              <div class="flex items-center gap-2">
+                <div class="relative">
+                  <img src="https://placehold.co/140/png" alt="uploaded"
+                    class="w-[140px] h-[140px] object-cover rounded-md" />
+                  <button
+                    class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
+                    ✕
+                  </button>
+                </div>
+                <div class="relative">
+                  <img src="https://placehold.co/140/png" alt="uploaded"
+                    class="w-[140px] h-[140px] object-cover rounded-md" />
+                  <button
+                    class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
+                    ✕
+                  </button>
+                </div>
+                <div
+                  class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                  <span class="material-symbols-outlined text-neutral-400">add</span>
+                </div>
+                <div
+                  class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                  <span class="material-symbols-outlined text-neutral-400">add</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-500 mt-4 mb-4 flex items-center justify-center">
+              최소 사진 1장은 넣어야 합니다. 첫번째 등록한 사진이 대표사진이 됩니다. (최대 등록 사진 4장)
+            </p>
+            <!-- button -->
+            <div class="flex justify-center items-center gap-4">
+              <button class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm">
+                저장
+              </button>
+              <button class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm">
+                취소
+              </button>
+              <button class="bg-red-500 text-white rounded-md py-2 px-6 text-sm">
+                삭제
+              </button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addIngredientBtn = document.getElementById("addIngredientBtn");
+    const ingredientsContainer = document.getElementById(
+      "ingredientsContainer"
+    );
+
+    addIngredientBtn.addEventListener("click", () => {
+      const ingredientInput = document.createElement("div");
+      ingredientInput.class = "ingredient-input";
+
+      ingredientInput.innerHTML = `
+        <div class="grid grid-cols-4 gap-4 items-center">
+          <input type="text" placeholder="재료 제목" class="border-neutral-300 border rounded-md px-3 py-2" />
+          <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2" placeholder="재료명" />
+          <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2" placeholder="용량 (예: 10g)" />
+        </div>
+      `;
+
+      // 재료 입력 추가 (최대 50개)
+      if (ingredientsContainer.children.length < 50) {
+        ingredientsContainer.appendChild(ingredientInput);
+      } else {
+        alert("재료는 최대 50개까지 추가할 수 있습니다.");
+      }
+    });
+
+    // 모달 버튼 클릭 시 모달 열기
+    const recipeModal = document.querySelector("#recipeModal");
+
+    if (recipeModal) {
+      const modalBtn = document.querySelector('[data-bs-toggle="modal"]');
+      modalBtn.addEventListener("click", function () {
+        recipeModal.show();
+      });
+    }
+  });
+</script>
+<script>
+  let stepCount = 1;
+  let imageList = [];
+
+  function addStep() {
+    if (stepCount >= 20) return alert("Maximum of 20 steps allowed");
+
+    stepCount++;
+    const stepsContainer = document.getElementById("steps");
+    const newStep = document.createElement("div");
+    newStep.class = "step";
+    newStep.id = `step${stepCount}`;
+    newStep.innerHTML = `
+              <label>Step ${stepCount}</label>
+              <input type="text" placeholder="Describe step ${stepCount}" required />
+              <button class="add-btn" onclick="addStep()">+</button>
+          `;
+    stepsContainer.appendChild(newStep);
+  }
+
+  function uploadImages(event) {
+    const files = event.target.files;
+
+    if (files.length + imageList.length > 4) {
+      alert("You can upload a maximum of 4 images.");
+      return;
+    }
+
+    for (let file of files) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imageList.push(e.target.result);
+        renderImages();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function renderImages() {
+    const preview = document.getElementById("image-preview");
+    const carousel = document.getElementById("carousel");
+
+    preview.innerHTML = "";
+    carousel.innerHTML = "";
+
+    imageList.forEach((src, index) => {
+      const img = document.createElement("img");
+      img.src = src;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.class = "delete-btn";
+      deleteBtn.innerText = "x";
+      deleteBtn.onclick = () => deleteImage(index);
+
+      const container = document.createElement("div");
+      container.appendChild(img);
+      container.appendChild(deleteBtn);
+
+      preview.appendChild(container);
+
+      const carouselImg = document.createElement("img");
+      carouselImg.src = src;
+      carousel.appendChild(carouselImg);
+    });
+  }
+
+  function deleteImage(index) {
+    imageList.splice(index, 1);
+    renderImages();
+  }
+
+  function submitForm() {
+    const steps = document.querySelectorAll("#steps .step input");
+    const alertBox = document.getElementById("alert");
+
+    if (steps.length < 3 || imageList.length < 1) {
+      alertBox.style.display = "block";
+      alertBox.innerText = "At least 3 steps and 1 image are required.";
+      return;
+    }
+
+    alertBox.style.display = "none";
+    alert("Recipe submitted successfully!");
+    // Redirect or reset logic here
+  }
+
+  function cancelForm() {
+    if (confirm("Are you sure you want to cancel?")) {
+      location.reload();
+    }
+  }
+</script>
+
+</html>

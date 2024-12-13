@@ -1,14 +1,29 @@
 package com.example.mat.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.shin.AuthMemberDto;
+// import com.example.mat.dto.shin.AuthMemberDto;
+import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.service.MemberService;
+
+import jakarta.validation.Valid;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -16,8 +31,123 @@ import com.example.mat.dto.PageRequestDto;
 @Controller
 public class MemberController {
 
+    private final MemberService memberService;
+
     @GetMapping("/login")
     public void getMethodName(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
         log.info("로그인 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/profile")
+    public void getProfile(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("프로필 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/edit")
+    public void getEdit(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("프로필 수정 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit/nickname")
+    public String postUpdateName(MemberDto memberDto, BindingResult result) {
+        log.info("닉네임 수정");
+
+        Authentication authentication = getAutentication();
+        // MemberDto 에 들어있는 값 접근 시
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+        memberDto.setUserid((authMemberDto.getUsername()));
+
+        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+            return "/member/edit";
+        }
+        memberService.nickUpdate(memberDto);
+
+        // SecurityContext 에 보관된 값 업데이트
+        authMemberDto.getMemberDto().setNickname(memberDto.getNickname());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("Updated nickname in SecurityContext: {}", authMemberDto.getMemberDto().getNickname());
+        return "redirect:/member/profile";
+
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/personalInformation")
+    public void getDetailmember(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 정보 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/editpi")
+    public void getEditPI(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 정보 수정 폼 요청");
+    }
+
+    // 회원 가입
+    @GetMapping("/register")
+    public void getRegister(MemberDto memberDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원가입 폼 요청");
+    }
+
+    @PostMapping("/register")
+    public String postRegister(@Valid MemberDto memberDto, BindingResult result,
+            boolean check,
+            @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원가입 요청 {}", memberDto);
+
+        if (result.hasErrors()) {
+            return "/member/register";
+        }
+        // 사용자 ID 중복 검사
+        if (memberService.checkDuplicateUserid(memberDto.getUserid())) {
+            result.rejectValue("userid", "error.userid", "이미 사용 중인 아이디입니다.");
+            return "/member/register";
+        }
+
+        // 이메일 중복 검사
+        // if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
+        // result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
+        // return "/member/register";
+        // }
+        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+            return "/member/register";
+        }
+        memberService.register(memberDto);
+
+        return "redirect:/member/login";
+    }
+
+    @GetMapping("/check-duplicate-userid")
+    public ResponseEntity<Boolean> checkDuplicateUserid(@RequestParam String userid) {
+        boolean isDuplicate = memberService.checkDuplicateUserid(userid);
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    // @GetMapping("/check-duplicate-email")
+    // public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String
+    // email) {
+    // boolean isDuplicate = memberService.checkDuplicateEmail(email);
+    // return ResponseEntity.ok(isDuplicate);
+    // }
+
+    @GetMapping("/check-duplicate-nickname")
+    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
+        boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    // 개발자용 - Authentication 확인용
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    @GetMapping("/auth")
+    public Authentication getAutentication() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        return authentication;
+
     }
 }
