@@ -50,6 +50,18 @@ public class MemberController {
         log.info("프로필 수정 폼 요청");
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/personalInformation")
+    public void getDetailmember(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 정보 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/editpi")
+    public void getEditPI(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 정보 수정 폼 요청");
+    }
+
     // 회원 가입
     @GetMapping("/register")
     public void getRegister(MemberDto memberDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
@@ -72,10 +84,10 @@ public class MemberController {
         }
 
         // 이메일 중복 검사
-        if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
-            result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
-            return "/member/register";
-        }
+        // if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
+        // result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
+        // return "/member/register";
+        // }
         if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
             result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
             return "/member/register";
@@ -91,11 +103,12 @@ public class MemberController {
         return ResponseEntity.ok(isDuplicate);
     }
 
-    @GetMapping("/check-duplicate-email")
-    public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String email) {
-        boolean isDuplicate = memberService.checkDuplicateEmail(email);
-        return ResponseEntity.ok(isDuplicate);
-    }
+    // @GetMapping("/check-duplicate-email")
+    // public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String
+    // email) {
+    // boolean isDuplicate = memberService.checkDuplicateEmail(email);
+    // return ResponseEntity.ok(isDuplicate);
+    // }
 
     @GetMapping("/check-duplicate-nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
