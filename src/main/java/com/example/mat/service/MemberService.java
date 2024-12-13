@@ -5,18 +5,23 @@ import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.entity.constant.MemberRole;
 import com.example.mat.entity.shin.Member;
 
-public interface MemberSerivce {
+public interface MemberService {
     // 닉네임 수정
-    void nickNameUpdate(MemberDto memberDto);
+    void nickUpdate(MemberDto memberDto);
 
     // 비밀번호 수정
     void passwordUpdate(PasswordDto passwordDto) throws Exception;
-
     // 회원탈퇴
-    void leave(PasswordDto passwordDto) throws Exception;
 
     // 회원가입
     String register(MemberDto memberDto);
+
+    // 이메일, 아이디, 닉네임 증복검사
+    boolean checkDuplicateUserid(String userid);
+
+    // boolean checkDuplicateEmail(String email);
+
+    boolean checkDuplicateNickname(String nickname);
 
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
@@ -26,7 +31,9 @@ public interface MemberSerivce {
                 .username(memberDto.getUsername())
                 .nickname(memberDto.getNickname())
                 .password(memberDto.getPassword())
-                .address(memberDto.getAddress())
+                .email(memberDto.getEmail())
+                .addr(memberDto.getAddr())
+                .detailAddr(memberDto.getDetailAddr())
                 .role(MemberRole.MEMBER)
                 .build();
     }
@@ -38,7 +45,9 @@ public interface MemberSerivce {
                 .userid(member.getUserid())
                 .nickname(member.getNickname())
                 .password(member.getPassword())
-                .address(member.getAddress())
+                .email(member.getEmail())
+                .addr(member.getAddr())
+                .detailAddr(member.getDetailAddr())
                 .role(MemberRole.MEMBER)
                 .build();
     }
