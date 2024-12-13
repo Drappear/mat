@@ -17,7 +17,7 @@
             <button class="photo-upload-btn">+</button>
           </div>
           <div class="profile-info">
-            <form action="" method="post">
+            <form th:action="@{/member/edit/nickname}" method="post">
               <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input
@@ -32,7 +32,7 @@
                 <textarea id="bio" name="bio" rows="3">Value</textarea>
               </div>
               <div class="form-actions">
-                <a class="submit-btn" th:href="@{/member/profile}"> 저장 </a>
+                <button class="submit-btn">저장</button>
               </div>
             </form>
           </div>
