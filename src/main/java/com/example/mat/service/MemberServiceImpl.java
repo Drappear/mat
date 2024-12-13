@@ -87,8 +87,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     @Override
     public void nickUpdate(MemberDto memberDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'nickUpdate'");
+        memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
     }
 
     @Override

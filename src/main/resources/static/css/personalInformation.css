@@ -75,3 +75,6 @@ body {
 .save-button:hover {
   background-color: #7ac142;
 }
+a.save-button {
+  text-decoration: none;
+}

@@ -24,7 +24,7 @@
                   type="text"
                   id="nickname"
                   name="nickname"
-                  value="Value"
+                  th:value="${#authentication.principal.memberDto.nickname}"
                 />
               </div>
               <div class="form-group">
