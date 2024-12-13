@@ -12,7 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,15 +36,23 @@ public class Member extends BaseEntity {
     private Long mid;
 
     @Column(nullable = false)
-    private String username;
-    @Column(nullable = false)
     private String userid;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String username;
+
     @Column(nullable = false)
     private String nickname;
-    private String address;
+
+    @Column(nullable = false)
+    private String email;
+
+    private String addr;
+
+    private String detailAddr;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;

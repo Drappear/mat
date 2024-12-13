@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up Page</title>
+
+    <!-- External CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+    />
+
+    <!-- Internal CSS -->
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+
+    <script>
+function checkDuplicateUserid() {
+    const userid = document.getElementById("userid").value;
+
+    // 입력값이 없으면 메시지 표시
+    if (userid.trim() === "") {
+        const message = document.getElementById("userid-message");
+        message.textContent = "아이디를 입력해주세요.";
+        message.style.color = "red";
+        message.style.display = "block";  // 경고문 표시
+        return;
+    }
+
+    fetch(`/member/check-duplicate-userid?userid=${userid}`)
+        .then((response) => response.json())
+        .then((isDuplicate) => {
+            const message = document.getElementById("userid-message");
+            if (isDuplicate) {
+                message.textContent = "이미 사용 중인 아이디입니다.";
+                message.style.color = "red";
+                message.style.display = "block";  // 경고문 표시
+            } else {
+                message.textContent = "사용 가능한 아이디입니다.";
+                message.style.color = "green";
+                message.style.display = "block";  // 경고문 표시
+            }
+        })
+        .catch((error) => console.error("Error:", error));
+}
+
+function checkDuplicateNickname() {
+    const nickname = document.getElementById("nickname").value;
+
+    // 입력값이 없으면 메시지 표시
+    if (nickname.trim() === "") {
+        const message = document.getElementById("nickname-message");
+        message.textContent = "닉네임을 입력해주세요.";
+        message.style.color = "red";
+        message.style.display = "block";  // 경고문 표시
+        return;
+    }
+
+    fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
+        .then((response) => response.json())
+        .then((isDuplicate) => {
+            const message = document.getElementById("nickname-message");
+            if (isDuplicate) {
+                message.textContent = "이미 사용 중인 닉네임입니다.";
+                message.style.color = "red";
+                message.style.display = "block";  // 경고문 표시
+            } else {
+                message.textContent = "사용 가능한 닉네임입니다.";
+                message.style.color = "green";
+                message.style.display = "block";  // 경고문 표시
+            }
+        })
+        .catch((error) => console.error("Error:", error));
+}
+  </script>
+  </head>
+  <body>
+    <div class="login-page">
+      <div class="login-content login-content-signup">
+        <div>
+          <h2>Sign Up</h2>
+          <form
+            th:action="@{/member/register}"
+            class="wrapper-box"
+            th:object="${memberDto}"
+            method="post"
+          ><div class="input-group">
+            <input
+                type="text"
+                class="form-control form-control-id"
+                placeholder="Id"
+                th:value="${memberDto.userid}"
+                th:field="*{userid}"
+                name="userid"
+                id="userid"
+            />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
+            </span>
+        </div>
+        <div
+            
+            th:errors="*{userid}"
+            class="text-danger"
+            id="userid-message"
+        ></div> <!-- 여기에 중복된 아이디 경고 메시지 표시 -->
+        
+        <!-- 닉네임 중복 확인 -->
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control form-control-nickname"
+                placeholder="Nickname"
+                th:value="${memberDto.nickname}"
+                th:field="*{nickname}"
+                name="nickname"
+                id="nickname"
+            />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" onclick="checkDuplicateNickname()">중복 확인</button>
+            </span>
+        </div>
+        <div
+            
+            th:errors="*{nickname}"
+            class="text-danger"
+            id="nickname-message"
+        ></div> <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
+            <input
+              type="password"
+              th:field="*{password}"
+              class="form-control form-control-password"
+              placeholder="Password"
+              th:value="${memberDto.password}"
+              name="password"
+              
+            />
+            <div
+              th:if="${#fields.hasErrors('password')}"
+              th:errors="*{password}"
+              class="text-danger"
+            ></div>
+          
+            <input
+              type="text"
+              class="form-control form-control-username"
+              placeholder="Username"
+              th:value="${memberDto.username}"
+              th:field="*{username}"
+              name="username"
+            />
+            <div
+              th:if="${#fields.hasErrors('username')}"
+              th:errors="*{username}"
+              class="text-danger"
+            ></div>
+
+   
+            <input
+              type="email"
+              th:field="*{email}"
+              class="form-control form-control-emailname"
+              placeholder="Email"
+              th:value="${memberDto.email}"
+              name="email"
+              id="email"
+            />
+            <div
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
+              class="text-danger"
+            
+            ></div>
+
+            <input
+              type="text"
+              class="form-control form-control-addr"
+              placeholder="Address (선택)"
+              th:value="${memberDto.addr}"
+              th:field="*{addr}"
+              name="addr"
+            />
+            <div
+              th:if="${#fields.hasErrors('addr')}"
+              th:errors="*{addr}"
+              class="text-danger"
+            ></div>
+            <input
+              type="text"
+              class="form-control form-control-detailAddr"
+              placeholder="DetailAddress (선택)"
+              th:value="${memberDto.detailAddr}"
+              th:field="*{detailAddr}"
+              name="detailAddr"
+            />
+            <div
+              th:if="${#fields.hasErrors('detailAddr')}"
+              th:errors="*{detailAddr}"
+              class="text-danger"
+            ></div>
+            <button type="submit" class="btn btn-submit btn-default pull-right">
+              Sign up
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="login-switcher">
+        <div class="login-switcher-signin">
+          <h3>Have an account?</h3>
+          <button >
+            <a th:href="@{/member/login}">Sign in</a>
+          </button>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
+  </body>
+</html>
