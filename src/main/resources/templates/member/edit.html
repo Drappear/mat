@@ -5,6 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/profile.css}" />
+    <script>
+      function checkDuplicateNickname() {
+        const nicknameInput = document.getElementById("nickname");
+        const nickname = nicknameInput.value.trim();
+        const currentNickname = nicknameInput.getAttribute(
+          "data-current-nickname"
+        );
+        const message = document.getElementById("nickname-message");
+
+        // 닉네임 비교 결과를 switch문으로 처리
+        switch (true) {
+          // 현재 닉네임과 같으면
+          case nickname === currentNickname:
+            message.textContent = "현재 사용 중인 닉네임입니다.";
+            message.style.color = "green";
+            return;
+
+          // 닉네임이 비어있으면
+          case nickname === "":
+            message.textContent = "닉네임을 입력해주세요.";
+            message.style.color = "red";
+            return;
+
+          // 중복 확인 API 호출
+          default:
+            fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
+              .then((response) => response.json())
+              .then((isDuplicate) => {
+                // 중복된 닉네임일 경우
+                if (isDuplicate) {
+                  message.textContent = "이미 사용 중인 닉네임입니다.";
+                  message.style.color = "red";
+                } else {
+                  message.textContent = "사용 가능한 닉네임입니다.";
+                  message.style.color = "green";
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                message.textContent = "중복 확인 중 오류가 발생했습니다.";
+                message.style.color = "red";
+              });
+        }
+      }
+    </script>
   </head>
   <body>
     <div th:replace="~{/fragments/profileheader::profileheader}"></div>
@@ -25,8 +70,20 @@
                   id="nickname"
                   name="nickname"
                   th:value="${#authentication.principal.memberDto.nickname}"
+                  data-current-nickname="${#authentication.principal.memberDto.nickname}"
                 />
-
+                <span class="input-group-btn">
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    onclick="checkDuplicateNickname()"
+                  >
+                    중복 확인
+                  </button>
+                </span>
+              </div>
+              <div class="text-danger" id="nickname-message"></div>
+              <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
 
               <div class="form-group">
                 <label for="bio">소개</label>
