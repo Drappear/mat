@@ -53,23 +53,23 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/edit/nickname")
     public String postUpdateName(MemberDto memberDto, BindingResult result) {
-        log.info("닉네임 수정");
+        log.info("닉네임 수정 {}", memberDto);
 
         Authentication authentication = getAutentication();
         // MemberDto 에 들어있는 값 접근 시
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-        memberDto.setUserid((authMemberDto.getUsername()));
+        memberDto.setUserid((authMemberDto.getMemberDto().getUserid()));
 
-        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
-            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
-            return "/member/edit";
-        }
+        // if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+        // result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+        // return "/member/edit";
+        // }
         memberService.nickUpdate(memberDto);
 
         // SecurityContext 에 보관된 값 업데이트
         authMemberDto.getMemberDto().setNickname(memberDto.getNickname());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("Updated nickname in SecurityContext: {}", authMemberDto.getMemberDto().getNickname());
+
         return "redirect:/member/profile";
 
     }
@@ -84,6 +84,13 @@ public class MemberController {
     @GetMapping("/editpi")
     public void getEditPI(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
         log.info("회원 정보 수정 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/editpi")
+    public void postEditPI(MemberDto memberDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 정보 수정");
+
     }
 
     // 회원 가입
