@@ -1,0 +1,349 @@
+/* ------------------------------------------------------------ */
+body {
+  margin-top: 20px;
+}
+.blog-content {
+  padding-top: 25px; /* 예: 상단 간격을 5px 줄이기 */
+  padding-bottom: 25px; /* 예: 하단 간격을 5px 줄이기 */
+}
+.blog-gray-bg {
+  background-color: #f5f5f5;
+}
+/* Blog --------------------- */
+.blog-post-card {
+  box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
+  border-radius: 5px;
+  overflow: hidden;
+  background: #ffffff;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.blog-post-card .blog-img {
+  position: relative;
+}
+.blog-post-card .blog-img .date {
+  position: absolute;
+  background: #fc5356;
+  color: #ffffff;
+  padding: 8px 15px;
+  left: 10px;
+  top: 10px;
+  border-radius: 4px;
+}
+.blog-post-card .blog-img .date span {
+  font-size: 22px;
+  display: block;
+  line-height: 22px;
+  font-weight: 700;
+}
+.blog-post-card .blog-img .date label {
+  font-size: 14px;
+  margin: 0;
+}
+.blog-post-card .blog-info {
+  padding: 20px;
+}
+.blog-post-card .blog-info h5 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+.blog-post-card .blog-info h5 a {
+  color: #20247b;
+}
+.blog-post-card .blog-info p {
+  margin: 0;
+}
+.blog-post-card .blog-info .btn-bar {
+  margin-top: 20px;
+}
+/* Article --------------------- */
+.blog-article {
+  box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
+  border-radius: 5px;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 15px;
+  padding-bottom: 5px;
+  margin: 15px 0 30px;
+  margin-bottom: 0%;
+}
+.blog-article-header {
+  padding: 15px 0 20px;
+}
+.blog-article-header h6 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.blog-article-header h6 a {
+  text-transform: uppercase;
+  color: #fc5356;
+  border-bottom: 1px solid #fc5356;
+}
+.blog-article-header h2 {
+  color: #20247b;
+  font-weight: 600;
+}
+.blog-article-header .media {
+  padding-top: 15px;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 20px;
+}
+.blog-article-header .media .avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.blog-article-header .media .media-body {
+  padding-left: 8px;
+}
+.blog-article-header .media .media-body label {
+  font-weight: 600;
+  color: #fc5356;
+  margin: 0;
+}
+.blog-article-header .media .media-body span {
+  display: block;
+  font-size: 12px;
+}
+.blog-article-body {
+  color: #20247b;
+}
+img {
+  max-width: 100%;
+}
+
+.article-img img {
+  display: block;
+  margin: 0 auto; /* 그림 가운데 정렬 */
+  margin-bottom: 15px;
+}
+.align-center {
+  display: flex;
+  justify-content: center;
+}
+.custom-col {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+/* 댓글 */
+.article-reply-content {
+  background: #eee;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #ffffff;
+}
+a {
+  color: #82b440;
+  text-decoration: none;
+}
+.blog-comment::before,
+.blog-comment::after,
+.blog-comment-form::before,
+.blog-comment-form::after {
+  content: "";
+  display: table;
+  clear: both;
+  padding-bottom: 0%;
+}
+
+.blog-comment {
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+.blog-comment ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.blog-comment img {
+  opacity: 1;
+  filter: Alpha(opacity=100);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.blog-comment img.avatar {
+  position: relative;
+  float: left;
+  margin-left: 0;
+  margin-top: 0;
+  width: 65px;
+  height: 65px;
+}
+
+.blog-comment .post-comments {
+  border: 1px solid #eee;
+  margin-bottom: 5px; /* 예: 댓글 목록 간격을 5px로 좁히기 */
+  margin-left: 85px;
+  margin-right: 0px;
+  padding: 10px 20px;
+  position: relative;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  background: #fff;
+  color: #6b6e80;
+  position: relative;
+}
+
+.blog-comment .meta {
+  font-size: 13px;
+  color: #aaaaaa;
+  padding-bottom: 8px;
+  margin-bottom: 10px !important;
+  border-bottom: 1px solid #eee;
+}
+
+.blog-comment ul.comments ul {
+  list-style-type: none;
+  padding: 0;
+  margin-left: 85px;
+}
+
+.blog-comment-form {
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 40px;
+  margin: 5px 0; /* 예: 상하 간격을 5px로 좁히기 */
+}
+
+.blog-comment h3,
+.blog-comment-form h3 {
+  margin-bottom: 5px; /* 예: 상하 간격을 5px로 좁히기 */
+  font-size: 26px;
+  line-height: 30px;
+  font-weight: 800;
+}
+
+/* 댓글 입력 창 */
+/* 댓글 작성 폼 스타일 */
+.blog-comment-form {
+  background-color: #f9f9f9;
+  padding: 30px;
+  margin: 5px 0; /* 예: 상하 간격을 5px로 좁히기 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blog-comment-form h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #20247b;
+}
+
+.blog-comment-form .form-group {
+  margin-bottom: 5px; /* 예: 하단 간격을 5px로 좁히기 */
+}
+
+.blog-comment-form label {
+  font-size: 16px;
+  color: #333;
+}
+
+.blog-comment-form textarea {
+  min-height: 100px;
+  max-height: 100px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: #333;
+  resize: vertical;
+}
+
+.blog-comment-form textarea:focus {
+  outline: none;
+  border-color: #fc5356;
+}
+
+.blog-comment-form button {
+  background-color: #426b1f; /* 초록색 */
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block; /* 버튼을 블록 요소로 만들어 */
+  margin-top: 15px;
+  margin-left: auto; /* 왼쪽 여백을 자동으로 설정 */
+  margin-right: 0; /* 오른쪽 여백을 0으로 설정하여 오른쪽 끝으로 정렬 */
+}
+
+.blog-comment-form button:hover {
+  background-color: #315016;
+}
+
+/* 수정 버튼 - 파란색 */
+.modify-btn {
+  background-color: #1c5cd4; /* 파란색 */
+  color: #fff;
+  border: 1px solid #1c5cd4;
+  margin-top: 10px;
+  margin-right: 5px;
+}
+
+.modify-btn:hover {
+  background-color: #1c4aa0; /* 파란색의 어두운 버전 */
+  border-color: #1c4aa0;
+}
+
+/* 삭제 버튼 - 빨간색 */
+.delete-btn {
+  background-color: #dc3545; /* 빨간색 */
+  color: #fff;
+  border: 1px solid #dc3545;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333; /* 빨간색의 어두운 버전 */
+  border-color: #bd2130;
+}
+
+/* 댓글 목록 내 Modify와 Delete 버튼 색상 설정 */
+.blog-comment .post-comments .meta i a.modify-link {
+  color: #007bff; /* 파란색 */
+}
+
+.blog-comment .post-comments .meta i a.modify-link:hover {
+  color: #0056b3; /* 파란색의 어두운 버전 */
+}
+
+.blog-comment .post-comments .meta i a.delete-link {
+  color: #dc3545; /* 빨간색 */
+}
+
+.blog-comment .post-comments .meta i a.delete-link:hover {
+  color: #c82333; /* 빨간색의 어두운 버전 */
+}
+
+/* 댓글의 reply가 대댓글에 있을 때만 표시되도록 */
+.blog-comment ul.comments li .meta i a.reply-link {
+  display: block;
+  color: #426b1f; /* 초록색 */
+}
+
+.blog-comment ul.comments li .meta i a.reply-link:hover {
+  color: #315016; /* 초록색의 어두운 버전 */
+}
