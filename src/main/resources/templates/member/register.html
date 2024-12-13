@@ -34,11 +34,11 @@ function checkDuplicateUserid() {
             if (isDuplicate) {
                 message.textContent = "이미 사용 중인 아이디입니다.";
                 message.style.color = "red";
-                message.style.display = "block";  // 경고문 표시
+
             } else {
                 message.textContent = "사용 가능한 아이디입니다.";
                 message.style.color = "green";
-                message.style.display = "block";  // 경고문 표시
+  
             }
         })
         .catch((error) => console.error("Error:", error));
@@ -52,7 +52,7 @@ function checkDuplicateNickname() {
         const message = document.getElementById("nickname-message");
         message.textContent = "닉네임을 입력해주세요.";
         message.style.color = "red";
-        message.style.display = "block";  // 경고문 표시
+
         return;
     }
 
@@ -63,11 +63,11 @@ function checkDuplicateNickname() {
             if (isDuplicate) {
                 message.textContent = "이미 사용 중인 닉네임입니다.";
                 message.style.color = "red";
-                message.style.display = "block";  // 경고문 표시
+        
             } else {
                 message.textContent = "사용 가능한 닉네임입니다.";
                 message.style.color = "green";
-                message.style.display = "block";  // 경고문 표시
+           
             }
         })
         .catch((error) => console.error("Error:", error));
@@ -94,9 +94,11 @@ function checkDuplicateNickname() {
                 name="userid"
                 id="userid"
             />
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
-            </span>
+         
+              <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
+              </span>
+         
         </div>
         <div
             
