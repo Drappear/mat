@@ -1,3 +1,13 @@
+.diner-main-img-and-map {
+  white-space: nowrap;
+  display: flex;
+}
+.diner-main-img {
+  display: inline-block;
+}
+.diner-map {
+  display: inline-block;
+}
 .diner-overview-section {
   border: 1px solid;
   padding: 5px;
@@ -17,12 +27,24 @@
   max-height: 220px;
 }
 
-.review-overview {
-  display: inline;
+.review-two-column-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style-type: none;
+}
+.review-list-item {
+  border: 1px solid;
+  flex-shrink: 0;
+  width: 584px;
+  padding: 10px 0 10px 25px;
 }
 .review-reviewer-img {
-  display: inline;
+  float: left;
 }
-.review-table {
-  display: inline;
+.review-info {
+  display: block;
+}
+.review-score {
+  display: block;
 }

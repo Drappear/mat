@@ -5,10 +5,12 @@
     <link rel="stylesheet" th:href="@{/css/diner/read.css}" />
   </th:block>
   <div layout:fragment="content">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-9"><img src="https://placehold.co/1080x480" alt="" /></div>
-        <div class="col-lg-3">
+    <div class="container diner-view">
+      <div class="diner-main-img-and-map">
+        <div class="col-lg-9 diner-main-img">
+          <img src="https://placehold.co/1080x480" alt="" />
+        </div>
+        <div class="col-lg-3 diner-map">
           <div class="row"><img src="https://placehold.co/320x320" alt="" /></div>
           <div class="row mt-3">
             <h5>식당 주소</h5>
@@ -27,7 +29,7 @@
             <div class="col">지역명</div>
             <div class="col">카테고리</div>
           </div>
-          <div class="row">별점영역</div>
+          <div class="row">영업시간</div>
         </div>
 
         <div class="col-lg-6"><h3>소개글</h3></div>
@@ -36,20 +38,19 @@
     </div>
     <div class="container">
       <div class="row mt-3 review-image-section">
-        <div class="col"><button class="btn btn-success">리뷰쓰기</button></div>
-        <div class="col-lg-10">
-          <img src="https://placehold.co/200x200" alt="" />
-          <img src="https://placehold.co/200x200" alt="" />
-          <img src="https://placehold.co/200x200" alt="" />
-          <img src="https://placehold.co/200x200" alt="" />
-          <span>더보기</span>
+        <div class="col">
+          <div>종합 별점</div>
+          <div>맛</div>
+          <div>가격</div>
+          <div>서비스</div>
         </div>
+        <div class="col"><button class="btn btn-success">리뷰쓰기</button></div>
       </div>
     </div>
     <div class="container mt-3">
-      <div class="row p-3">
-        <div class="col-lg-6">
-          <div class="row review-overview">
+      <div class="row review-two-column">
+        <ul class="review-two-column-list">
+          <li class="review-list-item">
             <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
             <table class="review-table">
               <tr>
@@ -63,25 +64,83 @@
                 <td>서비스</td>
               </tr>
             </table>
-          </div>
-          <div class="row">review text</div>
-          <div class="row">
-            <img src="https://placehold.co/70x70" alt="" />
-            <img src="https://placehold.co/70x70" alt="" />
-            <img src="https://placehold.co/70x70" alt="" />
-            <img src="https://placehold.co/70x70" alt="" />
-            <img src="https://placehold.co/70x70" alt="" />
-          </div>
-        </div>
-        <div class="col-lg-6"><h1>리뷰 영역</h1></div>
-      </div>
-      <div class="row p-3">
-        <div class="col-lg-6"><h1>리뷰 영역</h1></div>
-        <div class="col-lg-6"><h1>리뷰 영역</h1></div>
-      </div>
-      <div class="row p-3">
-        <div class="col-lg-6"><h1>리뷰 영역</h1></div>
-        <div class="col-lg-6"><h3>리뷰 더보기</h3></div>
+            <div class="row">review text</div>
+            <div class="row">
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+            </div>
+          </li>
+          <li class="review-list-item">
+            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
+            <div class="review-info">
+              <span>작성자</span>
+              <span>작성일</span>
+            </div>
+            <div class="review-score">
+              <span>총점</span>
+              <span>맛</span>
+              <span>가격</span>
+              <span>서비스</span>
+            </div>
+            <div class="row">review text</div>
+            <div class="row">
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+            </div>
+          </li>
+          <li class="review-list-item">
+            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
+            <table class="review-table">
+              <tr>
+                <td>작성자</td>
+                <td>작성일</td>
+              </tr>
+              <tr>
+                <td>총점</td>
+                <td>맛</td>
+                <td>가격</td>
+                <td>서비스</td>
+              </tr>
+            </table>
+            <div class="row">review text</div>
+            <div class="row">
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+            </div>
+          </li>
+          <li class="review-list-item">
+            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
+            <table class="review-table">
+              <tr>
+                <td>작성자</td>
+                <td>작성일</td>
+              </tr>
+              <tr>
+                <td>총점</td>
+                <td>맛</td>
+                <td>가격</td>
+                <td>서비스</td>
+              </tr>
+            </table>
+            <div class="row">review text</div>
+            <div class="row">
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+              <img src="https://placehold.co/70x70" alt="" />
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
