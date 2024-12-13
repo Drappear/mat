@@ -59,11 +59,19 @@ public class MemberController {
         // MemberDto 에 들어있는 값 접근 시
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
         memberDto.setUserid((authMemberDto.getMemberDto().getUserid()));
+        String currentNickname = authMemberDto.getMemberDto().getNickname();
 
-        // if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
-        // result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
-        // return "/member/edit";
-        // }
+        if (currentNickname.equals(memberDto.getNickname())) {
+            log.info("입력된 닉네임이 현재 닉네임과 동일합니다.");
+            return "redirect:/member/profile";
+        }
+        if (result.hasErrors()) {
+            return "/member/edit";
+        }
+        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+            return "/member/edit";
+        }
         memberService.nickUpdate(memberDto);
 
         // SecurityContext 에 보관된 값 업데이트
@@ -108,25 +116,27 @@ public class MemberController {
         if (result.hasErrors()) {
             return "/member/register";
         }
-        // 사용자 ID 중복 검사
-        if (memberService.checkDuplicateUserid(memberDto.getUserid())) {
-            result.rejectValue("userid", "error.userid", "이미 사용 중인 아이디입니다.");
-            return "/member/register";
-        }
 
-        // 이메일 중복 검사
-        // if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
-        // result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
-        // return "/member/register";
-        // }
-        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
-            result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
-            return "/member/register";
-        }
         memberService.register(memberDto);
 
         return "redirect:/member/login";
     }
+
+    // 사용자 ID 중복 검사
+    // if (memberService.checkDuplicateUserid(memberDto.getUserid())) {
+    // result.rejectValue("userid", "error.userid", "이미 사용 중인 아이디입니다.");
+    // return "/member/register";
+    // }
+    // if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+    // result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
+    // return "/member/edit";
+    // }
+
+    // 이메일 중복 검사
+    // if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
+    // result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
+    // return "/member/register";
+    // }
 
     @GetMapping("/check-duplicate-userid")
     public ResponseEntity<Boolean> checkDuplicateUserid(@RequestParam String userid) {
