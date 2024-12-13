@@ -5,6 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 
+import lombok.Data;
+
+@Data
 public class ImageDto {
 
     private Long inum;

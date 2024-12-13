@@ -1,9 +1,12 @@
 package com.example.mat.repository;
 
+import java.util.stream.LongStream;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.mat.entity.market.Product;
+import com.example.mat.entity.market.ProductCategory;
 
 @SpringBootTest
 public class ProductRepositoryTest {
@@ -17,9 +20,15 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
-    public void testInsertProduct() {
+    @Test
+    public void testInsertProductCategory() {
 
-        Product product = Product.builder().build();
+        LongStream.rangeClosed(1, 10).forEach(i -> {
+            ProductCategory productCategory = ProductCategory.builder()
+                    .cateid(i)
+                    .build();
+            productCategoryRepository.save(productCategory);
+        });
 
     }
 }
