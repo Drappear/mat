@@ -7,9 +7,9 @@
   background: #fff;
 }
 .login-page .login-content {
-  width: 420px;
-  padding: 40px;
-  height: 500px;
+  width: 480px; /* 기존 420px에서 확장 */
+  padding: 50px; /* 기존 40px에서 여백 증가 */
+  height: 800px; /* 기존 500px에서 확장 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -22,6 +22,7 @@
   transition: all 0.2s ease-out;
   transition-delay: 0.2s;
 }
+
 .login-page .login-content.login-content-signin.ng-hide:not(.ng-hide-animate) {
   transition-delay: 0s;
   display: block !important;
@@ -133,6 +134,7 @@
   height: 400px;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.03);
 }
+
 .login-page .login-switcher > div {
   width: 40%;
   margin-top: 125px;
@@ -178,4 +180,24 @@
   display: block !important;
   opacity: 0;
   transform: translateY(10px);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  max-width: 290px;
+}
+
+.input-group input.form-control {
+  flex: 1; /* 입력 필드가 가능한 넓게 확장 */
+  border-radius: 4px 0 0 4px; /* 버튼과 자연스럽게 연결 */
+  max-width: 100%;
+}
+
+.input-group-btn button {
+  border-radius: 0 4px 4px 0; /* 오른쪽 모서리 둥글게 */
+  height: 100%; /* 입력 필드 높이와 동일하게 */
+  padding: 0 15px; /* 버튼 안 여백 */
+  white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
 }
