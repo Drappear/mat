@@ -85,6 +85,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    @Transactional
     @Override
     public void nickUpdate(MemberDto memberDto) {
         memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
