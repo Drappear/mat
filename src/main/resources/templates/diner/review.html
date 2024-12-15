@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/layouts/layout}">
+  <!-- 페이지 별 css -->
+  <th:block layout:fragment="css"> </th:block>
+  <div layout:fragment="content">
+    <section class="diner-register">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h4>식당 등록</h4>
+            <div>
+              <h5>평가하기</h5>
+              <form action="">
+                <h6>맛</h6>
+                <div class="starrr">
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                </div>
+                <h6>가격</h6>
+                <div class="starrr">
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                </div>
+                <h6>서비스</h6>
+                <div class="starrr">
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                </div>
+
+                <div class="mb-3">
+                  <label for="reviewDesc" class="form-label">소개글</label>
+                  <textarea
+                    class="form-control"
+                    id="reviewDesc"
+                    name="reviewDesc"
+                    rows="10"
+                  >
+                  </textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="reviewImage" class="form-label">사진 등록</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="reviewImage"
+                    name="reviewImage"
+                  />
+
+                </div>
+                <button type="submit" class="btn btn-dark">작성 완료</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- 페이지 별 js 영역 -->
+  <th:block layout:fragment="js"> </th:block>
+</html>

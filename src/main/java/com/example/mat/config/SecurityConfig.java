@@ -20,7 +20,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
-                .requestMatchers("/diner/list", "/member/register").permitAll()
+                .requestMatchers("/member/register").permitAll()
+                .requestMatchers("/diner/**").permitAll()
                 .anyRequest().permitAll());
         http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
 
