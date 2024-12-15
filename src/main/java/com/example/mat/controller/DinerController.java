@@ -25,5 +25,13 @@ public class DinerController {
     public void getDinerRead() {
         log.info("get diner read 페이지 요청");
     }
+    @GetMapping("/register")
+    public void getDinerRegister() {
+        log.info("get diner register 페이지 요청");
+    }
+    @GetMapping("/review")
+    public void getDinerReview() {
+        log.info("get diner review 페이지 요청");
+    }
 
 }
