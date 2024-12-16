@@ -31,7 +31,7 @@ public interface RecipeService {
   // 상세조회
   RecipeDto get(Long rno);
 
-  default RecipeDto entityToDto(Recipe recipe, List<RecipeImage> recipeImages, Long reviewCnt, Double en) {
+  default RecipeDto entityToDto(Recipe recipe, List<RecipeImage> recipeImages, Double en) {
 
     // recipe => RecipeDto
     RecipeDto recipeDto = RecipeDto.builder()
