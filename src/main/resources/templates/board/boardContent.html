@@ -17,8 +17,15 @@
                 <!-- post content -->
                 <article class="blog-article">
                   <div class="blog-article-header">
-                    <h6><a href="#">Category</a></h6>
-                    <h2>User123 이 작성한 글 제목</h2>
+                    <h6>
+                      <a href="#"
+                        >Category:
+                        <span th:text="${board.boardCategory}"
+                          >Category</span
+                        ></a
+                      >
+                    </h6>
+                    <h2 th:text="${board.title}">User123 이 작성한 글 제목</h2>
                     <div class="media">
                       <div class="avatar">
                         <img
@@ -28,8 +35,11 @@
                         />
                       </div>
                       <div class="media-body">
-                        <label>User123</label>
-                        <span>2024-12-11 12:40</span>
+                        <label th:text="${board.writer}">User123</label>
+                        <span
+                          th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm')}"
+                          >2024-12-11 12:40</span
+                        >
                       </div>
                       <!-- 작성자만 볼 수 있는 수정 및 삭제 버튼, 오른쪽 정렬 -->
                       <div class="post-buttons">
@@ -42,6 +52,7 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="article-img">
                     <img
                       src="https://www.bootdey.com/image/800x350/87CEFA/000000"
@@ -49,30 +60,26 @@
                       alt=""
                     />
                   </div>
+
                   <div class="blog-article-body">
-                    <p>
+                    <p th:text="${board.content}">
                       국정의 중요한 사항에 관한 대통령의 자문에 응하기 위하여
                       국가원로로 구성되는 국가원로자문회의를 둘 수 있다.
                       언론·출판에 대한 허가나 검열과 집회·결사에 대한 허가는
-                      인정되지 아니한다. 국가는 건전한 소비행위를 계도하고
-                      생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이
-                      정하는 바에 의하여 보장한다. 원장은 국회의 동의를 얻어
-                      대통령이 임명하고, 그 임기는 4년으로 하며, 1차에 한하여
-                      중임할 수 있다. 모든 국민은 고문을 받지 아니하며, 형사상
-                      자기에게 불리한 진술을 강요당하지 아니한다. 국회는 법률에
-                      저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을
-                      제정할 수 있다. 국회는 헌법개정안이 공고된 날로부터 60일
-                      이내에 의결하여야 하며, 국회의 의결은 재적의원 3분의 2
-                      이상의 찬성을 얻어야 한다. 정당의 설립은 자유이며,
-                      복수정당제는 보장된다. 공공필요에 의한 재산권의 수용·사용
-                      또는 제한 및 그에 대한 보상은 법률로써 하되, 정당한 보상을
-                      지급하여야 한다. 각급 선거관리위원회는 선거인명부의 작성등
-                      선거사무와 국민투표사무에 관하여 관계 행정기관에 필요한
-                      지시를 할 수 있다. 국가는 사회보장·사회복지의 증진에
-                      노력할 의무를 진다. 국무총리는 대통령을 보좌하며, 행정에
-                      관하여 대통령의 명을 받아 행정각부를 통할한다. 이 헌법중
-                      공무원의 임기 또는 중임제한에 관한 규정은 이 헌법에 의하여
-                      그 공무원이 최초로 선출 또는 임명된 때로부터 적용한다.
+                      인정되지 아니한다. ...
+                    </p>
+                  </div>
+
+                  <div class="post-info">
+                    <p>
+                      View Count: <span th:text="${board.viewCount}">0</span>
+                    </p>
+                    <p>
+                      Updated on:
+                      <span
+                        th:text="${#dates.format(board.updateDate, 'yyyy-MM-dd HH:mm')}"
+                        >2024-12-11 12:40</span
+                      >
                     </p>
                   </div>
                 </article>
@@ -102,87 +109,7 @@
                       <div class="col-md-12">
                         <div class="blog-comment">
                           <ul class="comments">
-                            <!-- 첫 번째 댓글 -->
-                            <li class="clearfix">
-                              <img
-                                src="https://bootdey.com/img/Content/user_1.jpg"
-                                class="avatar"
-                                alt=""
-                              />
-                              <div class="post-comments">
-                                <p class="meta">
-                                  Dec 18, 2014 <a href="#">JohnDoe</a> says :
-                                  <i class="pull-right">
-                                    <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                    <a href="#" class="modify-link"
-                                      ><small>Modify</small></a
-                                    >
-                                    |
-                                    <a href="#" class="delete-link"
-                                      ><small>Delete</small></a
-                                    >
-                                    |
-                                    <a href="#"><small>Reply</small></a>
-                                  </i>
-                                </p>
-                                <p>안녕하세요.</p>
-                              </div>
-                            </li>
-
-                            <!-- 두 번째 댓글 -->
-                            <li class="clearfix">
-                              <img
-                                src="https://bootdey.com/img/Content/user_2.jpg"
-                                class="avatar"
-                                alt=""
-                              />
-                              <div class="post-comments">
-                                <p class="meta">
-                                  Dec 19, 2014 <a href="#">JaneDoe</a> says :
-                                  <i class="pull-right">
-                                    <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                    <a href="#" class="modify-link"
-                                      ><small>Modify</small></a
-                                    >
-                                    |
-                                    <a href="#" class="delete-link"
-                                      ><small>Delete</small></a
-                                    >
-                                    |
-                                    <a href="#"><small>Reply</small></a>
-                                  </i>
-                                </p>
-                                <p>반가워요. 잘있어요. 다시만나요.</p>
-                              </div>
-
-                              <!-- 대댓글 -->
-                              <ul class="comments">
-                                <li class="clearfix">
-                                  <img
-                                    src="https://bootdey.com/img/Content/user_3.jpg"
-                                    class="avatar"
-                                    alt=""
-                                  />
-                                  <div class="post-comments">
-                                    <p class="meta">
-                                      Dec 20, 2014 <a href="#">JohnDoe</a> says
-                                      :
-                                      <i class="pull-right">
-                                        <!-- 대댓글 수정, 삭제 링크 -->
-                                        <a href="#" class="modify-link"
-                                          ><small>Modify</small></a
-                                        >
-                                        |
-                                        <a href="#" class="delete-link"
-                                          ><small>Delete</small></a
-                                        >
-                                      </i>
-                                    </p>
-                                    <p>가나다라마바사아자차카타파하!!!</p>
-                                  </div>
-                                </li>
-                              </ul>
-                            </li>
+                            <!-- 댓글 항목들 (예시) -->
                           </ul>
                         </div>
                       </div>

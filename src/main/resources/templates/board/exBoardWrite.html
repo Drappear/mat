@@ -12,7 +12,7 @@
         <div class="write-article">
           <!-- 글 작성 폼 -->
           <form
-            action="/board/submit"
+            action="/posts"
             method="POST"
             class="blog-article"
             enctype="multipart/form-data"
@@ -20,7 +20,6 @@
             <div class="write-article-header">
               <p class="new-post">New Post</p>
               <div class="form-group">
-                <!-- 카테고리 선택 -->
                 <select
                   id="category"
                   name="boardCategory"
@@ -33,7 +32,6 @@
                 </select>
               </div>
               <div class="form-group">
-                <!-- 제목 입력 -->
                 <input
                   type="text"
                   id="title"
@@ -45,7 +43,6 @@
               </div>
             </div>
             <div class="article-img">
-              <!-- 이미지 업로드 (필요시) -->
               <input
                 type="file"
                 id="image"
@@ -56,7 +53,6 @@
             </div>
             <div class="write-article-body">
               <div class="form-group">
-                <!-- 내용 입력 -->
                 <textarea
                   id="content"
                   name="content"
@@ -68,7 +64,6 @@
               </div>
             </div>
             <div class="form-group">
-              <!-- 게시물 등록 버튼 -->
               <button type="submit" class="btn btn-primary submit-btn">
                 Post
               </button>
