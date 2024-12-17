@@ -32,6 +32,7 @@ public class MemberRepositoryTest {
                     .password(passwordEncoder.encode("1111"))
                     .username("username" + i)
                     .email("user" + i + "@naver.com")
+                    .tel("01012345678" + i)
                     .addr("경기도 고양시 일산동구 oo 아파트" + i + "번지")
                     .detailAddr(i + "층")
                     .role(MemberRole.MEMBER)

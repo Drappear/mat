@@ -50,6 +50,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String tel;
     private String addr;
 
     private String detailAddr;

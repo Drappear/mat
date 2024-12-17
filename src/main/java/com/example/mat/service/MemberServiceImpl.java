@@ -50,6 +50,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
                 .nickname(member.getNickname())
                 .password(member.getPassword())
                 .email(member.getEmail())
+                .tel(member.getTel())
                 .addr(member.getAddr())
                 .detailAddr(member.getDetailAddr())
                 .role(member.getRole())
@@ -89,6 +90,18 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     @Override
     public void nickUpdate(MemberDto memberDto) {
         memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
+    }
+
+    @Transactional
+    @Override
+    public void personalUpdate(MemberDto memberDto) {
+        // 레포지토리 메서드를 호출하여 모든 정보를 한 번에 업데이트
+        memberRepository.updatePersonalInfo(
+                memberDto.getEmail(),
+                memberDto.getAddr(),
+                memberDto.getDetailAddr(),
+                memberDto.getTel(),
+                memberDto.getUserid());
     }
 
     @Override

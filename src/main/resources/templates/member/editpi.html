@@ -6,6 +6,15 @@
     <title>개인정보 관리</title>
     <link rel="stylesheet" th:href="@{/css/personalInformation.css}" />
   </head>
+  <script>
+    // 폼 제출 이벤트 제어
+    document.querySelector("form").addEventListener("submit", function (event) {
+      if (!isUseridValid || !isNicknameValid) {
+        event.preventDefault(); // 제출 막기
+        alert("아이디와 닉네임 중복 확인을 완료해주세요.");
+      }
+    });
+  </script>
   <body>
     <div class="header">
       <h1>개인정보 관리</h1>
@@ -16,7 +25,7 @@
         <h2
           th:text="${#authentication.principal.memberDto.nickname + '님의 회원 개인정보 수정'}"
         ></h2>
-        <form class="profile-info">
+        <form class="profile-info" th:action="@{/member/editpi}" method="post">
           <div class="form-group">
             <label for="userid">아이디</label>
             <input
@@ -48,20 +57,29 @@
             />
           </div>
           <div class="form-group">
-            <label for="address">주소</label>
+            <label for="tel">전화번호</label>
             <input
               type="text"
-              id="address"
-              name="address"
+              id="tel"
+              name="tel"
+              th:value="${#authentication.principal.memberDto.tel}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="addr">주소</label>
+            <input
+              type="text"
+              id="addr"
+              name="addr"
               th:value="${#authentication.principal.memberDto.addr}"
             />
           </div>
           <div class="form-group">
-            <label for="detail-address">상세주소</label>
+            <label for="detailAddr">상세주소</label>
             <input
               type="text"
-              id="detail-address"
-              name="detail-address"
+              id="detailAddr"
+              name="detailAddr"
               th:value="${#authentication.principal.memberDto.detailAddr}"
             />
           </div>

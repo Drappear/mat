@@ -15,30 +15,30 @@
     <link rel="stylesheet" th:href="@{/css/login.css}" />
 
     <script>
+let isUseridChecked = false;
+let isNicknameChecked = false;
+
 function checkDuplicateUserid() {
     const userid = document.getElementById("userid").value;
+    const message = document.getElementById("userid-message");
 
-    // 입력값이 없으면 메시지 표시
     if (userid.trim() === "") {
-        const message = document.getElementById("userid-message");
         message.textContent = "아이디를 입력해주세요.";
         message.style.color = "red";
-        message.style.display = "block";  // 경고문 표시
         return;
     }
 
     fetch(`/member/check-duplicate-userid?userid=${userid}`)
         .then((response) => response.json())
         .then((isDuplicate) => {
-            const message = document.getElementById("userid-message");
             if (isDuplicate) {
                 message.textContent = "이미 사용 중인 아이디입니다.";
                 message.style.color = "red";
-
+                isUseridChecked = false;
             } else {
                 message.textContent = "사용 가능한 아이디입니다.";
                 message.style.color = "green";
-  
+                isUseridChecked = true;
             }
         })
         .catch((error) => console.error("Error:", error));
@@ -46,32 +46,44 @@ function checkDuplicateUserid() {
 
 function checkDuplicateNickname() {
     const nickname = document.getElementById("nickname").value;
+    const message = document.getElementById("nickname-message");
 
-    // 입력값이 없으면 메시지 표시
     if (nickname.trim() === "") {
-        const message = document.getElementById("nickname-message");
         message.textContent = "닉네임을 입력해주세요.";
         message.style.color = "red";
-
         return;
     }
 
     fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
         .then((response) => response.json())
         .then((isDuplicate) => {
-            const message = document.getElementById("nickname-message");
             if (isDuplicate) {
                 message.textContent = "이미 사용 중인 닉네임입니다.";
                 message.style.color = "red";
-        
+                isNicknameChecked = false;
             } else {
                 message.textContent = "사용 가능한 닉네임입니다.";
                 message.style.color = "green";
-           
+                isNicknameChecked = true;
             }
         })
         .catch((error) => console.error("Error:", error));
 }
+
+function validateForm() {
+    if (!isUseridChecked) {
+        alert("아이디 중복 확인을 해주세요.");
+        return false;
+    }
+
+    if (!isNicknameChecked) {
+        alert("닉네임 중복 확인을 해주세요.");
+        return false;
+    }
+
+    return true; // 폼 제출 허용
+}
+
   </script>
   </head>
   <body>
@@ -84,6 +96,7 @@ function checkDuplicateNickname() {
             class="wrapper-box"
             th:object="${memberDto}"
             method="post"
+            onsubmit="return validateForm();"
           ><div class="input-group">
             <input
                 type="text"
@@ -102,9 +115,10 @@ function checkDuplicateNickname() {
         </div>
         <div
             
-            th:errors="*{userid}"
+           
             class="text-danger"
             id="userid-message"
+            th:text="${#fields.hasErrors('nickname')} ? '' : ''">
         ></div> <!-- 여기에 중복된 아이디 경고 메시지 표시 -->
         
         <!-- 닉네임 중복 확인 -->
@@ -124,7 +138,7 @@ function checkDuplicateNickname() {
         </div>
         <div
             
-            th:errors="*{nickname}"
+          
             class="text-danger"
             id="nickname-message"
         ></div> <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
@@ -170,6 +184,21 @@ function checkDuplicateNickname() {
             <div
             th:if="${#fields.hasErrors('email')}"
             th:errors="*{email}"
+              class="text-danger"
+            
+            ></div>
+            <input
+              type="tel"
+              th:field="*{tel}"
+              class="form-control form-control-tel"
+              placeholder="tel"
+              th:value="${memberDto.tel}"
+              name="tel"
+              id="tel"
+            />
+            <div
+            th:if="${#fields.hasErrors('tel')}"
+            th:errors="*{tel}"
               class="text-danger"
             
             ></div>
