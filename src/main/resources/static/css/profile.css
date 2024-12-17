@@ -122,3 +122,8 @@ body {
   font-size: 16px;
   color: #666;
 }
+.profile-info .form-actions {
+  display: flex;
+
+  padding: 10px; /* 버튼 간의 간격을 설정 (원하는 크기로 조정) */
+}
