@@ -49,6 +49,16 @@
             />
           </div>
           <div class="form-group">
+            <label for="tel">전화번호</label>
+            <input
+              type="text"
+              id="tel"
+              name="tel"
+              th:value="${#authentication.principal.memberDto.tel}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
             <label for="address">주소</label>
             <input
               type="text"

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.mat.entity.shin.Member;
 
+import jakarta.transaction.Transactional;
+
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUserid(String userid);
 
@@ -23,4 +25,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("UPDATE Member m SET m.nickname=:nickname WHERE m.userid=:userid")
     void updateNickname(String nickname, String userid);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Member m SET m.email = :email, m.addr = :addr, m.detailAddr = :detailAddr, m.tel = :tel WHERE m.userid = :userid")
+    void updatePersonalInfo(String email, String addr, String detailAddr, String tel, String userid);
 }

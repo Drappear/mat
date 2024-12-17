@@ -39,6 +39,9 @@ public class MemberDto {
     @Email(message = "유효한 이메일 주소를 입력해주세요.")
     private String email;
 
+    @NotBlank(message = "전화번호는 필수 항목입니다.")
+    private String tel;
+
     private String addr;
 
     private String detailAddr;
