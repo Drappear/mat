@@ -20,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {})
+@ToString(exclude = {"recipe"})
 @Entity
 public class RecipeStep extends BaseEntity {
 

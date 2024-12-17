@@ -42,7 +42,15 @@
                   >
                     전체
                   </button>
+                  <!-- RecipeCategory의 name 반복 출력 -->
                   <button
+                  type="button"
+                  th:each="category : ${categoryList}"
+                  class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                  th:text="${category.name}"
+                > <!-- 카테고리 이름이 여기에 들어감 -->
+              </button>
+                  <!-- <button
                     type="button"
                     class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
                   >
@@ -59,59 +67,7 @@
                     class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
                   >
                     국/탕
-                  </button>
-                  <!-- <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >찌개</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >디저트</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >면/만두</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >밥/죽/떡</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >퓨전</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >김치/젓갈/장류</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >양념/소스/잼</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >양식</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >샐러드</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >스프</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >빵</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >과자</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >차/음료/술</span
-                  > -->
+                  </button> -->
                 </div>
               </nav>
               <div class="bg-white flex justify-between items-center mb-6">
@@ -138,6 +94,7 @@
                   </button>
                 </div>
               </div>
+              <!-- 카드그룹 -->
               <div
                 class="bg-neutral-100 p-4 rounded-lg card-group"
                 name="cardGroup"
