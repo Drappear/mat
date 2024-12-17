@@ -38,16 +38,24 @@ public class RecipeDto {
     private Long viewCount; // 조회수
 
     // TODO: mid -> Member 에서 가져오기
+    private Long mid;
+    private String nickname;
 
-    // // 레시피에 소속된 이미지 가져오기
+    // TODO: 레시피에 소속된 이미지 가져오기
     @Builder.Default
     private List<RecipeImageDto> recipeImageDtos = new ArrayList<>();
 
-    // 레시피 스텝
+    // TODO: 레시피 스텝
     @Builder.Default
     private List<RecipeStepDto> recipeStepDtos = new ArrayList<>();
 
-    // 레시피 카테고리
+    // TODO: 레시피 카테고리
+    @Builder.Default
+    private List<RecipeCategoryDto> recipeCategoryDtos = new ArrayList<>();
+
+    // TODO: 레시피 재료
+    @Builder.Default
+    private List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
 
     private LocalDateTime regDate; // 등록일
     private LocalDateTime updateDate; // 수정일

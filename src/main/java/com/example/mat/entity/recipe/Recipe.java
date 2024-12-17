@@ -32,7 +32,7 @@ import com.example.mat.entity.shin.Member;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "recipeImageDtos" })
+@ToString(exclude = { "member", "recipeStep", "recipeCategory", "recipeIngredient" })
 @Entity
 public class Recipe extends BaseEntity {
 
@@ -66,8 +66,12 @@ public class Recipe extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private RecipeStep recipeStep;
 
-    //레시피 카테고리
+    // 레시피 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
     private RecipeCategory recipeCategory;
+
+    // 레시피 재료
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RecipeIngredient recipeIngredient;
 
 }
