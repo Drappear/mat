@@ -121,7 +121,7 @@ public class MemberController {
         authMemberDto.getMemberDto().setDetailAddr(updatememberDto.getDetailAddr());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "/member/personalInformation";
+        return "redirect:/member/personalInformation";
     }
 
     // 회원 가입
