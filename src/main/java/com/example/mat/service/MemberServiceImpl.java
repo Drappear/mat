@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.PasswordDto;
-
+import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.shin.Member;
 import com.example.mat.repository.MemberRepository;
 
@@ -94,14 +94,16 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     @Transactional
     @Override
-    public void personalUpdate(MemberDto memberDto) {
+    public void personalUpdate(UpdateMemberDto updatememberDto) {
+
+        log.info("서비스단 {}", updatememberDto);
         // 레포지토리 메서드를 호출하여 모든 정보를 한 번에 업데이트
         memberRepository.updatePersonalInfo(
-                memberDto.getEmail(),
-                memberDto.getAddr(),
-                memberDto.getDetailAddr(),
-                memberDto.getTel(),
-                memberDto.getUserid());
+                updatememberDto.getEmail(),
+                updatememberDto.getAddr(),
+                updatememberDto.getDetailAddr(),
+                updatememberDto.getTel(),
+                updatememberDto.getUserid());
     }
 
     @Override

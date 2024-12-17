@@ -22,6 +22,7 @@ import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.shin.AuthMemberDto;
 // import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -98,9 +99,9 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/editpi")
     public String postEditPI(
-            @Valid @ModelAttribute MemberDto memberDto,
+            @Valid @ModelAttribute("updateMemberDto") UpdateMemberDto updatememberDto,
             BindingResult result) {
-        log.info("회원 정보 수정 요청: {}", memberDto);
+        log.info("회원 정보 수정 요청: {}", updatememberDto);
 
         if (result.hasErrors()) {
             return "/member/editpi";
@@ -111,12 +112,13 @@ public class MemberController {
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
 
         // 개인정보 업데이트 수행
-        memberService.personalUpdate(memberDto);
+        memberService.personalUpdate(updatememberDto);
 
         // SecurityContext의 정보를 업데이트
-        authMemberDto.getMemberDto().setEmail(memberDto.getEmail());
-        authMemberDto.getMemberDto().setAddr(memberDto.getAddr());
-        authMemberDto.getMemberDto().setDetailAddr(memberDto.getDetailAddr());
+        authMemberDto.getMemberDto().setEmail(updatememberDto.getEmail());
+        authMemberDto.getMemberDto().setTel(updatememberDto.getTel());
+        authMemberDto.getMemberDto().setAddr(updatememberDto.getAddr());
+        authMemberDto.getMemberDto().setDetailAddr(updatememberDto.getDetailAddr());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "/member/personalInformation";

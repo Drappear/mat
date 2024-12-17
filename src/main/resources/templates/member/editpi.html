@@ -6,15 +6,7 @@
     <title>개인정보 관리</title>
     <link rel="stylesheet" th:href="@{/css/personalInformation.css}" />
   </head>
-  <script>
-    // 폼 제출 이벤트 제어
-    document.querySelector("form").addEventListener("submit", function (event) {
-      if (!isUseridValid || !isNicknameValid) {
-        event.preventDefault(); // 제출 막기
-        alert("아이디와 닉네임 중복 확인을 완료해주세요.");
-      }
-    });
-  </script>
+
   <body>
     <div class="header">
       <h1>개인정보 관리</h1>
