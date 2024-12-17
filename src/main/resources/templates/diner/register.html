@@ -3,6 +3,7 @@
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/upload.css}" />
   </th:block>
   <div layout:fragment="content">
     <section class="diner-register">
@@ -89,31 +90,38 @@
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
-                    <div class="upload-box">
-                      <div id="drop-file" class="drag-file">
-                        <i class="fa-regular fa-image fa-lg"></i>
-                        <p class="message mt-3">Drag files to upload</p>
+                    <div class="contents upload-section">
+                      <div class="upload-box">
+                        <div id="drop-file" class="drag-file">
+                          <img
+                            src="https://img.icons8.com/pastel-glyph/2x/image-file.png"
+                            alt="파일 아이콘"
+                            class="image"
+                          />
+                          <p class="message mt-3">Drag files to upload</p>
+                        </div>
                       </div>
-                    </div>
-                    <label for="dinerImage" class="diner-image-label">사진 업로드</label>
-                    <input
-                      type="file"
-                      class="file"
-                      id="dinerImage"
-                      name="dinerImage"
-                      multiple
-                      onchange="dropFile.handleFiles(this.files)"
-                    />
-                    <div id="files" class="files">
-                      <div class="file"></div>
+                      <label class="file-label" for="chooseFile">사진 업로드</label>
+                      <input
+                        class="file"
+                        id="chooseFile"
+                        type="file"
+                        multiple
+                        onchange="dropFile.handleFiles(this.files)"
+                      />
+                      <div id="files" class="files">
+                        <div class="file"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
-                  <div class="col-6 mb-3">
-                    <button type="submit" class="btn btn-primary">작성 완료</button>
-                    <button type="submit" class="btn btn-success">목록</button>
+                  <div class="col-6 mt-3 mb-3 buttons">
+                    <div class="row justify-content-center">
+                      <button type="submit" class="btn btn-primary m-3">등록하기</button>
+                      <button type="submit" class="btn btn-success m-3">목록이동</button>
+                    </div>
                   </div>
                 </div>
               </div>

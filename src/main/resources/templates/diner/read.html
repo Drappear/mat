@@ -44,7 +44,9 @@
           <div>가격</div>
           <div>서비스</div>
         </div>
-        <div class="col"><button class="btn btn-success">리뷰쓰기</button></div>
+        <div class="col">
+          <button class="btn btn-success" id="modalOpenButton">리뷰쓰기</button>
+        </div>
       </div>
     </div>
     <div class="container mt-3">
@@ -145,5 +147,7 @@
     </div>
   </div>
   <!-- 페이지 별 js 영역 -->
-  <th:block layout:fragment="js"> </th:block>
+  <th:block layout:fragment="js">
+    <script th:src="@{/assets/js/diner/read.js}"></script>
+  </th:block>
 </html>
