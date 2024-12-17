@@ -18,7 +18,7 @@
             <img src="https://via.placeholder.com/120" alt="프로필 사진" />
           </div>
           <div class="profile-info">
-            <form action="#">
+            <form th:action="@{/member/edit}">
               <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input
@@ -34,7 +34,7 @@
                 <textarea id="bio" name="bio" rows="3" readonly>Value</textarea>
               </div>
               <div class="form-actions">
-                <a class="submit-btn" th:href="@{/member/edit}"> 수정 </a>
+                <button class="submit-btn">수정하기</button>
               </div>
             </form>
           </div>
