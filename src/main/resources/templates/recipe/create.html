@@ -64,11 +64,13 @@
             <div class="p-4 bg-neutral-50 rounded-lg">
               <div class="grid grid-cols-3 gap-4 items-center">
                 <label for="category" class="form-label text-neutral-950">카테고리</label>
-                <select id="category" class="form-select col-span-2 border-neutral-300 border rounded-md px-3 py-2">
+                <select id="category" name="category" class="form-select col-span-2 border-neutral-300 border rounded-md px-3 py-2">
                   <option value="">선택</option>
-                  <option value="한식">한식</option>
-                  <option value="양식">양식</option>
-                  <option value="중식">중식</option>
+                  <option 
+                  th:each="category : ${categories}" 
+                  th:value="${category.rCateId}" 
+                  th:text="${category.name}">
+                  </option>
                 </select>
               </div>
             </div>

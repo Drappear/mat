@@ -1,6 +1,7 @@
 package com.example.mat.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.recipe.RecipeCategoryDto;
 import com.example.mat.dto.recipe.RecipeDto;
 import com.example.mat.entity.recipe.RecipeCategory;
 import com.example.mat.repository.RecipeCategoryRepository;
@@ -53,9 +55,20 @@ public class RecipeController {
   }
 
   @GetMapping("/create")
-  public void getCreate(RecipeDto recipeDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) { // MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto
-                            // pageRequestDto
+  public String getCreate(Model model, RecipeDto recipeDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 작성 폼 요청");
+    // 카테고리 리스트를 가져옵니다.
+        List<RecipeCategoryDto> categories = recipeCategoryRepository.findAllOrderByRCateId()
+                .stream()
+                .map(category -> RecipeCategoryDto.builder()
+                        .rCateId(category.getRCateId())
+                        .name(category.getName())
+                        .build())
+                .collect(Collectors.toList());
+
+        // 모델에 추가
+        model.addAttribute("categories", categories);
+        return "recipe/create";
   }
   @PostMapping("/create")
   public String postCreate(@Valid RecipeDto recipeDto, BindingResult result, @ModelAttribute("requestDto") PageRequestDto pageRequestDto, RedirectAttributes rttr) {
