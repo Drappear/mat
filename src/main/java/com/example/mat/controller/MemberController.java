@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,9 +23,11 @@ import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.shin.AuthMemberDto;
 // import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.service.MemberService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Log4j2
@@ -122,6 +125,30 @@ public class MemberController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/member/personalInformation";
+    }
+
+    @GetMapping("/editPassword")
+    public void getEditPassword(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("비밀번호 변경 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit/password")
+    public String postUpdatePassword(PasswordDto passwordDto, HttpSession session, RedirectAttributes rttr) {
+        log.info("비밀번호 수정");
+
+        // 서비스 호출
+        try {
+            memberService.passwordUpdate(passwordDto);
+        } catch (Exception e) {
+            // 실패시 /edit
+            e.printStackTrace();
+            rttr.addFlashAttribute("error", e.getMessage());
+            return "redirect:/member/editPassword";
+        }
+        // 성공 시 세션 해제 후 /login 이동
+        session.invalidate();
+        return "redirect:/member/login";
     }
 
     // 회원 가입
