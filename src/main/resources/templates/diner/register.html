@@ -13,7 +13,7 @@
             <div class="row justify-content-center mt-5">
               <h4>식당 등록</h4>
             </div>
-            <form>
+            <form th:action="@{create}" method="post" id="createForm">
               <div class="register-items">
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
@@ -30,25 +30,25 @@
                   </div>
                   <div class="col col-lg-5 mb-3">
                     <label for="dinerName" class="form-label">이름</label>
-                    <input type="text" class="form-control" id="dinerName" name="dinerName" />
+                    <input type="text" class="form-control" id="dinerName" name="name" />
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-3 mb-3">
                     <label for="dinerPhone" class="form-label">전화번호</label>
-                    <input type="text" class="form-control" id="dinerPhone" name="dinerPhone" />
+                    <input type="text" class="form-control" id="dinerPhone" name="phone" />
                   </div>
                   <div class="col-lg-3 mb-3">
                     <label for="dinerRegNum" class="form-label">사업자 등록번호</label>
-                    <input type="text" class="form-control" id="dinerRegNum" name="dinerRegNum" />
+                    <input type="text" class="form-control" id="dinerRegNum" name="regNum" />
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerAddr" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="dinerAddr" name="dinerAddr" />
+                    <input type="text" class="form-control" id="dinerAddr" name="address" />
                   </div>
                 </div>
 
@@ -59,7 +59,7 @@
                       type="text"
                       class="form-control"
                       id="dinerAddrDetail"
-                      name="dinerAddrDetail"
+                      name="addressDetail"
                     />
                   </div>
                 </div>
@@ -67,7 +67,7 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerDesc" class="form-label">소개글</label>
-                    <textarea class="form-control" id="dinerDesc" name="dinerDesc" rows="10">
+                    <textarea class="form-control" id="dinerDesc" name="content" rows="10">
                     </textarea>
                   </div>
                 </div>
@@ -75,16 +75,19 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerMenu" class="form-label">메뉴 정보</label>
-                    <textarea class="form-control" id="dinerMenu" name="dinerMenu" rows="5">
-                    </textarea>
+                    <textarea class="form-control" id="dinerMenu" name="menu" rows="5"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerTime" class="form-label">영업 시간</label>
-                    <textarea class="form-control" id="dinerTime" name="dinerTime" rows="5">
-                    </textarea>
+                    <textarea
+                      class="form-control"
+                      id="dinerTime"
+                      name="workTime"
+                      rows="5"
+                    ></textarea>
                   </div>
                 </div>
 
@@ -120,7 +123,7 @@
                   <div class="col-6 mt-3 mb-3 buttons">
                     <div class="row justify-content-center">
                       <button type="submit" class="btn btn-primary m-3">등록하기</button>
-                      <button type="submit" class="btn btn-success m-3">목록이동</button>
+                      <button type="button" class="btn btn-success m-3">목록이동</button>
                     </div>
                   </div>
                 </div>
