@@ -11,12 +11,13 @@ import com.example.mat.entity.market.ProductCategory;
 
 public interface ProductService {
 
-    ProductDto getRow(Long id);
+    ProductDto getRow(Long pid);
 
     PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto);
 
     List<ProductCategoryDto> getProductCateList();
 
+    // dto > entity
     public default Product dtoToEntity(ProductDto dto) {
         return Product.builder()
                 .pid(dto.getPid())
@@ -29,6 +30,7 @@ public interface ProductService {
 
     }
 
+    // entity > dto
     public default ProductDto entityToDto(Product product) {
         return ProductDto.builder()
                 .pid(product.getPid())

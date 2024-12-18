@@ -1,5 +1,6 @@
 package com.example.mat.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -28,13 +29,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCategoryRepository productCategoryRepository;
 
     @Override
-    public ProductDto getRow(Long id) {
+    public ProductDto getRow(Long pid) {
 
-        return entityToDto(productRepository.findById(id).get());
+        return entityToDto(productRepository.findById(pid).get());
     }
 
     @Override
     public PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto) {
+        
         Pageable pageable = requestDto.getPageable(Sort.by("pid").descending());
         Page<Product> result = productRepository.findAll(pageable);
 
