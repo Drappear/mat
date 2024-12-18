@@ -127,3 +127,8 @@ body {
 
   padding: 10px; /* 버튼 간의 간격을 설정 (원하는 크기로 조정) */
 }
+a.submit-btn {
+  text-align: right;
+  text-decoration: none;
+  margin-right: 10px;
+}

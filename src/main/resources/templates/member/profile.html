@@ -35,17 +35,12 @@
               </div>
 
               <div class="form-actions">
+                <a class="submit-btn" th:href="@{/member/personalInformation}"
+                  >회원 정보</a
+                ><a class="submit-btn" th:href="@{/member/editPassword}"
+                  >비밀번호 변경</a
+                >
                 <button class="submit-btn">수정하기</button>
-              </div>
-            </form>
-            <form th:action="@{/member/personalInformation}" method="get">
-              <div class="form-actions">
-                <button class="submit-btn">회원 정보</button>
-              </div>
-            </form>
-            <form>
-              <div class="form-actions">
-                <button class="submit-btn">비밀번호 변경</button>
               </div>
             </form>
           </div>
