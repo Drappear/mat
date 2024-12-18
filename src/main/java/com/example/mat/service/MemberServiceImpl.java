@@ -126,4 +126,18 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
         }
     }
+
+    @Transactional
+    @Override
+    public void leave(PasswordDto passwordDto) throws Exception {
+        Member member = memberRepository.findByUserid(passwordDto.getUserid()).get();
+
+        if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), member.getPassword())) {
+            throw new Exception("현재 비밀번호를 확인");
+        }
+
+        // reviewRepository.deleteByMember(member);
+
+        memberRepository.deleteById(member.getMid());
+    }
 }
