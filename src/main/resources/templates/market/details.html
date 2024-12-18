@@ -307,13 +307,11 @@
               <div class="product__details__quantity">
                 <div class="quantity">
                   <div class="pro-qty">
-                    <input type="text" value="1" />
+                    <input type="text" value="1" name="quantity" />
                   </div>
                 </div>
               </div>
-              <a th:href="@{/market/cart}" class="primary-btn" id="addToCartBtn"
-                >ADD TO CART</a
-              >
+              <a href="#" class="primary-btn" id="addToCartBtn">ADD TO CART</a>
               <a th:href="@{/market/order}" class="primary-btn" id="order"
                 >ORDER</a
               >
@@ -408,6 +406,11 @@
     </footer>
     <!-- Footer Section End -->
 
+    <form th:action="@{/market/cart}" method="post" id="addCartForm">
+      <input type="hidden" name="quantity" value="" />
+      <input type="hidden" name="pid" value="${dto.pid}" />
+    </form>
+
     <!-- Js Plugins -->
     <script src="/assets/js/jquery-3.3.1.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
@@ -419,5 +422,7 @@
     <script src="/assets/js/main.js"></script>
   </body>
   <!-- 사용자 스크립트 추가 -->
-  <th:block layout:fragment="script"> </th:block>
+  <th:block layout:fragment="script">
+    <script th:src="@{/market/cart.js}"></script>
+  </th:block>
 </html>

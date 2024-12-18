@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
+import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.entity.Member;
 import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Product;
 import com.example.mat.repository.CartItemRepository;
+
 import com.example.mat.repository.CartRepository;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.ProductRepository;
@@ -34,30 +36,36 @@ public class CartServiceImpl implements CartService {
     private final MemberRepository memberRepository;
     
     @Override
-    public Long addCart(CartItemDto cartItemDto, String email) {
-        Product product = productRepository.findById(cartItemDto.getPid())
-                            .orElseThrow(EntityNotFoundException::new);
+    public Long addCart(CartItemDto cartItemDto, MemberDto memberDto) {
 
-        Member member = memberRepository.findByEmail(email);
-        
-        
-        Cart cart = cartRepository.findByMember_mid(member.getMid());
+        //Cart 생성   
+        Cart cart = cartRepository.findByMember_mid(memberDto.getMid());
 
         if (cart == null) {
             // 멤버에게 카트 없으면, 카트 생성
-           cart = Cart.createCart(member);
+           cart = Cart.builder().member(Member.builder().mid(memberDto.getMid()).build()).build();
            cartRepository.save(cart);
         }
 
-        CartItem savedCartItem = cartItemRepository.findByCart_cartidAndProduct_pid(cart.getCartid(), product.getPid());
+        Product product = productRepository.findById(cartItemDto.getPid())
+                            .orElseThrow(EntityNotFoundException::new);   
+
+        CartItem savedCartItem = cartItemRepository.findByProductCart(cart, product);
+
         if(savedCartItem != null){
             // 이미 상품이 있다면 개수를 +
             savedCartItem.addQuantity(cartItemDto.getQuantity());
-            return savedCartItem.getCartitemid();
+            cartItemRepository.save(savedCartItem);
+            return savedCartItem.getCartItemId();
         } else {
-            CartItem cartItem =  CartItem.createCartItem(cart, product, cartItemDto.getQuantity());
+            //CartItem cartItem =  CartItem.createCartItem(cart, product, cartItemDto.getQuantity());
+            CartItem cartItem =  CartItem.builder()
+            .quantity(cartItemDto.getQuantity())
+            .product(product)
+            .cart(cart)            
+            .build();
             cartItemRepository.save(cartItem);
-            return cartItem.getCartitemid();
+            return cartItem.getCartItemId();
         }
 
     }
