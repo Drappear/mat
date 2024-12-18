@@ -8,19 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.example.mat.dto.recipe.RecipeImageDto;
 import com.example.mat.dto.recipe.RecipeStepDto;
@@ -32,7 +26,7 @@ import com.example.mat.entity.shin.Member;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "recipeImageDtos" })
+@ToString(exclude = { "member", "recipeStep", "recipeCategory", "recipeIngredient" })
 @Entity
 public class Recipe extends BaseEntity {
 
@@ -66,8 +60,12 @@ public class Recipe extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private RecipeStep recipeStep;
 
-    //레시피 카테고리
+    // 레시피 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
     private RecipeCategory recipeCategory;
+
+    // 레시피 재료
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RecipeIngredient recipeIngredient;
 
 }
