@@ -15,7 +15,7 @@ import com.example.mat.dto.market.CartItemDto;
 import com.example.mat.entity.Member;
 import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Product;
-import com.example.mat.repository.CartItemRepository;
+import com.example.mat.repository.CartItemRepositoryTest;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.ProductRepository;
 
@@ -35,7 +35,7 @@ public class CartServiceTest {
     MemberRepository memberRepository;
 
     @Autowired
-    CartItemRepository cartItemRepository;
+    CartItemRepositoryTest cartItemRepository;
 
 
     // 카트 담기 테스트

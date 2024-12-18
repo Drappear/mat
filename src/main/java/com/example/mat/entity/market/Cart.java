@@ -38,21 +38,9 @@ public class Cart extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long cartid;
-
-    private int quantity; // 카트에 담긴 상품 개수
+    private Long cartid;   
     
     @OneToOne(fetch = FetchType.LAZY)
-    Member member;
-
-    // 멤버에게 카트 부여 
-    // 멤버 한명 > 카트 한개
-    public static Cart createCart(Member member){
-        Cart cart = new Cart();
-        cart.setMember(member);
-        return cart;
-    }
-
-
+    private Member member;
 
 }

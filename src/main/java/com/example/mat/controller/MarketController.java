@@ -1,12 +1,18 @@
 package com.example.mat.controller;
 
-import java.security.Principal;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +30,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
 import com.example.mat.dto.market.ProductDto;
+import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.Product;
 import com.example.mat.service.CartService;
@@ -67,40 +74,33 @@ public class MarketController {
 
 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/cart")
-        public @ResponseBody ResponseEntity cart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal) {
+        public @ResponseBody ResponseEntity<String> cart(CartItemDto cartItemDto) {
+            log.info("카트 추가 정보 {}",cartItemDto);          
+        
+      
 
-            // 인증되지 않은 사용자의 요청 처리
-        if (principal == null) {
-        return new ResponseEntity<String>("로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
-         }
-
-       if(bindingResult.hasErrors()){
-        StringBuilder sb = new StringBuilder();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-
-        for (FieldError fieldError : fieldErrors) {
-            sb.append(fieldError.getDefaultMessage());
-        }
-
-        return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
-       }
-
-       String email = principal.getName();
+       MemberDto memberDto = MemberDto.builder().mid(22L).build();
        Long cartItemId;
 
        try {
-        cartItemId = cartService.addCart(cartItemDto, email);
+        cartItemId = cartService.addCart(cartItemDto,memberDto);
        } catch (Exception e) {
-        return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("카트 추가 실패", HttpStatus.BAD_REQUEST);
        }
-       return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
+       return new ResponseEntity<String>(String.valueOf(cartItemId), HttpStatus.OK);
         
 }
 
-       @GetMapping(value = "/cart")
-    public void orderHist(Principal principal, Model model){
-        List<CartDetailDto> cartDetailList = cartService.getCartList(principal.getName());
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/cart")
+    public void orderHist(Model model){
+        log.info("카트 목록");        
+
+
+        String email = getAuthentication().getUsername();
+        List<CartDetailDto> cartDetailList = cartService.getCartList(email);
         model.addAttribute("cartItems", cartDetailList);
      
     }
@@ -117,6 +117,20 @@ public class MarketController {
     @GetMapping("/orderlist")
     public void getOrderList() {
         log.info("orderlist 페이지 요청");
+    }   
+
+   
+    private User getAuthentication() {
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+
+
+        User user = (User) authentication.getPrincipal();
+        
+        // MemberDto 에 들어있는 값 접근 시
+        //AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+        return user;
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.mat.entity.market;
 
 import com.example.mat.entity.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,8 @@ public class CartItem extends BaseEntity{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long cartitemid;
+    @Column(name="cartitemid")
+    private Long cartItemId;
 
     private int quantity;
     
@@ -41,7 +43,7 @@ public class CartItem extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
-    // 상품 수량 증가
+    // // 상품 수량 증가
     public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
@@ -50,16 +52,5 @@ public class CartItem extends BaseEntity{
     public void updateQuantity(int quantity){
         this.quantity = quantity;
     }
-
-    // 카트에 담을 상품 엔티티 생성 메소드
-    public static CartItem createCartItem(Cart cart, Product product, int quantity){
-        CartItem cartItem = new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
-        return cartItem;
-    }
-
-
     
 }
