@@ -503,8 +503,10 @@
               >
                 <div class="product__item">
                   <div class="product__item__pic set-bg">
-                    <a th:href="@{/market/details}"
-                      ><img src="/assets/img/product/product-1.jpg" />
+                    <a th:href="@{details(pid=${dto.pid})}"
+                      ><img
+                        th:src="@{/assets/img/product/fruits/product-__${dto.pid}__.jpg}"
+                      />
                     </a>
                     <ul class="product__item__pic__hover">
                       <li>
@@ -517,10 +519,13 @@
                   </div>
                   <div class="product__item__text">
                     <h6>
-                      <a th:href="@{/market/details}" th:text="${dto.name}"></a>
+                      <a
+                        th:href="@{details(pid=${dto.pid})}"
+                        th:text="${dto.name}"
+                      ></a>
                     </h6>
                     <h5
-                      th:href="@{/market/details}"
+                      th:href="@{details(pid=${dto.pid})}"
                       th:text="${dto.price}"
                     ></h5>
                   </div>
@@ -534,10 +539,8 @@
                     <a
                       class="page-link"
                       th:href="@{list(page=${result.start-1},size=${result.size})}"
-                      >Previous</a
-                    >
+                    ></a>
                   </li>
-
                   <li
                     th:class="'page-item ' + ${result.page == page ? 'active':''}"
                     aria-current="page"
@@ -549,13 +552,11 @@
                       th:text="${page}"
                     ></a>
                   </li>
-
                   <li class="page-item" th:if="${result.next}">
                     <a
                       class="page-link"
                       th:href="@{list(page=${result.end+1},size=${result.size})}"
-                      >Next</a
-                    >
+                    ></a>
                   </li>
                 </ul>
               </nav>
