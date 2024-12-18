@@ -201,6 +201,32 @@ public class MemberController {
     // return ResponseEntity.ok(isDuplicate);
     // }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/leave")
+    public void getLeave(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("회원 탈퇴 폼 요청");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/leave")
+    public String postLeave(PasswordDto passwordDto, boolean check, HttpSession session, RedirectAttributes rttr) {
+        log.info("회원 탈퇴 요청 {}, {}", passwordDto, check);
+        if (!check) {
+            rttr.addFlashAttribute("error", "체크표시를 확인해 주세요");
+            return "/member/leave";
+        }
+        // 서비스 작업
+        try {
+            memberService.leave(passwordDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rttr.addFlashAttribute("error", e.getMessage());
+            return "redirect:/member/leave";
+        }
+        session.invalidate();
+        return "redirect:/diner/list";
+    }
+
     @GetMapping("/check-duplicate-nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
 
