@@ -67,8 +67,12 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerDesc" class="form-label">소개글</label>
-                    <textarea class="form-control" id="dinerDesc" name="content" rows="10">
-                    </textarea>
+                    <textarea
+                      class="form-control"
+                      id="dinerDesc"
+                      name="content"
+                      rows="10"
+                    ></textarea>
                   </div>
                 </div>
 
@@ -111,6 +115,7 @@
                         type="file"
                         multiple
                         onchange="dropFile.handleFiles(this.files)"
+                        accept="image/png, image/jpg, image/jpeg"
                       />
                       <div id="files" class="files">
                         <div class="file"></div>
@@ -136,6 +141,10 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script>
+      const csrfValue = "[[${_csrf.token}]]";
+    </script>
     <script th:src="@{/assets/js/diner/register.js}"></script>
+    <script th:src="@{/assets/js/diner/upload.js}"></script>
   </th:block>
 </html>
