@@ -1,6 +1,8 @@
 package com.example.mat.dto.diner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +23,9 @@ public class DinerDto {
     private String workTime;
     private Long viewCount;
     private String regNum;
+
+    @Builder.Default
+    private List<DinerImageDto> dinerImageDtos = new ArrayList<>();
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
