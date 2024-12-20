@@ -81,6 +81,24 @@
         <div class="profile-section">
           <div class="profile-photo">
             <img src="https://via.placeholder.com/120" alt="프로필 사진" />
+            <!-- <img
+              data-bs-toggle="modal"
+              data-bs-target="#imgModal"
+              th:attr="data-file=${memberImage.getThumbImageURL()}"
+              th:src="|/upload/display?fileName=${memberImage.getThumbImageURL()}|"
+              th:if="${memberImage.path != null}"
+              alt="프로필 사진"
+              class="block"
+            />
+            <label class="photo-upload-btn">
+              <input
+                type="file"
+                class="form-control block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                placeholder="+"
+                multiple
+                accept="image/png, image/jpeg"
+              />
+            </label> -->
             <button class="photo-upload-btn">+</button>
           </div>
           <div class="profile-info">
