@@ -1,20 +1,29 @@
 package com.example.mat.repository;
 
 import com.example.mat.entity.won.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+/**
+ * 게시판 Repository 인터페이스
+ * Spring Data JPA를 사용하여 데이터베이스와 상호작용합니다.
+ */
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    // 특정 카테고리의 게시물 목록 조회
-    List<Board> findByBoardCategory(String boardCategory);
-
-    // 제목으로 게시물 검색
-    List<Board> findByTitleContaining(String keyword);
-
-    // 게시물 조회수가 높은 순으로 정렬하여 조회
-    List<Board> findAllByOrderByViewCountDesc();
+    /**
+     * 페이징 처리된 게시글 리스트를 가져오는 쿼리.
+     * 게시글 정보, 작성자 이름, 게시글 작성일 등을 포함하여 반환합니다.
+     * 
+     * @param pageable 페이징 정보를 담고 있는 객체
+     * @return 페이징 처리된 게시글 리스트
+     */
+    @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, m.nickname " +
+            "FROM Board b " +
+            "LEFT JOIN b.member m " +
+            "ORDER BY b.regDate DESC")
+    Page<Object[]> getListPage(Pageable pageable);
 }
