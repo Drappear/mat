@@ -181,22 +181,24 @@
           </div>
         </div>
         <div class="row">
-          <th:block th:each="num : ${#numbers.sequence(1,12)}">
+          <th:block th:each="diner : ${result.dtoList}">
             <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="blog__item">
                 <div class="blog__item__pic">
-                  <img th:src="@{/assets/img/blog/blog-1.jpg}" alt="" />
+                  <img
+                    th:src="|/upload/display?fileName=${diner.dinerImageDtos[0].getThumbImageURL()}|"
+                    th:if="${diner.dinerImageDtos.size() > 0 && diner.dinerImageDtos[0].path != null}"
+                    alt=""
+                    loading="lazy"
+                  />
                 </div>
                 <div class="blog__item__text">
                   <ul>
                     <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
                     <li><i class="fa fa-comment-o"></i> 5</li>
                   </ul>
-                  <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                  <p>
-                    Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                    quaerat
-                  </p>
+                  <h5><a href="#" th:text="${diner.name}"></a></h5>
+                  <p th:text="${diner.content}"></p>
                 </div>
               </div>
             </div>

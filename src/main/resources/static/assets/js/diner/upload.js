@@ -39,10 +39,26 @@ function DropFile(dropAreaId, fileListId) {
       fileList.scrollTo({ top: fileList.scrollHeight });
     }
   }
-
   function handleFiles(files) {
-    files = [...files];
-    files.forEach(previewFile);
+    let formData = new FormData();
+    for (let index = 0; index < files.length; index++) {
+      formData.append("uploadFiles", files[index]);
+    }
+
+    fetch("/upload/upload", {
+      method: "post",
+      headers: {
+        "X-CSRF-TOKEN": csrfValue,
+      },
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        data = [...data];
+        data.forEach(previewFile);
+      });
   }
 
   function previewFile(file) {
@@ -50,7 +66,6 @@ function DropFile(dropAreaId, fileListId) {
     fileList.appendChild(renderFile(file));
   }
 
-  // 파일 추가시 목록 생성
   function renderFile(file) {
     let fileDOM = document.createElement("div");
     fileDOM.className = "file";
@@ -60,9 +75,8 @@ function DropFile(dropAreaId, fileListId) {
       </div>
       <div class="details" data-name="${file.fileName}" data-path="${file.folderPath}" data-uuid="${file.uuid}">
         <header class="header">
-          <span class="name">${file.name}</span>
-          <span class="size">${file.size}</span>
-        </header>
+          <span class="name">${file.fileName}</span>
+        </header>        
       </div>
     `;
     return fileDOM;
@@ -74,51 +88,52 @@ function DropFile(dropAreaId, fileListId) {
 }
 
 const dropFile = new DropFile("drop-file", "files");
-const fileInput = document.querySelector("[type='file']");
+// const fileInput = document.querySelector("#chooseFile");
 
-fileInput.addEventListener("change", (e) => {
-  const files = e.target.files;
+// fileInput.addEventListener("change", (e) => {
+//   console.log("file input change");
 
-  let formData = new FormData();
-  for (let index = 0; index < files.length; index++) {
-    formData.append("uploadFiles", files[index]);
-  }
+//   const files = e.target.files;
+//   let formData = new FormData();
+//   for (let index = 0; index < files.length; index++) {
+//     formData.append("uploadFiles", files[index]);
+//   }
 
-  fetch("/upload/upload", {
-    method: "post",
-    headers: {
-      "X-CSRF-TOKEN": csrfValue,
-    },
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
+//   fetch("/upload/upload", {
+//     method: "post",
+//     headers: {
+//       "X-CSRF-TOKEN": csrfValue,
+//     },
+//     body: formData,
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
 
-      // 첨부 파일 화면 출력
-      showUploadImages(data);
-    });
-});
+//       // 첨부 파일 화면 출력
+//       // showUploadImages(data);
+//     });
+// });
 
-function showUploadImages(files) {
-  // 이미지 보여줄 영역 찾아오기
-  const output = document.querySelector("div .file");
+// function showUploadImages(files) {
+//   // 이미지 보여줄 영역 찾아오기
+//   const output = document.querySelector("div .file");
 
-  let tags = "";
+//   let tags = "";
 
-  files.forEach((file) => {
-    tags += `<div class="thumbnail">`;
-    tags += `<img src="https://img.icons8.com/pastel-glyph/2x/image-file.png" alt="파일타입 이미지" class="image">`;
-    tags += `</div>`;
-    tags += `<div class="details" data-name="${file.fileName}" data-path="${file.folderPath}" data-uuid="${file.uuid}">`;
-    tags += `<header class="header">`;
-    tags += `<span class="name">${file.name}</span>`;
-    tags += `<span class="size">${file.size}</span>`;
-    tags += `</header>`;
-    tags += `</div>`;
-  });
-  output.insertAdjacentHTML("beforeend", tags);
-}
+//   files.forEach((file) => {
+//     tags += `<div class="thumbnail">`;
+//     tags += `<img src="https://img.icons8.com/pastel-glyph/2x/image-file.png" alt="파일타입 이미지" class="image">`;
+//     tags += `</div>`;
+//     tags += `<div class="details" data-name="${file.fileName}" data-path="${file.folderPath}" data-uuid="${file.uuid}">`;
+//     tags += `<header class="header">`;
+//     tags += `<span class="name">${file.name}</span>`;
+//     tags += `<span class="size">${file.size}</span>`;
+//     tags += `</header>`;
+//     tags += `</div>`;
+//   });
+//   output.insertAdjacentHTML("beforeend", tags);
+// }
 
 // 작성 클릭시
 document.querySelector("#createForm").addEventListener("submit", (e) => {

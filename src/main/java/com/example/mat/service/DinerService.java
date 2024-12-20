@@ -15,7 +15,7 @@ import com.example.mat.entity.diner.DinerImage;
 public interface DinerService {
 
     // 식당 목록 조회
-    // PageResultDto<DinerDto, Object[]> getList(PageRequestDto pageRequestDto);
+    PageResultDto<DinerDto, Object[]> getDinerList(PageRequestDto pageRequestDto);
 
     // 식당 등록
     Long createDiner(DinerDto dinerDto);
@@ -29,7 +29,7 @@ public interface DinerService {
     // 식당 삭제
     void deleteDiner(Long did);
 
-    default DinerDto entityToDto(Diner diner, Long viewCount) {
+    default DinerDto entityToDto(Diner diner, List<DinerImage> dinerImages) {
         DinerDto dinerDto = DinerDto.builder()
                 .did(diner.getDid())
                 .name(diner.getName())
@@ -39,8 +39,20 @@ public interface DinerService {
                 .workTime(diner.getWorkTime())
                 .phone(diner.getPhone())
                 .regNum(diner.getRegNum())
-                .viewCount(viewCount)
+                // .viewCount(viewCount)
                 .build();
+
+        List<DinerImageDto> dinerImageDtos = dinerImages.stream().map(dinerImage -> {
+            return DinerImageDto.builder()
+                    .inum(dinerImage.getInum())
+                    .uuid(dinerImage.getUuid())
+                    .imgName(dinerImage.getImgName())
+                    .path(dinerImage.getPath())
+                    .imgCate(dinerImage.getImgCate())
+                    .build();
+        }).collect(Collectors.toList());
+
+        dinerDto.setDinerImageDtos(dinerImageDtos);
 
         return dinerDto;
     }
