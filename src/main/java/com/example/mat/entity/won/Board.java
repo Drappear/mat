@@ -11,7 +11,7 @@ import com.example.mat.entity.BaseEntity;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "image" }) // 이미지 필드만 제외
+@ToString(exclude = { "image", "boardCategory" })
 public class Board extends BaseEntity {
 
     @Id
@@ -29,17 +29,14 @@ public class Board extends BaseEntity {
     private Long viewCount = 0L;
 
     @Column(nullable = false)
-    private String boardCategory;
+    private String nickname = "Anonymous";
 
-    // 작성자 정보
-    // Member 엔티티와 다대일 관계
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "member_id", nullable = false)
-    // private Member member;
-    @Column(nullable = false)
-    private String nickname;
+    // BoardCategory와의 연관 관계
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false) // 외래 키로 CATEGORY_ID 사용
+    private BoardCategory boardCategory;
 
-    // 게시글에 포함된 단일 이미지
-    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
     private BoardImage image;
 }

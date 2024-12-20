@@ -21,5 +21,6 @@ public class BoardCategory extends BaseEntity {
   private Long boardCNo;
 
   // 카테고리 이름
+  @Column(nullable = false)
   private String name;
 }

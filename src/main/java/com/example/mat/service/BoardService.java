@@ -1,9 +1,10 @@
 package com.example.mat.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.won.BoardDto;
-import com.example.mat.entity.won.BoardImage;
 
 /**
  * 게시판 서비스 인터페이스
@@ -26,7 +27,7 @@ public interface BoardService {
      * @param image    게시물에 업로드할 이미지 정보
      * @return 등록된 게시물 ID
      */
-    Long registerWithImage(BoardDto boardDto, BoardImage image);
+    Long registerWithImage(BoardDto boardDto, MultipartFile file);
 
     /**
      * 게시물 수정
@@ -43,7 +44,7 @@ public interface BoardService {
      * @param image    게시물에 업로드할 새로운 이미지 정보
      * @return 수정된 게시물 ID
      */
-    Long modifyWithImage(BoardDto boardDto, BoardImage image);
+    Long modifyWithImage(BoardDto boardDto, MultipartFile file);
 
     /**
      * 게시물 삭제
@@ -58,7 +59,7 @@ public interface BoardService {
      * @param pageRequestDto 페이징 요청 정보를 담고 있는 DTO
      * @return 페이징 처리된 게시물 결과 DTO
      */
-    PageResultDto<BoardDto, Object[]> getList(PageRequestDto pageRequestDto);
+    // PageResultDto<BoardDto, Object[]> getList(PageRequestDto pageRequestDto);
 
     /**
      * 게시물 상세 조회
