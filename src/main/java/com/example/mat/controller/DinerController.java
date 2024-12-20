@@ -29,11 +29,9 @@ public class DinerController {
     @GetMapping("/list")
     public void getDinerList(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, Model model) {
         log.info("get diner list 페이지 요청");
-        // PageResultDto<DinerDto, Object[]> result =
-        // dinerService.getList(pageRequestDto);
+        PageResultDto<DinerDto, Object[]> result = dinerService.getDinerList(pageRequestDto);
 
-        // model.addAttribute("result", result);
-        // return "/diner/list";
+        model.addAttribute("result", result);
     }
 
     @GetMapping("/idx")

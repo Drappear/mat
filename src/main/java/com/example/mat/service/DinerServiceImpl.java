@@ -60,11 +60,17 @@ public class DinerServiceImpl implements DinerService {
         throw new UnsupportedOperationException("Unimplemented method 'deleteDiner'");
     }
 
-    // @Override
-    // public PageResultDto<DinerDto, Object[]> getList(PageRequestDto
-    // pageRequestDto) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method 'getList'");
-    // }
+    @Override
+    public PageResultDto<DinerDto, Object[]> getDinerList(PageRequestDto pageRequestDto) {
+        Pageable pageable = pageRequestDto.getPageable(Sort.by("did").descending());
+
+        Page<Object[]> result = dinerImageRepository.getTotalList(pageRequestDto.getType(), pageRequestDto.getKeyword(),
+                pageable);
+
+        Function<Object[], DinerDto> function = (en -> entityToDto((Diner) en[0],
+                (List<DinerImage>) Arrays.asList((DinerImage) en[1])));
+
+        return new PageResultDto<>(result, function);
+    }
 
 }
