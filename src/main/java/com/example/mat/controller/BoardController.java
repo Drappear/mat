@@ -2,31 +2,35 @@ package com.example.mat.controller;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.won.BoardCategoryDto;
 import com.example.mat.dto.won.BoardDto;
+import com.example.mat.entity.won.BoardImage;
+import com.example.mat.service.BoardCategoryService;
 import com.example.mat.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-/**
- * 게시판 컨트롤러
- * 클라이언트의 요청을 처리하고 서비스 계층과 상호작용합니다.
- */
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardCategoryService boardCategoryService;
+
+    // 절대 경로로 업로드 경로 설정
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
     /**
      * 게시물 목록 페이지
-     *
-     * @param pageRequestDto 페이징 및 검색 요청 정보
-     * @param model          뷰에 데이터를 전달하기 위한 모델 객체
-     * @return 게시물 목록 페이지 템플릿 이름
      */
     @GetMapping("/list")
     public String list(PageRequestDto pageRequestDto, Model model) {
@@ -37,75 +41,70 @@ public class BoardController {
 
     /**
      * 게시물 등록 페이지로 이동
-     *
-     * @return 게시물 등록 페이지 템플릿 이름
      */
     @GetMapping("/register")
-    public String registerForm() {
+    public String registerForm(Model model) {
+        List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("boardDto", new BoardDto());
         return "board/register";
     }
 
     /**
      * 게시물 등록 처리
-     *
-     * @param boardDto 등록할 게시물 정보
-     * @return 등록 완료 후 게시물 목록 페이지로 리다이렉트
      */
     @PostMapping("/register")
-    public String register(@ModelAttribute BoardDto boardDto) {
-        boardService.register(boardDto);
+    public String register(@ModelAttribute BoardDto boardDto,
+            @RequestParam("image") MultipartFile file) {
+        try {
+            // DTO 및 파일 확인 로그
+            System.out.println("Board DTO: " + boardDto);
+            System.out.println("File: " + (file != null ? file.getOriginalFilename() : "No file uploaded"));
+
+            // 파일 저장
+            BoardImage image = null;
+            if (file != null && !file.isEmpty()) {
+                image = saveImage(file);
+            }
+
+            // 서비스 호출
+            boardService.registerWithImage(boardDto, image);
+        } catch (Exception e) {
+            e.printStackTrace(); // 모든 예외 로깅
+            return "redirect:/board/register?error";
+        }
         return "redirect:/board/list";
     }
 
     /**
-     * 게시물 상세 조회 페이지
+     * 이미지 저장 로직
      *
-     * @param bno   조회할 게시물 ID
-     * @param model 뷰에 데이터를 전달하기 위한 모델 객체
-     * @return 게시물 상세 페이지 템플릿 이름
+     * @param file 업로드할 이미지 파일
+     * @return 저장된 BoardImage 엔티티
+     * @throws IOException 파일 저장 중 예외
      */
-    @GetMapping("/{bno}")
-    public String detail(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getDetail(bno);
-        model.addAttribute("board", boardDto);
-        return "board/detail";
-    }
+    private BoardImage saveImage(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
 
-    /**
-     * 게시물 수정 페이지로 이동
-     *
-     * @param bno   수정할 게시물 ID
-     * @param model 뷰에 데이터를 전달하기 위한 모델 객체
-     * @return 게시물 수정 페이지 템플릿 이름
-     */
-    @GetMapping("/modify/{bno}")
-    public String modifyForm(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getDetail(bno);
-        model.addAttribute("board", boardDto);
-        return "board/modify";
-    }
+        // 업로드 경로 생성
+        File uploadPath = new File(UPLOAD_DIR);
+        if (!uploadPath.exists()) {
+            uploadPath.mkdirs();
+        }
 
-    /**
-     * 게시물 수정 처리
-     *
-     * @param boardDto 수정할 게시물 정보
-     * @return 수정 완료 후 게시물 상세 페이지로 리다이렉트
-     */
-    @PostMapping("/modify")
-    public String modify(@ModelAttribute BoardDto boardDto) {
-        boardService.modify(boardDto);
-        return "redirect:/board/" + boardDto.getBno();
-    }
+        // 파일 저장
+        String uuid = UUID.randomUUID().toString();
+        String fileName = uuid + "_" + file.getOriginalFilename();
+        File saveFile = new File(uploadPath, fileName);
+        file.transferTo(saveFile);
 
-    /**
-     * 게시물 삭제 처리
-     *
-     * @param bno 삭제할 게시물 ID
-     * @return 삭제 완료 후 게시물 목록 페이지로 리다이렉트
-     */
-    @PostMapping("/delete/{bno}")
-    public String delete(@PathVariable Long bno) {
-        boardService.delete(bno);
-        return "redirect:/board/list";
+        // 이미지 정보 생성
+        return BoardImage.builder()
+                .uuid(uuid)
+                .imgName(file.getOriginalFilename())
+                .path(UPLOAD_DIR)
+                .build();
     }
 }

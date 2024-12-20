@@ -21,9 +21,13 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
      * @param pageable 페이징 정보를 담고 있는 객체
      * @return 페이징 처리된 게시글 리스트
      */
-    @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, m.nickname " +
+
+    @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, b.nickname " +
             "FROM Board b " +
-            "LEFT JOIN b.member m " +
             "ORDER BY b.regDate DESC")
+    // @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, m.nickname " +
+    // "FROM Board b " +
+    // "LEFT JOIN b.member m " +
+    // "ORDER BY b.regDate DESC")
     Page<Object[]> getListPage(Pageable pageable);
 }
