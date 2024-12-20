@@ -1,6 +1,8 @@
 package com.example.mat.dto.shin;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.mat.entity.constant.MemberRole;
 
@@ -43,6 +45,8 @@ public class MemberDto {
 
     private String detailAddr;
 
+    @Builder.Default
+    private List<MemberImageDto> memberImageDtos = new ArrayList<>();
     private MemberRole role;
 
     private LocalDateTime regDate;

@@ -16,6 +16,17 @@
         <div class="profile-section">
           <div class="profile-photo">
             <img src="https://via.placeholder.com/120" alt="프로필 사진" />
+            <!-- <img
+            class="object-cover w-full h-full rounded-full"
+            th:src="|/upload/display?fileName=${member.memberImageDtos[0].getThumbImageURL()}|"
+            th:if="${member.memberImageDtos.size() > 0 && member.memberImageDtos[0].path != null}"
+            alt=""
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 rounded-full shadow-inner"
+            aria-hidden="true"
+          ></div> -->
           </div>
           <div class="profile-info">
             <form th:action="@{/member/edit}">
