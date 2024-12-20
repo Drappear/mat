@@ -1,0 +1,121 @@
+/* 전체 화면 스타일 */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 글 작성 페이지 스타일 */
+.write-content {
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: flex-start; /* 세로 상단 정렬 */
+  height: 100vh; /* 화면 전체 높이를 사용 */
+  padding-top: 20px; /* 상단 여백 추가 */
+}
+
+.write-article {
+  background-color: #ffffff; /* 흰색 배경 */
+  width: 70%; /* 글 작성 영역 크기 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px; /* 상단 여백 추가 */
+}
+
+.write-article-header {
+  margin-bottom: 20px;
+}
+
+.write-article-header h2 {
+  color: #20247b;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.write-article-header label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.write-article-header .form-group {
+  margin-bottom: 20px;
+}
+
+.write-article-header select {
+  width: 100%; /* 카테고리 선택칸 너비 확장 */
+  padding: 8px;
+}
+
+.write-article-header input {
+  width: 100%; /* 제목 입력 칸 너비 확장 */
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.write-article-header input:focus,
+.write-article-body textarea:focus {
+  border-color: #fc5356;
+  outline: none;
+}
+
+/* 본문 작성 */
+.write-article-body {
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.write-article-body textarea {
+  width: 100%;
+  min-height: 300px;
+  font-size: 16px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  overflow-y: auto;
+}
+
+.article-img input[type="file"] {
+  display: block;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 버튼 스타일 */
+.submit-btn {
+  background-color: #426b1f;
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+  align-self: flex-end; /* 오른쪽 정렬 */
+}
+
+.submit-btn:hover {
+  background-color: #315016;
+}
+
+.new-post {
+  font-size: 24px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 20px;
+}

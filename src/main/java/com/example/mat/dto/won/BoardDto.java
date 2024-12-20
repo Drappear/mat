@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-// 게시판 DTO 클래스
+/**
+ * 게시판 DTO 클래스
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -28,25 +28,21 @@ public class BoardDto {
     @NotBlank(message = "내용은 필수 항목입니다.")
     private String content;
 
-    // 작성자 회원 아이디
-    private Long mid;
-
     // 작성자 닉네임
     private String nickname;
 
-    // 게시글이 속한 카테고리 목록
-    @Builder.Default
-    private List<BoardCategoryDto> boardCateDtos = new ArrayList<>();
+    // 게시판 카테고리 이름
+    private String boardCategory;
 
     // 게시글 조회수
     private Long viewCount;
-
-    // 메인 이미지 경로
-    private String mainImage;
 
     // 게시글 작성 시간
     private LocalDateTime regDate;
 
     // 게시글 수정 시간
     private LocalDateTime updateDate;
+
+    // 이미지 파일 정보
+    private String imageFileName; // 업로드된 이미지 파일 이름
 }
