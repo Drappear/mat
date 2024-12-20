@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html
-  lang="zxx"
+  lang="ko"
   xmlns:th="http://www.thymeleaf.org"
   layout:decorate="~{/layouts/layout}"
 >
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Post</title>
     <!-- CSS 파일 경로 지정 -->
     <link rel="stylesheet" th:href="@{/css/board/register.css}" />
@@ -18,8 +19,8 @@
           <form
             th:action="@{/board/register}"
             method="POST"
-            class="blog-article"
             enctype="multipart/form-data"
+            class="blog-article"
           >
             <!-- CSRF 토큰 -->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -29,28 +30,32 @@
 
               <!-- 카테고리 선택 -->
               <div class="form-group">
+                <label for="category"></label>
                 <select
                   id="category"
-                  name="boardCategory"
+                  name="categoryId"
                   class="form-control"
                   required
                 >
+                  <option value="" disabled selected>Category</option>
                   <option
                     th:each="category : ${categories}"
-                    th:value="${category.name}"
+                    th:value="${category.boardCNo}"
                     th:text="${category.name}"
+                    th:selected="${boardDto.categoryId == category.boardCNo}"
                   ></option>
                 </select>
               </div>
 
               <!-- 제목 입력 -->
               <div class="form-group">
+                <label for="title"></label>
                 <input
                   type="text"
                   id="title"
                   name="title"
                   class="form-control"
-                  placeholder="제목 입력"
+                  placeholder="제목을 입력하세요"
                   th:value="${boardDto.title}"
                   required
                 />
@@ -59,19 +64,29 @@
 
             <!-- 이미지 업로드 -->
             <div class="article-img">
+              <label for="image"></label>
               <input
                 type="file"
                 id="image"
                 name="image"
                 class="form-control"
                 accept="image/jpeg, image/png, image/gif"
-                required
               />
+              <!-- 기존 이미지 표시 -->
+              <div
+                th:if="${boardDto.imageFileName != null}"
+                class="existing-image"
+              >
+                <p>
+                  현재 이미지: <span th:text="${boardDto.imageFileName}"></span>
+                </p>
+              </div>
             </div>
 
             <!-- 본문 입력 -->
             <div class="write-article-body">
               <div class="form-group">
+                <label for="content">본문</label>
                 <textarea
                   id="content"
                   name="content"
@@ -85,7 +100,7 @@
             </div>
 
             <!-- 작성 버튼 -->
-            <div class="form-group">
+            <div class="form-group text-center">
               <button type="submit" class="btn btn-primary submit-btn">
                 Post
               </button>

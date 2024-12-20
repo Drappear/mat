@@ -3,6 +3,8 @@ html,
 body {
   height: 100%;
   margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9; /* 부드러운 배경색 추가 */
 }
 
 .container {
@@ -32,7 +34,11 @@ body {
 }
 
 .write-article-header {
-  margin-bottom: 20px;
+  margin-bottom: 5px; /* 간격을 좁힘 */
+}
+
+.write-article-header .form-group {
+  margin-bottom: 5px; /* 간격을 좁힘 */
 }
 
 .write-article-header h2 {
@@ -46,15 +52,6 @@ body {
   margin-bottom: 8px;
   font-weight: bold;
   color: #333;
-}
-
-.write-article-header .form-group {
-  margin-bottom: 20px;
-}
-
-.write-article-header select {
-  width: 100%; /* 카테고리 선택칸 너비 확장 */
-  padding: 8px;
 }
 
 .write-article-header input {
@@ -71,9 +68,21 @@ body {
   outline: none;
 }
 
+/* 이미지 업로드 */
+.article-img {
+  margin-bottom: 10px; /* 간격을 좁힘 */
+}
+
+.article-img input[type="file"] {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
 /* 본문 작성 */
 .write-article-body {
-  margin-top: 20px;
+  margin-top: 10px; /* 간격을 좁힘 */
   flex-grow: 1;
 }
 
@@ -86,13 +95,6 @@ body {
   border-radius: 4px;
   resize: vertical;
   overflow-y: auto;
-}
-
-.article-img input[type="file"] {
-  display: block;
-  margin-top: 15px;
-  font-size: 14px;
-  color: #666;
 }
 
 /* 버튼 스타일 */
@@ -118,4 +120,19 @@ body {
   text-align: center;
   font-weight: 600;
   margin-bottom: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .write-article {
+    width: 90%; /* 작은 화면에서는 너비 확대 */
+  }
+
+  .write-article-header h2 {
+    font-size: 22px; /* 제목 크기 조정 */
+  }
+
+  .submit-btn {
+    align-self: center; /* 버튼 중앙 정렬 */
+  }
 }
