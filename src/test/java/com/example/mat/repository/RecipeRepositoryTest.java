@@ -53,7 +53,7 @@ public class RecipeRepositoryTest {
         // .name("국/탕/찌개")
         // .name("디저트")
         // .name("면/만두")
-        .name("밥/죽/떡")
+        // .name("밥/죽/떡")
         // .name("퓨전")
         // .name("김치/젓갈/장류")
         // .name("양념/소스/잼")
