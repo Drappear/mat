@@ -51,6 +51,19 @@
   width: 100%;
 }
 
+/* 식당 목록 */
+.blog__item {
+  margin-bottom: 30px;
+}
+
+.blog__item__text {
+  padding-top: 5px;
+}
+
+.blog__item__text ul{
+  margin-bottom: 3px;
+}
+
 /* sort element */
 .sort-element {
   position: relative;
@@ -168,13 +181,13 @@
 -----------------------*/
 
 .diners__item {
-  height: 480px;
+  height: 360px;
   position: relative;
 }
 
 .diners__slider .col-lg-12 {
   max-width: 100%;
-  height: 480px;
+  height: 360px;
 }
 
 .diners__slider.owl-carousel .owl-nav button {

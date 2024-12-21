@@ -1,5 +1,7 @@
 package com.example.mat.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.service.DinerService;
 
@@ -29,8 +32,11 @@ public class DinerController {
     @GetMapping("/list")
     public void getDinerList(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, Model model) {
         log.info("get diner list 페이지 요청");
+        pageRequestDto.setSize(8);
         PageResultDto<DinerDto, Object[]> result = dinerService.getDinerList(pageRequestDto);
+        List<DinerCategoryDto> categories = dinerService.getCategoryList();
 
+        model.addAttribute("categories", categories);
         model.addAttribute("result", result);
     }
 
@@ -45,8 +51,12 @@ public class DinerController {
     }
 
     @GetMapping("/register")
-    public void getDinerRegister() {
+    public void getDinerRegister(Model model) {
         log.info("get diner register 페이지 요청");
+
+        List<DinerCategoryDto> categories = dinerService.getCategoryList();
+
+        model.addAttribute("categories", categories);
     }
 
     @PostMapping("/create")

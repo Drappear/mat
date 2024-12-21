@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.entity.diner.Diner;
+import com.example.mat.entity.diner.DinerCategory;
 import com.example.mat.entity.diner.DinerImage;
 
 public interface DinerService {
@@ -28,6 +30,16 @@ public interface DinerService {
 
     // 식당 삭제
     void deleteDiner(Long did);
+
+    List<DinerCategoryDto> getCategoryList();
+
+    public default DinerCategoryDto entityToDto(DinerCategory entity) {
+      return DinerCategoryDto.builder().dcid(entity.getDcid()).name(entity.getName()).build();
+  }
+
+  public default DinerCategory dtoToEntity(DinerCategoryDto dto) {
+      return DinerCategory.builder().dcid(dto.getDcid()).name(dto.getName()).build();
+  }
 
     default DinerDto entityToDto(Diner diner, List<DinerImage> dinerImages) {
         DinerDto dinerDto = DinerDto.builder()

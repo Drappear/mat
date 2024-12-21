@@ -18,14 +18,9 @@
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
                     <div class="col col-lg-1">
-                      <select class="form-select">
+                      <select class="form-select" name="dinerCategory" id="dinerCategory">
                         <option selected>분류</option>
-                        <option value="1">한식</option>
-                        <option value="2">양식</option>
-                        <option value="3">중식</option>
-                        <option value="4">일식</option>
-                        <option value="5">카페&디저트</option>
-                        <option value="5">퓨전&기타</option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}"></option>
                       </select>
                     </div>
                   </div>
