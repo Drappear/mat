@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.entity.diner.Diner;
+import com.example.mat.entity.diner.DinerCategory;
 import com.example.mat.entity.diner.DinerImage;
+import com.example.mat.repository.DinerCategoryRepository;
 import com.example.mat.repository.DinerImageRepository;
 import com.example.mat.repository.DinerRepository;
 
@@ -28,6 +32,7 @@ public class DinerServiceImpl implements DinerService {
 
     private final DinerRepository dinerRepository;
     private final DinerImageRepository dinerImageRepository;
+    private final DinerCategoryRepository dinerCategoryRepository;
 
     @Override
     public Long createDiner(DinerDto dinerDto) {
@@ -63,7 +68,7 @@ public class DinerServiceImpl implements DinerService {
     @Override
     public PageResultDto<DinerDto, Object[]> getDinerList(PageRequestDto pageRequestDto) {
         Pageable pageable = pageRequestDto.getPageable(Sort.by("did").descending());
-
+        
         Page<Object[]> result = dinerImageRepository.getTotalList(pageRequestDto.getType(), pageRequestDto.getKeyword(),
                 pageable);
 
@@ -71,6 +76,13 @@ public class DinerServiceImpl implements DinerService {
                 (List<DinerImage>) Arrays.asList((DinerImage) en[1])));
 
         return new PageResultDto<>(result, function);
+    }
+
+    @Override
+    public List<DinerCategoryDto> getCategoryList() {
+      List<DinerCategory> result = dinerCategoryRepository.findAll();
+
+        return result.stream().map(c -> entityToDto(c)).collect(Collectors.toList());
     }
 
 }

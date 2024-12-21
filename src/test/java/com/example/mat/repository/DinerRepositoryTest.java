@@ -10,11 +10,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import com.example.mat.entity.diner.Diner;
+import com.example.mat.entity.diner.DinerCategory;
 
 @SpringBootTest
 public class DinerRepositoryTest {
     @Autowired
     private DinerRepository dinerRepository;
+
+    @Autowired
+    private DinerCategoryRepository dinerCategoryRepository;
 
     @Test
     public void createDinerTest() {
@@ -28,6 +32,16 @@ public class DinerRepositoryTest {
                 .build();
 
         dinerRepository.save(diner);
+    }
+
+    @Test
+    public void categoryInsertTest() {
+      dinerCategoryRepository.save(DinerCategory.builder().name("한식").build());
+      dinerCategoryRepository.save(DinerCategory.builder().name("양식").build());
+      dinerCategoryRepository.save(DinerCategory.builder().name("중식").build());
+      dinerCategoryRepository.save(DinerCategory.builder().name("일식").build());
+      dinerCategoryRepository.save(DinerCategory.builder().name("카페&디저트").build());
+      dinerCategoryRepository.save(DinerCategory.builder().name("퓨전&기타").build());
     }
 
 }
