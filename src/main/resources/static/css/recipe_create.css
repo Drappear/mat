@@ -1076,6 +1076,24 @@ video {
   color: rgba(0, 0, 0, 0.9) !important;
 }
 
+/* 요리 정보 selectbox 크기기 */
 .select-info{
-  width: 180px;
+  width: 15vw;
 }
+/* 반응형 처리 */
+@media (min-width: 1800px) {
+  .select-info {
+    width: 13.5vw; /* select 요소가 부모 컨테이너에 맞게 확장 */
+  }
+}
+@media (max-width: 1176px) {
+  .select-info {
+    width: 8vw; /* select 요소가 부모 컨테이너에 맞게 확장 */
+  }
+}
+/* @media (max-width: 768px) {
+  .select-info {
+    width: 5vw; 
+  }
+} */
+ 
