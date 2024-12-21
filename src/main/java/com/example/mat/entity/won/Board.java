@@ -39,8 +39,4 @@ public class Board extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private BoardImage image;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7

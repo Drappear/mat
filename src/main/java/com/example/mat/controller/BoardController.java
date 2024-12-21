@@ -85,55 +85,6 @@ public class BoardController {
             return "redirect:/board/list?error";
         }
         return "board/detail";
-<<<<<<< HEAD
-=======
-    }
-
-    /**
-     * 게시물 수정 페이지로 이동
-     */
-    @GetMapping("/modify/{bno}")
-    public String modifyForm(@PathVariable Long bno, Model model) {
-        try {
-            BoardDto boardDto = boardService.getDetail(bno);
-            List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
-            model.addAttribute("categories", categories);
-            model.addAttribute("boardDto", boardDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/board/list?error";
-        }
-        return "board/modify";
-    }
-
-    /**
-     * 게시물 수정 처리
-     */
-    @PostMapping("/modify")
-    public String modify(@ModelAttribute BoardDto boardDto,
-            @RequestParam(value = "image", required = false) MultipartFile file) {
-        try {
-            boardService.modifyWithImage(boardDto, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/board/modify/" + boardDto.getBno() + "?error";
-        }
-        return "redirect:/board/list";
-    }
-
-    /**
-     * 게시물 삭제 처리
-     */
-    @PostMapping("/delete/{bno}")
-    public String delete(@PathVariable Long bno) {
-        try {
-            boardService.delete(bno);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/board/list?error";
-        }
-        return "redirect:/board/list";
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7
     }
 
     /**
