@@ -8,12 +8,19 @@
     <div class="container diner-view">
       <div class="diner-main-img-and-map">
         <div class="col-lg-9 diner-main-img">
-          <img src="https://placehold.co/1080x480" alt="" />
+          <img
+                    th:src="|/upload/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
+                    th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
+                    alt=""
+                    loading="lazy"
+                    width="1080px"
+                    height="420px"
+                  />
         </div>
         <div class="col-lg-3 diner-map">
           <div class="row"><img src="https://placehold.co/320x320" alt="" /></div>
           <div class="row mt-3">
-            <h5>식당 주소</h5>
+            <h5 th:text="${dinerDto.address}"></h5>
           </div>
           <div class="row mt-3">
             <h5>식당 상세 주소</h5>
@@ -24,16 +31,17 @@
     <div class="container">
       <div class="row mt-3 diner-overview-section">
         <div class="col-lg-3">
-          <div class="row"><h3>식당 이름</h3></div>
+          <div class="row"><h3 th:text="${dinerDto.name}"></h3></div>
           <div class="row">
             <div class="col">지역명</div>
             <div class="col">카테고리</div>
           </div>
-          <div class="row">영업시간</div>
+          <div class="row" th:text="${dinerDto.phone}"></div>
+          <div class="row" th:text="${dinerDto.workTime}">영업시간</div>
         </div>
 
-        <div class="col-lg-6"><h3>소개글</h3></div>
-        <div class="col-lg-3"><h3>메뉴 정보</h3></div>
+        <div class="col-lg-6"><h3 th:text="${dinerDto.content}"></h3></div>
+        <div class="col-lg-3"><h3 th:text="${dinerDto.menu}"></h3></div>
       </div>
     </div>
     <div class="container">
@@ -45,6 +53,9 @@
           <div>서비스</div>
         </div>
         <div class="col">
+          <button class="btn btn-info" id="modalOpenButton">수정</button>
+          <button class="btn btn-danger" id="modalOpenButton">삭제</button>
+          <button class="btn btn-primary" id="modalOpenButton">목록</button>
           <button class="btn btn-success" id="modalOpenButton">리뷰쓰기</button>
         </div>
       </div>
