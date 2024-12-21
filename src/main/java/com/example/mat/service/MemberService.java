@@ -2,6 +2,7 @@ package com.example.mat.service;
 
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.PasswordDto;
+import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.constant.MemberRole;
 import com.example.mat.entity.shin.Member;
 
@@ -9,9 +10,14 @@ public interface MemberService {
     // 닉네임 수정
     void nickUpdate(MemberDto memberDto);
 
+    // 개인정보 수정
+    void personalUpdate(UpdateMemberDto updatememberDto);
+
     // 비밀번호 수정
     void passwordUpdate(PasswordDto passwordDto) throws Exception;
+
     // 회원탈퇴
+    void leave(PasswordDto passwordDto) throws Exception;
 
     // 회원가입
     String register(MemberDto memberDto);
@@ -32,6 +38,7 @@ public interface MemberService {
                 .nickname(memberDto.getNickname())
                 .password(memberDto.getPassword())
                 .email(memberDto.getEmail())
+                .tel(memberDto.getTel())
                 .addr(memberDto.getAddr())
                 .detailAddr(memberDto.getDetailAddr())
                 .role(MemberRole.MEMBER)
@@ -46,6 +53,7 @@ public interface MemberService {
                 .nickname(member.getNickname())
                 .password(member.getPassword())
                 .email(member.getEmail())
+                .tel(member.getTel())
                 .addr(member.getAddr())
                 .detailAddr(member.getDetailAddr())
                 .role(MemberRole.MEMBER)

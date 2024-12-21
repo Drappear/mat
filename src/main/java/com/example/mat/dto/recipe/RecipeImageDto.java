@@ -25,6 +25,7 @@ public class RecipeImageDto {
   private String path;
 
   // TODO: rno 가져오기 -> Recipe 에서
+  private Long rno;
 
   private LocalDateTime regDate;
   private LocalDateTime updateDate;
