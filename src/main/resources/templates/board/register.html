@@ -8,27 +8,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Post</title>
-    <!-- CSS 파일 경로 지정 -->
     <link rel="stylesheet" th:href="@{/css/board/register.css}" />
   </head>
   <body>
     <div layout:fragment="content">
       <div class="write-content">
         <div class="write-article">
-          <!-- 글 작성 폼 -->
+          <!-- boardDto 확인 -->
+          <p th:if="${boardDto == null}" class="text-danger">
+            boardDto 객체가 전달되지 않았습니다.
+          </p>
           <form
             th:action="@{/board/register}"
             method="POST"
             enctype="multipart/form-data"
             class="blog-article"
           >
-            <!-- CSRF 토큰 -->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-
             <div class="write-article-header">
               <p class="new-post">New Post</p>
-
-              <!-- 카테고리 선택 -->
               <div class="form-group">
                 <label for="category"></label>
                 <select
@@ -45,9 +43,10 @@
                     th:selected="${boardDto.categoryId == category.boardCNo}"
                   ></option>
                 </select>
+                <p th:if="${categories == null || #lists.isEmpty(categories)}" class="text-danger">
+                  카테고리를 불러올 수 없습니다.
+                </p>
               </div>
-
-              <!-- 제목 입력 -->
               <div class="form-group">
                 <label for="title"></label>
                 <input
@@ -59,20 +58,24 @@
                   th:value="${boardDto.title}"
                   required
                 />
+                <div th:if="${#fields.hasErrors('title')}" class="text-danger">
+                  <p th:errors="*{title}"></p>
+                </div>
               </div>
             </div>
-
-            <!-- 이미지 업로드 -->
             <div class="article-img">
-              <label for="image"></label>
+              <label for="image">이미지 업로드</label>
               <input
                 type="file"
                 id="image"
                 name="image"
                 class="form-control"
                 accept="image/jpeg, image/png, image/gif"
+                onchange="previewImage(event)"
               />
-              <!-- 기존 이미지 표시 -->
+              <div id="image-preview" class="mt-2">
+                <img id="preview" src="" alt="미리보기" style="max-width: 100%; display: none;" />
+              </div>
               <div
                 th:if="${boardDto.imageFileName != null}"
                 class="existing-image"
@@ -82,8 +85,6 @@
                 </p>
               </div>
             </div>
-
-            <!-- 본문 입력 -->
             <div class="write-article-body">
               <div class="form-group">
                 <label for="content">본문</label>
@@ -96,10 +97,11 @@
                   th:text="${boardDto.content}"
                   required
                 ></textarea>
+                <div th:if="${#fields.hasErrors('content')}" class="text-danger">
+                  <p th:errors="*{content}"></p>
+                </div>
               </div>
             </div>
-
-            <!-- 작성 버튼 -->
             <div class="form-group text-center">
               <button type="submit" class="btn btn-primary submit-btn">
                 Post
@@ -109,8 +111,6 @@
         </div>
       </div>
     </div>
-
-    <!-- JavaScript 라이브러리 -->
     <script th:src="@{https://code.jquery.com/jquery-1.10.2.min.js}"></script>
     <script
       th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js}"
