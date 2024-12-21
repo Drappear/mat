@@ -15,8 +15,8 @@ import com.example.mat.entity.BaseEntity;
 public class Board extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "mat_board_seq_gen", sequenceName = "mat_board_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mat_board_seq_gen")
+    @SequenceGenerator(name = "mat_board_seq_gen", sequenceName = "mat_board_seq", allocationSize = 1, initialValue = 1)
     private Long bno;
 
     @Column(nullable = false)
@@ -29,11 +29,11 @@ public class Board extends BaseEntity {
     private Long viewCount = 0L;
 
     @Column(nullable = false)
-    private String nickname = "Anonymous";
+    private String nick = "Anonymous"; // 기본값 추가
 
     // BoardCategory와의 연관 관계
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false) // 외래 키로 CATEGORY_ID 사용
+    @JoinColumn(name = "category_id", nullable = false)
     private BoardCategory boardCategory;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

@@ -1,21 +1,18 @@
 package com.example.mat.service;
 
+import com.example.mat.dto.won.BoardDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.mat.dto.PageRequestDto;
-import com.example.mat.dto.PageResultDto;
-import com.example.mat.dto.won.BoardDto;
+import java.util.List;
 
-/**
- * 게시판 서비스 인터페이스
- * 비즈니스 로직의 계약을 정의합니다.
- */
 public interface BoardService {
 
     /**
      * 게시물 등록
      *
-     * @param boardDto 게시물 정보를 담고 있는 DTO
+     * @param boardDto 게시물 데이터
      * @return 등록된 게시물 ID
      */
     Long register(BoardDto boardDto);
@@ -23,8 +20,8 @@ public interface BoardService {
     /**
      * 게시물 등록 (이미지 포함)
      *
-     * @param boardDto 게시물 정보를 담고 있는 DTO
-     * @param image    게시물에 업로드할 이미지 정보
+     * @param boardDto 게시물 데이터
+     * @param file     이미지 파일
      * @return 등록된 게시물 ID
      */
     Long registerWithImage(BoardDto boardDto, MultipartFile file);
@@ -32,7 +29,7 @@ public interface BoardService {
     /**
      * 게시물 수정
      *
-     * @param boardDto 수정할 게시물 정보를 담고 있는 DTO
+     * @param boardDto 수정할 게시물 데이터
      * @return 수정된 게시물 ID
      */
     Long modify(BoardDto boardDto);
@@ -40,8 +37,8 @@ public interface BoardService {
     /**
      * 게시물 수정 (이미지 포함)
      *
-     * @param boardDto 수정할 게시물 정보를 담고 있는 DTO
-     * @param image    게시물에 업로드할 새로운 이미지 정보
+     * @param boardDto 수정할 게시물 데이터
+     * @param file     이미지 파일
      * @return 수정된 게시물 ID
      */
     Long modifyWithImage(BoardDto boardDto, MultipartFile file);
@@ -49,23 +46,32 @@ public interface BoardService {
     /**
      * 게시물 삭제
      *
-     * @param bno 삭제할 게시물의 ID
+     * @param bno 게시물 ID
      */
     void delete(Long bno);
 
     /**
-     * 게시물 목록 조회 (페이징 및 검색)
-     *
-     * @param pageRequestDto 페이징 요청 정보를 담고 있는 DTO
-     * @return 페이징 처리된 게시물 결과 DTO
-     */
-    // PageResultDto<BoardDto, Object[]> getList(PageRequestDto pageRequestDto);
-
-    /**
      * 게시물 상세 조회
      *
-     * @param bno 조회할 게시물의 ID
-     * @return 게시물 상세 정보 DTO
+     * @param bno 게시물 ID
+     * @return 게시물 데이터
      */
     BoardDto getDetail(Long bno);
+
+    /**
+     * 게시물 목록 조회
+     *
+     * @return 게시물 데이터 목록
+     */
+    List<BoardDto> getList();
+
+    /**
+     * 검색 및 페이징을 포함한 게시물 목록 조회
+     *
+     * @param keyword  검색 키워드
+     * @param category 카테고리 ID
+     * @param pageable 페이징 정보
+     * @return 페이징 처리된 게시물 데이터
+     */
+    Page<BoardDto> getList(String keyword, Long category, Pageable pageable);
 }

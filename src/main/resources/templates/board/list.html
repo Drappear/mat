@@ -22,25 +22,22 @@
 
             <!-- 글 작성 버튼 추가 -->
             <div class="text-center mb-4">
-              <a href="/write-post" class="btn btn-success"> 글 작성 </a>
+              <a th:href="@{/board/register}" class="btn btn-success"> 글 작성 </a>
             </div>
 
             <!-- Form container for category selection and search -->
             <div class="mb-4">
-              <form class="d-flex align-items-center justify-content-center">
+              <form class="d-flex align-items-center justify-content-center" th:action="@{/board/list}" method="GET">
                 <!-- Category Selection -->
                 <div class="me-2">
-                  <label
-                    for="categorySelect"
-                    class="form-label d-block"
-                  ></label>
-                  <select id="categorySelect" class="form-select">
-                    <option value="">Select Category</option>
-                    <option value="tech">Technology</option>
-                    <option value="dev">Development</option>
-                    <option value="design">Design</option>
-                    <option value="news">News</option>
-                    <option value="other">Other</option>
+                  <label for="categorySelect" class="form-label d-block"></label>
+                  <select id="categorySelect" name="category" class="form-select">
+                    <option value="" th:selected="${#strings.isEmpty(param.category)}">Select Category</option>
+                    <option th:each="category : ${categories}" 
+                            th:value="${category.boardCNo}" 
+                            th:text="${category.name}" 
+                            th:selected="${param.category == category.boardCNo}">
+                    </option>
                   </select>
                 </div>
 
@@ -51,7 +48,9 @@
                     type="text"
                     class="form-control"
                     id="searchInput"
+                    name="keyword"
                     placeholder="Search for posts..."
+                    th:value="${param.keyword}"
                   />
                 </div>
 
@@ -59,201 +58,63 @@
                 <div class="align-self-center">
                   <button type="submit" class="btn btn-primary">
                     <i class="fas fa-search"></i>
-                    <!-- FontAwesome 검색 아이콘 -->
                   </button>
                 </div>
               </form>
             </div>
 
-            <!-- Sample Posts container -->
+            <!-- Posts container -->
             <div class="post-list">
-              <!-- Post 1 -->
-              <div
-                class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0"
-              >
+              <div th:each="post : ${boards}" 
+                   class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
                 <div class="row align-items-center">
                   <div class="col-md-8 mb-3 mb-sm-0">
                     <h5>
-                      <a href="#" class="text-primary">샘플 게시글 1</a>
+                      <a th:href="@{/board/detail/{bno}(bno=${post.bno})}" class="text-primary" th:text="${post.title}"></a>
                     </h5>
                     <p class="text-sm">
                       <span class="op-6">Posted</span>
-                      <a class="text-black">2 hours ago</a>
+                      <span th:text="${post.regDate}">2 hours ago</span>
                       <span class="op-6">by</span>
-                      <a class="text-black">JohnDoe</a>
+                      <span th:text="${post.nick}">JohnDoe</span>
                     </p>
-                    <p class="text-sm op-5">
-                      This is a sample content for post 1.
-                    </p>
+                    <p class="text-sm op-5" th:text="${post.content}">Sample content...</p>
                   </div>
                   <div class="col-md-4 op-7">
                     <div class="row text-center op-7">
                       <div class="col px-1">
                         <i class="fa-solid fa-comment icon-1x"></i>
-                        <!-- FontAwesome 댓글 아이콘 -->
-                        <span class="d-block text-sm">10 Replies</span>
+                        <span class="d-block text-sm">0 Replies</span> <!-- 댓글은 임시로 표시 -->
                       </div>
                       <div class="col px-1">
                         <i class="fa-solid fa-eye icon-1x"></i>
-                        <!-- FontAwesome 조회수 아이콘 -->
-                        <span class="d-block text-sm">150 Views</span>
+                        <span class="d-block text-sm" th:text="${post.viewCount} + ' Views'"></span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- Post 2 -->
-              <div
-                class="card row-hover pos-relative py-3 px-3 mb-3 border-primary border-top-0 border-right-0 border-bottom-0 rounded-0"
-              >
-                <div class="row align-items-center">
-                  <div class="col-md-8 mb-3 mb-sm-0">
-                    <h5>
-                      <a href="#" class="text-primary">샘플 게시글 2</a>
-                    </h5>
-                    <p class="text-sm">
-                      <span class="op-6">Posted</span>
-                      <a class="text-black">1 hour ago</a>
-                      <span class="op-6">by</span>
-                      <a class="text-black">JaneSmith</a>
-                    </p>
-                    <p class="text-sm op-5">
-                      This is a sample content for post 2.
-                    </p>
-                  </div>
-                  <div class="col-md-4 op-7">
-                    <div class="row text-center op-7">
-                      <div class="col px-1">
-                        <i class="fa-solid fa-comment icon-1x"></i>
-                        <span class="d-block text-sm">5 Replies</span>
-                      </div>
-                      <div class="col px-1">
-                        <i class="fa-solid fa-eye icon-1x"></i>
-                        <span class="d-block text-sm">200 Views</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Post 3 -->
-              <div
-                class="card row-hover pos-relative py-3 px-3 mb-3 border-success border-top-0 border-right-0 border-bottom-0 rounded-0"
-              >
-                <div class="row align-items-center">
-                  <div class="col-md-8 mb-3 mb-sm-0">
-                    <h5>
-                      <a href="#" class="text-primary">샘플 게시글 3</a>
-                    </h5>
-                    <p class="text-sm">
-                      <span class="op-6">Posted</span>
-                      <a class="text-black">3 hours ago</a>
-                      <span class="op-6">by</span>
-                      <a class="text-black">AlexK</a>
-                    </p>
-                    <p class="text-sm op-5">
-                      This is a sample content for post 3.
-                    </p>
-                  </div>
-                  <div class="col-md-4 op-7">
-                    <div class="row text-center op-7">
-                      <div class="col px-1">
-                        <i class="fa-solid fa-comment icon-1x"></i>
-                        <span class="d-block text-sm">8 Replies</span>
-                      </div>
-                      <div class="col px-1">
-                        <i class="fa-solid fa-eye icon-1x"></i>
-                        <span class="d-block text-sm">300 Views</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Post 4 -->
-              <div
-                class="card row-hover pos-relative py-3 px-3 mb-3 border-danger border-top-0 border-right-0 border-bottom-0 rounded-0"
-              >
-                <div class="row align-items-center">
-                  <div class="col-md-8 mb-3 mb-sm-0">
-                    <h5>
-                      <a href="#" class="text-primary">샘플 게시글 4</a>
-                    </h5>
-                    <p class="text-sm">
-                      <span class="op-6">Posted</span>
-                      <a class="text-black">5 hours ago</a>
-                      <span class="op-6">by</span>
-                      <a class="text-black">SarahL</a>
-                    </p>
-                    <p class="text-sm op-5">
-                      This is a sample content for post 4.
-                    </p>
-                  </div>
-                  <div class="col-md-4 op-7">
-                    <div class="row text-center op-7">
-                      <div class="col px-1">
-                        <i class="fa-solid fa-comment icon-1x"></i>
-                        <span class="d-block text-sm">15 Replies</span>
-                      </div>
-                      <div class="col px-1">
-                        <i class="fa-solid fa-eye icon-1x"></i>
-                        <span class="d-block text-sm">400 Views</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Post 5 -->
-              <div
-                class="card row-hover pos-relative py-3 px-3 mb-3 border-info border-top-0 border-right-0 border-bottom-0 rounded-0"
-              >
-                <div class="row align-items-center">
-                  <div class="col-md-8 mb-3 mb-sm-0">
-                    <h5>
-                      <a href="#" class="text-primary">샘플 게시글 5</a>
-                    </h5>
-                    <p class="text-sm">
-                      <span class="op-6">Posted</span>
-                      <a class="text-black">6 hours ago</a>
-                      <span class="op-6">by</span>
-                      <a class="text-black">ChrisW</a>
-                    </p>
-                    <p class="text-sm op-5">
-                      This is a sample content for post 5.
-                    </p>
-                  </div>
-                  <div class="col-md-4 op-7">
-                    <div class="row text-center op-7">
-                      <div class="col px-1">
-                        <i class="fa-solid fa-comment icon-1x"></i>
-                        <span class="d-block text-sm">20 Replies</span>
-                      </div>
-                      <div class="col px-1">
-                        <i class="fa-solid fa-eye icon-1x"></i>
-                        <span class="d-block text-sm">500 Views</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Pagination -->
-              <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item">
-                    <a class="page-link" href="#">Previous</a>
-                  </li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                  </li>
-                </ul>
-              </nav>
             </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li th:classappend="${boards.hasPrevious()} ? '' : 'disabled'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${boards.number - 1})}" aria-label="Previous">
+                    Previous
+                  </a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(1, boards.totalPages)}" 
+                    th:classappend="${pageNum == boards.number + 1} ? 'active'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${pageNum - 1})}" th:text="${pageNum}"></a>
+                </li>
+                <li th:classappend="${boards.hasNext()} ? '' : 'disabled'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${boards.number + 1})}" aria-label="Next">
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
