@@ -72,7 +72,7 @@
               <div class="p-4 bg-neutral-50 rounded-lg">
                 <div class="grid grid-cols-3 gap-4 items-center">
                   <label for="recipeDescription"
-                    class="text-neutral-950 form-label">요리소개</label>
+                    class="text-neutral-950 form-label">요리 소개</label>
                   <textarea id="recipeDescription"
                     placeholder="요리에 대한 간단한 설명을 적어주세요."
                     class="form-control col-span-2 border-neutral-300 border rounded-md px-3 py-2"
@@ -88,7 +88,7 @@
                   <label for="category"
                     class="form-label text-neutral-950">카테고리</label>
                   <select id="category" name="category"
-                    class="form-select col-span-2 border-neutral-300 border rounded-md px-3 py-2">
+                    class="form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2">
                     <option value>선택</option>
                     <option th:each="category : ${categories}"
                       th:value="${category.rCateId}" th:text="${category.name}">
@@ -99,53 +99,53 @@
             </div>
 
             <!-- 요리정보 -->
-            <div class="form-section">
-              <div class="p-4 bg-neutral-50 rounded-lg">
-                <div class="grid grid-cols-3 gap-4 items-center">
-                  <!--flex gap-5 items-center -->
-                  <label for="cookingInfo"
-                    class="form-label text-neutral-950">요리정보</label>
-                  <div class="col-span-2 flex justify-end gap-4">
-                    <div>
-                      <!-- <label for="servings" class="form-label text-neutral-950">인원</label> -->
-                      <select id="servings" name="servings"
-                        class="form-select form-select-lg col-span-2 border-neutral-300 border rounded-md px-3 py-2">
-                        <option value>인원 선택</option>
-                        <option value="1">1인분</option>
-                        <option value="2">2인분</option>
-                        <option value="3">3인분</option>
-                        <option value="4">4인분</option>
-                        <option value="5">5인분</option>
-                      </select>
-                    </div>
-                    <div>
-                      <select id="time" name="time"
-                        class="form-select form-select-lg col-span-2 border-neutral-300 border rounded-md px-3 py-2">
-                        <option value>시간 선택</option>
-                        <option value="10">10분 이내</option>
-                        <option value="30">30분 이내</option>
-                        <option value="60">60분 이내</option>
-                        <option value="90">90분 이내</option>
-                        <option value="120">2시간 이내</option>
-                        <option value="180">2시간 이상</option>
-                      </select>
-                    </div>
-                    <div>
-                      <select id="difficulty" name="difficulty"
-                        class="form-select form-select-lg col-span-2 border-neutral-300 border rounded-md px-3 py-2">
-                        <option value>난이도 선택</option>
-                        <option value="1">쉬움</option>
-                        <option value="2">보통</option>
-                        <option value="3">어려움</option>
-                        <option value="4">매우어려움</option>
-                        <option value="5">신의경지</option>
-                      </select>
-                    </div>
-                  </div>
+            <!-- 요리정보 -->
+<div class="form-section">
+  <div class="p-4 bg-neutral-50 rounded-lg">
+    <div class="grid grid-cols-3 gap-4 items-center">
+      <!--flex gap-5 items-center -->
+      <label for="cookingInfo" class="form-label text-neutral-950">요리 정보</label>
+      <div class="col-span-2 flex justify-end gap-4">
+        <div>
+          <!-- <label for="servings" class="form-label text-neutral-950">인원</label> -->
+          <select id="servings" name="servings"
+            class="select-info form-select-sm  col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+            <option value>인원 선택</option>
+            <option value="1">1인분</option>
+            <option value="2">2인분</option>
+            <option value="3">3인분</option>
+            <option value="4">4인분</option>
+            <option value="5">5인분</option>
+          </select>
+        </div>
+        <div>
+          <select id="time" name="time"
+            class="select-info form-select-sm  col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+            <option value>시간 선택</option>
+            <option value="10">10분 이내</option>
+            <option value="30">30분 이내</option>
+            <option value="60">60분 이내</option>
+            <option value="90">90분 이내</option>
+            <option value="120">2시간 이내</option>
+            <option value="180">2시간 이상</option>
+          </select>
+        </div>
+        <div>
+          <select id="difficulty" name="difficulty"
+            class="select-info form-select-sm  col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+            <option value>난이도 선택</option>
+            <option value="1">쉬움</option>
+            <option value="2">보통</option>
+            <option value="3">어려움</option>
+            <option value="4">매우어려움</option>
+            <option value="5">신의경지</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-                </div>
-              </div>
-            </div>
 
             <!-- {/* Divider */} -->
             <div class="border-t border-neutral-300 my-4"></div>
