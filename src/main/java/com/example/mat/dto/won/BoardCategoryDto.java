@@ -14,19 +14,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class BoardCategoryDto {
 
-<<<<<<< HEAD
-    // 카테고리 고유 번호
-    private Long boardCNo;
-
-    // 카테고리 이름
-    @NotBlank(message = "카테고리 선택은 필수 항목입니다.")
-    private String name;
-=======
   // 카테고리 고유 번호
   private Long boardCNo;
 
   // 카테고리 이름
   @NotBlank(message = "카테고리 선택은 필수 항목입니다.")
   private String name;
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7
 }

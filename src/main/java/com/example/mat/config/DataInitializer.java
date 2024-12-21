@@ -20,8 +20,4 @@ public class DataInitializer {
             }
         };
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7

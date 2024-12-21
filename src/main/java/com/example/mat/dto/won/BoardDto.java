@@ -33,8 +33,4 @@ public class BoardDto {
     private Long categoryId; // 카테고리 ID를 사용
 
     private String imageFileName;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7

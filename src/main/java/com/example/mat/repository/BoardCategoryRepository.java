@@ -18,8 +18,4 @@ public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Lo
      * @return 카테고리에 해당하는 엔티티
      */
     BoardCategory findByName(String name);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 86c8cc0c6022911626db3c215fc316a3a0f5ded7
