@@ -1,9 +1,8 @@
 package com.example.mat.entity.won;
 
-import com.example.mat.entity.BaseEntity;
 import jakarta.persistence.*;
-
 import lombok.*;
+import com.example.mat.entity.BaseEntity;
 
 @Entity
 @Table(name = "mat_board")
@@ -12,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = { "image", "boardCategory" })
 public class Board extends BaseEntity {
 
     @Id
@@ -23,12 +22,21 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
-    private Long viewCount;
+    private Long viewCount = 0L;
 
     @Column(nullable = false)
-    private String boardCategory;
+    private String nickname = "Anonymous";
+
+    // BoardCategory와의 연관 관계
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false) // 외래 키로 CATEGORY_ID 사용
+    private BoardCategory boardCategory;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private BoardImage image;
 }

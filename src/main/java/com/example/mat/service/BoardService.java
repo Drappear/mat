@@ -1,39 +1,71 @@
 package com.example.mat.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.won.BoardDto;
-import com.example.mat.entity.won.Board;
 
-import java.util.List;
-
+/**
+ * 게시판 서비스 인터페이스
+ * 비즈니스 로직의 계약을 정의합니다.
+ */
 public interface BoardService {
 
-    Long createPost(BoardDto boardDto);
+    /**
+     * 게시물 등록
+     *
+     * @param boardDto 게시물 정보를 담고 있는 DTO
+     * @return 등록된 게시물 ID
+     */
+    Long register(BoardDto boardDto);
 
-    void updatePost(Long bno, BoardDto boardDto);
+    /**
+     * 게시물 등록 (이미지 포함)
+     *
+     * @param boardDto 게시물 정보를 담고 있는 DTO
+     * @param image    게시물에 업로드할 이미지 정보
+     * @return 등록된 게시물 ID
+     */
+    Long registerWithImage(BoardDto boardDto, MultipartFile file);
 
-    void deletePost(Long bno);
+    /**
+     * 게시물 수정
+     *
+     * @param boardDto 수정할 게시물 정보를 담고 있는 DTO
+     * @return 수정된 게시물 ID
+     */
+    Long modify(BoardDto boardDto);
 
-    BoardDto getPost(Long bno);
+    /**
+     * 게시물 수정 (이미지 포함)
+     *
+     * @param boardDto 수정할 게시물 정보를 담고 있는 DTO
+     * @param image    게시물에 업로드할 새로운 이미지 정보
+     * @return 수정된 게시물 ID
+     */
+    Long modifyWithImage(BoardDto boardDto, MultipartFile file);
 
-    List<BoardDto> getPostList();
+    /**
+     * 게시물 삭제
+     *
+     * @param bno 삭제할 게시물의 ID
+     */
+    void delete(Long bno);
 
-    default BoardDto entityToDto(Board board) {
-        return BoardDto.builder()
-                .bno(board.getBno())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .viewCount(board.getViewCount())
-                .boardCategory(board.getBoardCategory())
-                .build();
-    }
+    /**
+     * 게시물 목록 조회 (페이징 및 검색)
+     *
+     * @param pageRequestDto 페이징 요청 정보를 담고 있는 DTO
+     * @return 페이징 처리된 게시물 결과 DTO
+     */
+    // PageResultDto<BoardDto, Object[]> getList(PageRequestDto pageRequestDto);
 
-    default Board dtoToEntity(BoardDto boardDto) {
-        return Board.builder()
-                .bno(boardDto.getBno())
-                .title(boardDto.getTitle())
-                .content(boardDto.getContent())
-                .viewCount(boardDto.getViewCount())
-                .boardCategory(boardDto.getBoardCategory())
-                .build();
-    }
+    /**
+     * 게시물 상세 조회
+     *
+     * @param bno 조회할 게시물의 ID
+     * @return 게시물 상세 정보 DTO
+     */
+    BoardDto getDetail(Long bno);
 }
