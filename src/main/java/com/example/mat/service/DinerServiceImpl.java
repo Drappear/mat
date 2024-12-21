@@ -1,5 +1,6 @@
 package com.example.mat.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +50,20 @@ public class DinerServiceImpl implements DinerService {
 
     @Override
     public DinerDto getDinerDetail(Long did) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDinerDetail'");
+        List<Object[]> result = dinerImageRepository.getDinerRow(did);
+
+        Diner diner = (Diner) result.get(0)[0];
+        // Long reviewCnt = (Long) result.get(0)[2];
+        // Double reviewAvg = (Double) result.get(0)[3];
+
+        // 식당 이미지
+        List<DinerImage> dinerImages = new ArrayList<>();
+        result.forEach(row -> {
+          DinerImage dinerImage = (DinerImage) row[1];
+          dinerImages.add(dinerImage);
+        });
+
+        return entityToDto(diner, dinerImages);
     }
 
     @Override

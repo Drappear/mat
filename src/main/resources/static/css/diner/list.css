@@ -53,7 +53,7 @@
 
 /* 식당 목록 */
 .blog__item {
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 
 .blog__item__text {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.mat.dto.PageRequestDto;
@@ -46,8 +47,10 @@ public class DinerController {
     }
 
     @GetMapping("/read")
-    public void getDinerRead() {
+    public void getDinerRead(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, @RequestParam Long did, Model model) {
         log.info("get diner read 페이지 요청");
+        DinerDto dinerDto = dinerService.getDinerDetail(did);
+        model.addAttribute("dinerDto", dinerDto);
     }
 
     @GetMapping("/register")
