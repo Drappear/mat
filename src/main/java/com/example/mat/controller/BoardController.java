@@ -1,116 +1,135 @@
 package com.example.mat.controller;
 
+import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.won.BoardCategoryDto;
 import com.example.mat.dto.won.BoardDto;
+import com.example.mat.service.BoardCategoryService;
 import com.example.mat.service.BoardService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Log4j2
+/**
+ * 게시판 컨트롤러
+ * 클라이언트의 요청을 처리하고 서비스 계층과 상호작용합니다.
+ */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardCategoryService boardCategoryService;
 
-    // 게시물 작성 페이지 이동
-    @GetMapping("/write")
-    public String showWritePostPage() {
-        log.info("게시물 작성 페이지로 이동");
-        return "board/boardWrite";
-    }
-
-    // 게시물 등록 처리
-    @PostMapping("/submit")
-    public String submitPost(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            log.warn("유효성 검증 실패: {}", bindingResult.getAllErrors());
-            model.addAttribute("errorMessages", bindingResult.getAllErrors());
-            return "board/boardWrite";
-        }
-
-        Long bno = boardService.createPost(boardDto);
-        log.info("게시물 등록 완료 (bno: {})", bno);
-        return "redirect:/board/content/" + bno;
-    }
-
-    // 게시물 목록 조회
+    /**
+     * 게시물 목록 페이지
+     */
     @GetMapping("/list")
-    public String listPosts(Model model) {
-        List<BoardDto> boardList = boardService.getPostList();
-        model.addAttribute("boardList", boardList);
-        log.info("게시물 목록 조회 (총 {}건)", boardList.size());
-        return "board/boardList";
+    public String list(PageRequestDto pageRequestDto, Model model) {
+        PageResultDto<BoardDto, Object[]> result = boardService.getList(pageRequestDto);
+        model.addAttribute("result", result);
+        return "board/list";
     }
 
-    // 게시물 상세 조회
-    @GetMapping("/content/{bno}")
-    public String viewPost(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getPost(bno);
+    /**
+     * 게시물 등록 페이지로 이동
+     */
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        // 카테고리 목록 추가
+        List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("boardDto", new BoardDto());
+        return "board/register";
+    }
 
-        // 게시물이 null인 경우
-        if (boardDto == null) {
-            log.warn("게시물 상세 조회 실패 (bno: {})", bno);
-            return "redirect:/board/list";
+    /**
+     * 게시물 등록 처리
+     */
+    @PostMapping("/register")
+    public String register(@ModelAttribute BoardDto boardDto, @RequestParam("image") MultipartFile file) {
+        try {
+            // DTO 및 파일 확인 로그
+            System.out.println("Board DTO: " + boardDto);
+            System.out.println("File: " + (file != null ? file.getOriginalFilename() : "No file uploaded"));
+
+            // 카테고리 유효성 검사
+            if (boardDto.getCategoryId() == null) {
+                throw new IllegalArgumentException("카테고리는 필수 항목입니다.");
+            }
+
+            // 서비스 호출
+            boardService.registerWithImage(boardDto, file);
+        } catch (Exception e) {
+            e.printStackTrace(); // 모든 예외 로깅
+            return "redirect:/board/register?error";
         }
-
-        // 게시물 데이터가 제대로 조회된 경우
-        log.info("게시물 조회 성공: {}", boardDto);
-
-        // 게시물 정보를 모델에 추가
-        model.addAttribute("board", boardDto);
-
-        log.info("게시물 상세 조회 (bno: {})", bno);
-        return "board/boardContent";
-    }
-
-    // 게시물 수정 페이지 이동
-    @GetMapping("/edit/{bno}")
-    public String showEditPostPage(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getPost(bno);
-        if (boardDto == null) {
-            log.warn("게시물 수정 페이지 이동 실패 (bno: {})", bno);
-            return "redirect:/board/list";
-        }
-        model.addAttribute("board", boardDto);
-        log.info("게시물 수정 페이지로 이동 (bno: {})", bno);
-        return "board/boardEdit";
-    }
-
-    // 게시물 수정 처리
-    @PostMapping("/update/{bno}")
-    public String updatePost(@PathVariable Long bno, @Valid BoardDto boardDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.warn("게시물 수정 유효성 검증 실패 (bno: {})", bno);
-            return "board/boardEdit";
-        }
-        boardService.updatePost(bno, boardDto);
-        log.info("게시물 수정 완료 (bno: {})", bno);
-        return "redirect:/board/content/" + bno;
-    }
-
-    // 게시물 삭제 처리
-    @GetMapping("/delete/{bno}")
-    public String deletePost(@PathVariable Long bno) {
-        boardService.deletePost(bno);
-        log.info("게시물 삭제 완료 (bno: {})", bno);
         return "redirect:/board/list";
     }
 
-    // 임시 게시물 상세 보기 (디자인 확인용)
-    @GetMapping("/exContent")
-    public String testShowContent() {
-        log.info("임시 게시물 상세 보기 페이지 이동");
-        return "board/exBoardContent";
+    /**
+     * 게시물 상세 보기
+     */
+    @GetMapping("/detail/{bno}")
+    public String detail(@PathVariable Long bno, Model model) {
+        try {
+            BoardDto boardDto = boardService.getDetail(bno);
+            model.addAttribute("board", boardDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/board/list?error";
+        }
+        return "board/detail";
+    }
+
+    /**
+     * 게시물 수정 페이지로 이동
+     */
+    @GetMapping("/modify/{bno}")
+    public String modifyForm(@PathVariable Long bno, Model model) {
+        try {
+            BoardDto boardDto = boardService.getDetail(bno);
+            List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+            model.addAttribute("categories", categories);
+            model.addAttribute("boardDto", boardDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/board/list?error";
+        }
+        return "board/modify";
+    }
+
+    /**
+     * 게시물 수정 처리
+     */
+    @PostMapping("/modify")
+    public String modify(@ModelAttribute BoardDto boardDto,
+            @RequestParam(value = "image", required = false) MultipartFile file) {
+        try {
+            boardService.modifyWithImage(boardDto, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/board/modify/" + boardDto.getBno() + "?error";
+        }
+        return "redirect:/board/list";
+    }
+
+    /**
+     * 게시물 삭제 처리
+     */
+    @PostMapping("/delete/{bno}")
+    public String delete(@PathVariable Long bno) {
+        try {
+            boardService.delete(bno);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/board/list?error";
+        }
+        return "redirect:/board/list";
     }
 }
