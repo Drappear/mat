@@ -15,6 +15,7 @@ public class RecipeIngredientDto {
   private Long ingId; // 레시피 번호
 
   // TODO: rno -> Recipe에서 가져오기
+  private Long rno;
 
   @NotBlank(message = "재료명은 필수 항목입니다.")
   private String name; // 재료명
