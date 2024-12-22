@@ -25,7 +25,7 @@
             <!-- 제목 -->
             <div class="mb-3">
                 <label for="title" class="form-label"></label>
-                <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+                <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" maxlength="50" required>
             </div>
 
             <!-- 이미지 업로드 -->
@@ -37,7 +37,7 @@
             <!-- 내용 -->
             <div class="mb-3">
                 <label for="content" class="form-label"></label>
-                <textarea class="form-control" id="content" name="content" th:field="*{content}" rows="5" placeholder="내용을 입력하세요" required></textarea>
+                <textarea class="form-control" id="content" name="content" th:field="*{content}" rows="5" placeholder="내용을 입력하세요" maxlength="1300" required></textarea>
             </div>
     
             <!-- 등록 버튼 -->

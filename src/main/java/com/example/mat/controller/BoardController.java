@@ -33,13 +33,9 @@ public class BoardController {
             Pageable pageable,
             Model model) {
 
-        // 카테고리 목록 가져오기
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
-
-        // 게시물 목록 가져오기
         var boards = boardService.getList(keyword, category, pageable);
 
-        // 모델에 데이터 추가
         model.addAttribute("categories", categories);
         model.addAttribute("boards", boards);
 
@@ -49,10 +45,8 @@ public class BoardController {
     // 게시물 등록 페이지
     @GetMapping("/register")
     public String registerForm(Model model) {
-        // 카테고리 목록 가져오기
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
-        // 모델에 데이터 추가
         model.addAttribute("categories", categories);
         model.addAttribute("boardDto", new BoardDto());
 
@@ -63,16 +57,12 @@ public class BoardController {
     @PostMapping("/register")
     public String register(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
         try {
-            // 닉네임 설정
             if (boardDto.getNick() == null || boardDto.getNick().isBlank()) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 boardDto.setNick(authentication.getName());
             }
 
-            // 이미지 파일 처리
-            if (file != null && !file.isEmpty()) {
-                boardDto.setImageFileName(file);
-            }
+            boardDto.setImageFile(file);
 
             boardService.register(boardDto);
             return "redirect:/board/list";
@@ -100,7 +90,10 @@ public class BoardController {
     public String modifyForm(@PathVariable Long bno, Model model) {
         try {
             BoardDto boardDto = boardService.getDetail(bno);
+            List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+
             model.addAttribute("boardDto", boardDto);
+            model.addAttribute("categories", categories);
             return "board/modify";
         } catch (Exception e) {
             System.err.println("[ERROR] 게시물 수정 페이지 로드 중 오류 발생: " + e.getMessage());
@@ -111,16 +104,34 @@ public class BoardController {
     // 게시물 수정 처리
     @PostMapping("/modify")
     public String modify(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+        System.out.println("[DEBUG] modify() called with BoardDto: " + boardDto);
+        System.out.println("[DEBUG] Received file: " + (file != null ? file.getOriginalFilename() : "No file"));
+
         try {
-            // 이미지 파일 처리
+            // 파일이 있는 경우, BoardDto에 설정
             if (file != null && !file.isEmpty()) {
-                boardDto.setImageFileName(file);
+                boardDto.setImageFile(file);
             }
 
+            // 데이터 유효성 검사
+            if (boardDto.getTitle() == null || boardDto.getTitle().trim().isEmpty()) {
+                System.err.println("[ERROR] 제목이 비어 있습니다.");
+                return "redirect:/board/modify/" + boardDto.getBno() + "?error=title";
+            }
+
+            if (boardDto.getContent() == null || boardDto.getContent().trim().isEmpty()) {
+                System.err.println("[ERROR] 내용이 비어 있습니다.");
+                return "redirect:/board/modify/" + boardDto.getBno() + "?error=content";
+            }
+
+            // 게시물 수정 서비스 호출
             boardService.modify(boardDto);
+            System.out.println("[INFO] 게시물 수정 성공. 게시물 번호: " + boardDto.getBno());
             return "redirect:/board/detail/" + boardDto.getBno();
         } catch (Exception e) {
+            // 예외 발생 시 오류 로그 출력
             System.err.println("[ERROR] 게시물 수정 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
             return "redirect:/board/modify/" + boardDto.getBno() + "?error=true";
         }
     }

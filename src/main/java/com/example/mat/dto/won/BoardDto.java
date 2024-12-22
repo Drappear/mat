@@ -1,3 +1,4 @@
+// BoardDto 클래스
 package com.example.mat.dto.won;
 
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 게시판 DTO 클래스
@@ -36,5 +38,21 @@ public class BoardDto {
 
     private Long categoryId; // 카테고리 ID
 
-    private MultipartFile imageFileName; // 파일 업로드를 위한 MultipartFile
+    private MultipartFile imageFile; // 업로드된 파일
+    private String imageFileName; // 저장된 파일 경로
+
+    public String getContentPreview() {
+        if (content == null) {
+            return "";
+        }
+        return content.length() > 100 ? content.substring(0, 100) + "..." : content;
+    }
+
+    public String getFormattedRegDate() {
+        if (regDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return regDate.format(formatter);
+    }
 }

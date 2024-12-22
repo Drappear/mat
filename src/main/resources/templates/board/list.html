@@ -74,11 +74,11 @@
                     </h5>
                     <p class="text-sm">
                       <span class="op-6">Posted</span>
-                      <span th:text="${post.regDate}">2 hours ago</span>
+                      <span th:text="${post.formattedRegDate}">작성 시간</span>
                       <span class="op-6">by</span>
-                      <span th:text="${post.nick}">JohnDoe</span>
+                      <span th:text="${post.nick}">Nicknmame</span>
                     </p>
-                    <p class="text-sm op-5" th:text="${post.content}">Sample content...</p>
+                    <p class="text-sm op-5" th:text="${post.contentPreview}">Sample content...</p>
                   </div>
                   <div class="col-md-4 op-7">
                     <div class="row text-center op-7">
