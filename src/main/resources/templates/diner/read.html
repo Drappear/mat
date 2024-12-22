@@ -24,6 +24,7 @@
           </div>
           <div class="row mt-3">
             <h5>식당 상세 주소</h5>
+            <h6 th:text="${dinerDto.addressDetail}"></h6>
           </div>
         </div>
       </div>
@@ -53,10 +54,10 @@
           <div>서비스</div>
         </div>
         <div class="col">
-          <button class="btn btn-info" id="modalOpenButton">수정</button>
-          <button class="btn btn-danger" id="modalOpenButton">삭제</button>
-          <button class="btn btn-primary" id="modalOpenButton">목록</button>
-          <button class="btn btn-success" id="modalOpenButton">리뷰쓰기</button>
+          <button class="btn btn-info" id="modBtn">수정</button>
+          <button class="btn btn-primary" id="listBtn">목록</button>
+          <button class="btn btn-success" id="reviewBtn">리뷰쓰기</button>
+          
         </div>
       </div>
     </div>
@@ -156,9 +157,19 @@
         </ul>
       </div>
     </div>
+    <form action="" method="post" id="actionForm">
+      <input type="hidden" name="did" th:value="${dinerDto.did}">
+      <input type="hidden" name="page" th:value="${requestDto.page}">
+      <input type="hidden" name="size" th:value="${requestDto.size}">
+      <input type="hidden" name="type" th:value="${requestDto.type}">
+      <input type="hidden" name="keyword" th:value="${requestDto.keyword}">
+    </form>
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script>
+      const csrfValue = "[[${_csrf.token}]]";
+    </script>
     <script th:src="@{/js/diner/read.js}"></script>
   </th:block>
 </html>

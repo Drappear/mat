@@ -29,6 +29,7 @@ public class Diner extends BaseEntity {
 
     private String name;
     private String address;
+    private String addressDetail;
     private String phone;
     private String content;
     private String menu;
