@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/layouts/layout}">
+  <!-- 페이지 별 css -->
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/upload.css}" />
+  </th:block>
+  <div layout:fragment="content">
+    <section class="diner-register">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row justify-content-center mt-5">
+              <h4>식당 수정</h4>
+            </div>
+            <form th:action="@{modify}" method="post" id="createForm">
+              <div class="register-items">
+                <div class="row justify-content-center">
+                  <div class="row align-items-center mt-3">
+                    <div class="col col-lg-1">
+                      <select class="form-select" name="dinerCategory" id="dinerCategory">
+                        <option selected>분류</option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}"></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col col-lg-5 mb-3">
+                    <label for="dinerName" class="form-label">이름</label>
+                    <input type="text" class="form-control" id="dinerName" name="name" th:value="${dinerDto.name}" />
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-3 mb-3">
+                    <label for="dinerPhone" class="form-label">전화번호</label>
+                    <input type="text" class="form-control" id="dinerPhone" name="phone" th:value="${dinerDto.phone}"/>
+                  </div>
+                  <div class="col-lg-3 mb-3">
+                    <label for="dinerRegNum" class="form-label">사업자 등록번호</label>
+                    <input type="text" class="form-control" id="dinerRegNum" name="regNum" th:value="${dinerDto.regNum}"/>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerAddr" class="form-label">주소</label>
+                    <input type="text" class="form-control" id="dinerAddr" name="address" th:value="${dinerDto.address}"/>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerAddrDetail" class="form-label">상세주소</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dinerAddrDetail"
+                      name="addressDetail"
+                      th:value="${dinerDto.addressDetail}"
+                    />
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerDesc" class="form-label">소개글</label>
+                    <textarea
+                      class="form-control"
+                      id="dinerDesc"
+                      name="content"
+                      rows="10"
+                      th:value="${dinerDto.content}"
+                      th:text="${dinerDto.content}"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerMenu" class="form-label">메뉴 정보</label>
+                    <textarea class="form-control" id="dinerMenu" name="menu" rows="5" th:value="${dinerDto.menu}" th:text="${dinerDto.menu}"></textarea>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerTime" class="form-label">영업 시간</label>
+                    <textarea
+                      class="form-control"
+                      id="dinerTime"
+                      name="workTime"
+                      rows="5"
+                    th:value="${dinerDto.workTime}" th:text="${dinerDto.workTime}"></textarea>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <div class="contents upload-section">
+                      <div class="upload-box">
+                        <div id="drop-file" class="drag-file">
+                          <img
+                            src="https://img.icons8.com/pastel-glyph/2x/image-file.png"
+                            alt="파일 아이콘"
+                            class="image"
+                          />
+                          <p class="message mt-3">Drag files to upload</p>
+                        </div>
+                      </div>
+                      <label class="file-label" for="chooseFile">사진 업로드</label>
+                      <input
+                        name="uploadFiles"
+                        class="file"
+                        id="chooseFile"
+                        type="file"
+                        multiple
+                        onchange="dropFile.handleFiles(this.files)"
+                        accept="image/png, image/jpg, image/jpeg"
+                      />
+                      <div id="files" class="files">
+                        <div class="file"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-6 mt-3 mb-3 buttons">
+                    <div class="row justify-content-center">
+                      <button type="submit" class="btn btn-primary m-3">수정하기</button>
+                      <button type="button" class="btn btn-danger m-3" id="delBtn">삭제</button>
+                      <button type="button" class="btn btn-success m-3">목록이동</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="did" th:value="${dinerDto.did}">
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- 페이지 별 js 영역 -->
+  <th:block layout:fragment="js">
+    <script>
+      const csrfValue = "[[${_csrf.token}]]";
+    </script>
+    <script th:src="@{/js/diner/modify.js}"></script>
+    <script th:src="@{/js/diner/upload.js}"></script>
+  </th:block>
+</html>

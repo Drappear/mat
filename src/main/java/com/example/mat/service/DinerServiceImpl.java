@@ -23,6 +23,7 @@ import com.example.mat.repository.DinerCategoryRepository;
 import com.example.mat.repository.DinerImageRepository;
 import com.example.mat.repository.DinerRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -66,16 +67,31 @@ public class DinerServiceImpl implements DinerService {
         return entityToDto(diner, dinerImages);
     }
 
+    @Transactional
     @Override
     public Long updateDiner(DinerDto dinerDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateDiner'");
+      Map<String, Object> entityMap = dtoToEntity(dinerDto);
+
+      Diner diner = (Diner) entityMap.get("diner");
+      List<DinerImage> dinerImages = (List<DinerImage>) entityMap.get("dinerImages");
+
+      dinerRepository.save(diner);
+
+      // 기존 영화 이미지 제거
+      dinerImageRepository.deleteByDiner(diner);
+
+      dinerImages.forEach(dinerImage -> dinerImageRepository.save(dinerImage));
+
+      return diner.getDid();
     }
 
+    @Transactional
     @Override
     public void deleteDiner(Long did) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteDiner'");
+      Diner diner = Diner.builder().did(did).build();
+      dinerImageRepository.deleteByDiner(diner);
+      // reviewRepository.deleteByDiner(diner);
+      dinerRepository.delete(diner);
     }
 
     @Override

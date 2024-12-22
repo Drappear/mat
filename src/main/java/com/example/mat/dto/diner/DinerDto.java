@@ -17,6 +17,7 @@ public class DinerDto {
     private Long did;
     private String name;
     private String address;
+    private String addressDetail;
     private String phone;
     private String content;
     private String menu;

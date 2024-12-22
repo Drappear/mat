@@ -1,17 +1,17 @@
-const modalOpenButton = document.querySelector("#modalOpenButton");
-const reviewCloseBtn = document.querySelector("#reviewCloseBtn");
-const modal = document.querySelector("#modalContainer");
+const af = document.querySelector("#actionForm");
+const modBtn = document.querySelector("#modBtn");
+const listBtn = document.querySelector("#listBtn");
+const reviewBtn = document.querySelector("#reviewBtn");
 
-modalOpenButton.addEventListener("click", () => {
-  modal.classList.remove("hidden");
+modBtn.addEventListener("click", () => {
+  af.method = "get";
+  af.action = "/diner/modify";
+  af.submit();
 });
 
-reviewCloseBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-});
-
-window.addEventListener("click", function (event) {
-  if (event.target === modal) {
-    modal.classList.add("hidden");
-  }
+listBtn.addEventListener("click", () => {
+  af.querySelector("[name='did']").remove();
+  af.method = "get";
+  af.action = "/diner/list";
+  af.submit();
 });
