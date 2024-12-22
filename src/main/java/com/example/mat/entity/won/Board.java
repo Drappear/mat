@@ -25,7 +25,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long viewCount = 0L;
 
     @Column(nullable = false)

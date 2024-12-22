@@ -4,12 +4,16 @@ import com.example.mat.dto.won.BoardCategoryDto;
 import com.example.mat.dto.won.BoardDto;
 import com.example.mat.service.BoardCategoryService;
 import com.example.mat.service.BoardService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,7 +30,7 @@ public class BoardController {
     public String list(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
-            @PageableDefault(size = 10, sort = "regDate") Pageable pageable,
+            Pageable pageable,
             Model model) {
 
         // 카테고리 목록 가져오기
@@ -48,13 +52,6 @@ public class BoardController {
         // 카테고리 목록 가져오기
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
-        // 카테고리 데이터 확인용 로그 추가
-        if (categories.isEmpty()) {
-            System.out.println("[ERROR] 카테고리 데이터를 불러오지 못했습니다!");
-        } else {
-            System.out.println("[INFO] 카테고리 목록: " + categories);
-        }
-
         // 모델에 데이터 추가
         model.addAttribute("categories", categories);
         model.addAttribute("boardDto", new BoardDto());
@@ -64,8 +61,19 @@ public class BoardController {
 
     // 게시물 등록 처리
     @PostMapping("/register")
-    public String register(@ModelAttribute BoardDto boardDto) {
+    public String register(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
         try {
+            // 닉네임 설정
+            if (boardDto.getNick() == null || boardDto.getNick().isBlank()) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                boardDto.setNick(authentication.getName());
+            }
+
+            // 이미지 파일 처리
+            if (file != null && !file.isEmpty()) {
+                boardDto.setImageFileName(file);
+            }
+
             boardService.register(boardDto);
             return "redirect:/board/list";
         } catch (Exception e) {
@@ -102,8 +110,13 @@ public class BoardController {
 
     // 게시물 수정 처리
     @PostMapping("/modify")
-    public String modify(@ModelAttribute BoardDto boardDto) {
+    public String modify(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
         try {
+            // 이미지 파일 처리
+            if (file != null && !file.isEmpty()) {
+                boardDto.setImageFileName(file);
+            }
+
             boardService.modify(boardDto);
             return "redirect:/board/detail/" + boardDto.getBno();
         } catch (Exception e) {

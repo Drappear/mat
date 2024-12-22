@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -17,20 +18,23 @@ import java.time.LocalDateTime;
 @Data
 public class BoardDto {
 
-    private Long bno;
+    private Long bno; // 게시물 번호
 
     @NotBlank(message = "제목은 필수 항목입니다.")
-    private String title;
+    private String title; // 게시물 제목
 
     @NotBlank(message = "내용은 필수 항목입니다.")
-    private String content;
+    private String content; // 게시물 내용
 
-    private String nick;
-    private Long viewCount;
-    private LocalDateTime regDate;
-    private LocalDateTime updateDate;
+    private String nick; // 작성자 닉네임
 
-    private Long categoryId; // 카테고리 ID를 사용
+    private Long viewCount; // 조회수
 
-    private String imageFileName;
+    private LocalDateTime regDate; // 등록일
+
+    private LocalDateTime updateDate; // 수정일
+
+    private Long categoryId; // 카테고리 ID
+
+    private MultipartFile imageFileName; // 파일 업로드를 위한 MultipartFile
 }
