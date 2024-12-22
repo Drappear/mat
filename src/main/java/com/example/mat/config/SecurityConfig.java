@@ -32,7 +32,8 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/"));
 
         // CSRF 설정: 게시물 등록 경로에서 비활성화
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/board/register"));
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/board/register", "/board/modify"));
 
         return http.build();
     }

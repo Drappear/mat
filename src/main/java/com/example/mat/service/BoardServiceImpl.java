@@ -37,26 +37,23 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long register(BoardDto boardDto) {
-        // 닉네임이 없으면 로그인한 사용자의 닉네임으로 설정
         if (boardDto.getNick() == null || boardDto.getNick().isBlank()) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            // AuthMemberDto를 사용해 로그인된 사용자의 닉네임 가져오기
             boardDto.setNick(authentication.getName());
         }
 
-        // 게시물 엔티티 생성
         Board board = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
                 .nick(boardDto.getNick())
-                .viewCount(0L) // 명시적으로 viewCount 초기화
+                .viewCount(0L)
                 .boardCategory(boardCategoryRepository.findById(boardDto.getCategoryId())
                         .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID입니다.")))
                 .build();
 
-        // 이미지 처리
-        if (boardDto.getImageFileName() != null && !boardDto.getImageFileName().isEmpty()) {
-            String savedFilePath = saveFile(boardDto.getImageFileName());
+        // 이미지 파일 처리
+        if (boardDto.getImageFile() != null && !boardDto.getImageFile().isEmpty()) {
+            String savedFilePath = saveFile(boardDto.getImageFile());
             board.setImage(BoardImage.builder()
                     .imgName(savedFilePath)
                     .board(board)
@@ -69,22 +66,22 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long modify(BoardDto boardDto) {
-        // 수정할 게시물 가져오기
         Board board = boardRepository.findById(boardDto.getBno())
                 .orElseThrow(() -> new IllegalArgumentException("수정하려는 게시물을 찾을 수 없습니다. ID: " + boardDto.getBno()));
 
-        // 수정 내용 반영
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
         board.setNick(boardDto.getNick());
 
-        // 이미지가 존재하는 경우 업데이트
-        if (boardDto.getImageFileName() != null && !boardDto.getImageFileName().isEmpty()) {
-            String savedFilePath = saveFile(boardDto.getImageFileName());
+        // 이미지 파일 처리
+        if (boardDto.getImageFile() != null && !boardDto.getImageFile().isEmpty()) {
+            String savedFilePath = saveFile(boardDto.getImageFile());
             board.setImage(BoardImage.builder()
                     .imgName(savedFilePath)
                     .board(board)
                     .build());
+        } else if (board.getImage() != null) {
+            boardDto.setImageFileName(board.getImage().getImgName());
         }
 
         return board.getBno();
@@ -113,6 +110,7 @@ public class BoardServiceImpl implements BoardService {
                 .regDate(board.getRegDate())
                 .updateDate(board.getUpdateDate())
                 .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo() : null)
+                .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
                 .build();
     }
 
@@ -129,25 +127,24 @@ public class BoardServiceImpl implements BoardService {
                         .regDate(board.getRegDate())
                         .updateDate(board.getUpdateDate())
                         .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo() : null)
+                        .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
                         .build());
     }
 
-    // 파일 저장 로직
     private String saveFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("빈 파일입니다.");
+            return null;
         }
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(uploadPath, fileName); // 업로드 경로와 파일 이름 조합
+        Path filePath = Paths.get(uploadPath, fileName);
 
         try {
-            Files.createDirectories(filePath.getParent()); // 경로가 없으면 생성
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 파일 저장
+            Files.createDirectories(filePath.getParent());
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (IOException e) {
-            throw new RuntimeException("파일 업로드 실패: " + e.getMessage(), e); // 저장 실패 시 예외 발생
+            throw new RuntimeException("파일 업로드 실패: " + e.getMessage(), e);
         }
     }
-
 }
