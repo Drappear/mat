@@ -1,0 +1,115 @@
+/* 전체 화면 스타일 */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9; /* 부드러운 배경색 추가 */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 글 작성 페이지 스타일 */
+.write-content {
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: flex-start; /* 세로 상단 정렬 */
+  min-height: 100vh; /* 화면 전체 높이를 사용 */
+  padding-top: 20px; /* 상단 여백 추가 */
+}
+
+.write-article {
+  background-color: #ffffff; /* 흰색 배경 */
+  width: 100%; /* 글 작성 영역 크기 */
+  max-width: 900px; /* 최대 너비 제한 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px; /* 상단 여백 추가 */
+}
+
+.write-article label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.write-article input[type="text"],
+.write-article textarea,
+.write-article select {
+  width: 100%; /* 입력 칸 너비 확장 */
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px; /* 입력 필드 간 간격 */
+}
+
+.write-article input:focus,
+.write-article textarea:focus,
+.write-article select:focus {
+  border-color: #fc5356;
+  outline: none;
+  box-shadow: 0 0 5px rgba(252, 83, 86, 0.3);
+}
+
+/* 이미지 업로드 */
+.write-article input[type="file"] {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 본문 작성 */
+.write-article textarea {
+  min-height: 600px;
+  resize: vertical;
+  overflow-y: auto;
+}
+
+/* 등록 버튼 */
+.write-article button[type="submit"] {
+  background-color: #426b1f;
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+  align-self: flex-end; /* 버튼 오른쪽 정렬 */
+  display: inline-block; /* 인라인 블록으로 설정 */
+  float: right; /* 오른쪽 정렬 */
+}
+
+.write-article button[type="submit"]:hover {
+  background-color: #315016;
+}
+
+.new-post {
+  font-size: 24px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .write-article {
+    padding: 15px;
+  }
+
+  .write-article button[type="submit"] {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
