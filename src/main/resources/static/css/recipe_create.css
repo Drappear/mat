@@ -1077,7 +1077,7 @@ video {
 }
 
 /* 요리 정보 selectbox 크기기 */
-.select-info{
+.select-info {
   width: 15vw;
 }
 /* 반응형 처리 */
@@ -1096,4 +1096,3 @@ video {
     width: 5vw; 
   }
 } */
- 

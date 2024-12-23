@@ -50,7 +50,8 @@ public class Recipe extends BaseEntity {
     @Column(nullable = false)
     private String difficulty;
 
-    private Long viewCount; // 조회수
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int viewCount; // 조회수
 
     // TODO: mid -> Member 에서 가져오기
     @ManyToOne(fetch = FetchType.LAZY)
