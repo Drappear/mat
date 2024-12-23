@@ -295,79 +295,6 @@
   </script>
 
   <!-- TODO: 재료정보 row 추가 버튼 -->
-  <!-- <script>
-    document.getElementById("addIngredientBtn").addEventListener("click", () => {
-      try {
-        // 재료 컨테이너
-        const ingredientsContainer = document.getElementById("ingredientsContainer");
-
-        // 현재 추가된 재료 정보들의 수 확인
-        const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
-        const newIndex = currentInputs.length + 1;
-
-        // 최대 50개의 재료만 허용
-        if (newIndex > 50) {
-          alert("최대 50개의 재료만 추가할 수 있습니다.");
-          return;
-        }
-
-        // 새로운 재료 입력 필드 생성
-        const newIngredientDiv = document.createElement("div");
-        newIngredientDiv.className = "ingredient-input";
-        newIngredientDiv.innerHTML = `
-                <div class="grid grid-cols-4 gap-4 items-center">
-                    <input id="ingreName${newIndex}" name="ingreName${newIndex}" type="text"
-                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="재료명" />
-                    <input id="ingreAmount${newIndex}" name="ingreAmount${newIndex}" type="text"
-                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="용량 (예: 10g)" />
-                    <button type="button" class="btn btn-danger delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md">X</button>
-                </div>
-            `;
-
-        // 새로운 입력 필드를 컨테이너에 추가
-        ingredientsContainer.appendChild(newIngredientDiv);
-
-        // 입력 필드가 10개를 초과할 경우 스크롤바 활성화
-        if (currentInputs.length >= 10) {
-          ingredientsContainer.style.maxHeight = "400px"; // 최대 높이 설정
-          ingredientsContainer.style.overflowY = "auto"; // 수직 스크롤 활성화
-        }
-
-        // 삭제 버튼 이벤트 추가
-        const deleteButton = newIngredientDiv.querySelector(".delete-row-btn");
-        deleteButton.addEventListener("click", () => handleDeleteRow(newIngredientDiv));
-      } catch (error) {
-        console.error("재료 정보 입력줄을 추가하는 중 오류가 발생했습니다:", error);
-        alert("재료 정보 입력줄을 추가하는 중 문제가 발생했습니다. 다시 시도해주세요.");
-      }
-    });
-
-    function handleDeleteRow(rowElement) {
-      const inputs = rowElement.querySelectorAll("input");
-      const hasInputValue = Array.from(inputs).some(input => input.value.trim() !== "");
-
-      if (hasInputValue) {
-        const confirmDelete = confirm("정말 삭제하시겠습니까?");
-        if (!confirmDelete) return;
-      }
-
-      rowElement.remove();
-    }
-
-    // 기존 입력 필드에 삭제 버튼 추가 (재료 정보 2줄 제외)
-    document.querySelectorAll("#ingredientsContainer .ingredient-input").forEach((rowElement, index) => {
-      if (index >= 2) {
-        const deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className = "delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md";
-        deleteButton.textContent = "X";
-        deleteButton.addEventListener("click", () => handleDeleteRow(rowElement));
-        rowElement.querySelector(".grid").appendChild(deleteButton);
-      }
-    });
-  </script> -->
   <script>
     document.getElementById("addIngredientBtn").addEventListener("click", () => {
         try {
@@ -422,7 +349,7 @@
         const hasInputValue = Array.from(inputs).some(input => input.value.trim() !== "");
 
         if (hasInputValue) {
-            const confirmDelete = confirm("정말 삭제하시겠습니까?");
+            const confirmDelete = confirm("정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.");
             if (!confirmDelete) return;
         }
 
@@ -463,9 +390,7 @@
             rowElement.querySelector(".grid").appendChild(deleteButton);
         }
     });
-</script>
-
-
+  </script>
 
   <!-- TODO: step row 추가 버튼 / step 이미지 추가 -->
   <script>
@@ -530,43 +455,47 @@
     });
 
     // stepImg 클릭 이벤트 바인딩 함수
-    function bindImageUploadEvent() {
-      // 각 stepImg 요소에 클릭 이벤트 추가
-      document.querySelectorAll('[id^="stepImg"]').forEach(stepImg => {
-        // stepImg를 클릭했을 때, 이미지가 업로드되었거나 업로드되지 않았더라도 파일 선택 창을 열 수 있도록 설정
-        stepImg.addEventListener('click', function () {
-          // 파일 선택을 위한 input 요소 생성
-          const inputFile = document.createElement('input');
-          inputFile.type = 'file';
-          inputFile.accept = 'image/*'; // 이미지 파일만 선택 가능
+function bindImageUploadEvent() {
+    // 각 stepImg 요소에 클릭 이벤트 추가
+    document.querySelectorAll('[id^="stepImg"]').forEach(stepImg => {
+        // 중복 이벤트 방지를 위해 기존 이벤트 제거
+        stepImg.replaceWith(stepImg.cloneNode(true)); // 기존 노드를 복제하여 모든 이벤트 제거
+        const clonedStepImg = document.querySelector(`#${stepImg.id}`);
 
-          // 파일 선택 후 이미지 표시하기
-          inputFile.addEventListener('change', function (event) {
-            const file = event.target.files[0]; // 첫 번째 파일 선택
+        // 새로운 클릭 이벤트 추가
+        clonedStepImg.addEventListener('click', function () {
+            // 파일 선택을 위한 input 요소 생성
+            const inputFile = document.createElement('input');
+            inputFile.type = 'file';
+            inputFile.accept = 'image/*'; // 이미지 파일만 선택 가능
 
-            if (file) {
-              // 선택한 파일을 이미지로 표시
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                // 이미지를 미리보기로 추가
-                const imgElement = document.createElement('img');
-                imgElement.src = e.target.result;
-                imgElement.alt = 'Uploaded Image';
-                imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
+            // 파일 선택 후 이미지 표시하기
+            inputFile.addEventListener('change', function (event) {
+                const file = event.target.files[0]; // 첫 번째 파일 선택
 
-                // stepImg 영역에 이미지를 표시하고, 'add' 아이콘을 숨김
-                stepImg.innerHTML = ''; // 기존 내용 지우기
-                stepImg.appendChild(imgElement);
-              };
-              reader.readAsDataURL(file); // 파일을 data URL로 읽어 미리보기 생성
-            }
-          });
+                if (file) {
+                    // 선택한 파일을 이미지로 표시
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        // 이미지를 미리보기로 추가
+                        const imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imgElement.alt = 'Uploaded Image';
+                        imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
 
-          // 파일 선택 창 열기
-          inputFile.click();
+                        // stepImg 영역에 이미지를 표시하고, 'add' 아이콘을 숨김
+                        clonedStepImg.innerHTML = ''; // 기존 내용 지우기
+                        clonedStepImg.appendChild(imgElement);
+                    };
+                    reader.readAsDataURL(file); // 파일을 data URL로 읽어 미리보기 생성
+                }
+            });
+
+            // 파일 선택 창 열기
+            inputFile.click();
         });
-      });
-    }
+    });
+}
 
     // Step 삭제 버튼 이벤트 바인딩 함수
     function bindDeleteStepEvent(stepElement) {
@@ -576,7 +505,7 @@
         const hasInputValue = textArea && textArea.value.trim() !== '';
 
         if (hasInputValue) {
-          const confirmDelete = confirm('정말 삭제하시겠습니까?');
+          const confirmDelete = confirm('정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.');
           if (!confirmDelete) return;
         }
 
