@@ -56,7 +56,7 @@ public class DinerController {
     }
 
     @GetMapping("/register")
-    public void getDinerRegister(Model model) {
+    public void getDinerRegister(DinerDto dinerDto, Model model) {
         log.info("get diner register 페이지 요청");
 
         List<DinerCategoryDto> categories = dinerService.getCategoryList();
@@ -79,13 +79,16 @@ public class DinerController {
         rttr.addAttribute("type", pageRequestDto.getType());
         rttr.addAttribute("keyword", pageRequestDto.getKeyword());
 
-        return "/diner/list";
+        return "redirect:read";
     }
 
     @GetMapping("/modify")
     public void getDinerModify(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, @RequestParam Long did, Model model) {
       log.info("get diner modify 페이지 요청");
       DinerDto dinerDto = dinerService.getDinerDetail(did);
+      List<DinerCategoryDto> categories = dinerService.getCategoryList();
+
+      model.addAttribute("categories", categories);
       model.addAttribute("dinerDto", dinerDto);
     }
 

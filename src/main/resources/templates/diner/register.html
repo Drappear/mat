@@ -18,9 +18,9 @@
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
                     <div class="col col-lg-1">
-                      <select class="form-select" name="dinerCategory" id="dinerCategory">
+                      <select class="form-select" name="categoryName" id="categoryName">
                         <option selected>분류</option>
-                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}"></option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.name}"></option>
                       </select>
                     </div>
                   </div>
@@ -125,7 +125,7 @@
                   <div class="col-6 mt-3 mb-3 buttons">
                     <div class="row justify-content-center">
                       <button type="submit" class="btn btn-primary m-3">등록하기</button>
-                      <button type="button" class="btn btn-success m-3">목록이동</button>
+                      <a th:href="@{list}" class="btn btn-success m-3">목록이동</a>
                     </div>
                   </div>
                 </div>

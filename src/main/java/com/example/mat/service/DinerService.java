@@ -86,6 +86,7 @@ public interface DinerService {
                 .phone(dinerDto.getPhone())
                 .regNum(dinerDto.getRegNum())
                 .viewCount(dinerDto.getViewCount())
+                .dinerCategory(DinerCategory.builder().dcid(Long.parseLong(dinerDto.getCategoryName())).build())
                 .build();
 
         resultMap.put("diner", diner);
