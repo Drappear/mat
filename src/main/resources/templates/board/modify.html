@@ -11,13 +11,22 @@
       <div class="write-content">
         <div class="write-article">
           <!-- 글 수정 폼 -->
-          <form th:action="@{/board/modify}" th:object="${boardDto}" method="post" enctype="multipart/form-data">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <form
+            th:action="@{/board/modify}"
+            th:object="${boardDto}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <input
+              type="hidden"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
             <input type="hidden" th:field="*{bno}" />
 
             <!-- 카테고리 -->
             <div class="mb-3">
-              <label for="categoryId" class="form-label">Category</label>
+              <label for="categoryId" class="form-label"></label>
               <select
                 class="form-select"
                 id="categoryId"
@@ -37,7 +46,7 @@
 
             <!-- 제목 -->
             <div class="mb-3">
-              <label for="title" class="form-label">Title</label>
+              <label for="title" class="form-label"></label>
               <input
                 type="text"
                 class="form-control"
@@ -54,7 +63,11 @@
             <div th:if="${boardDto.imageFileName}" class="mb-3">
               <label for="currentImage" class="form-label">Current Image</label>
               <div>
-                <img th:src="@{/upload/{filename}(filename=${boardDto.imageFileName})}" alt="Current Image" style="max-width: 100%; height: auto;" />
+                <img
+                  th:src="@{/upload/{filename}(filename=${boardDto.imageFileName})}"
+                  alt="Current Image"
+                  style="max-width: 100%; height: auto"
+                />
               </div>
             </div>
 
@@ -71,7 +84,7 @@
 
             <!-- 내용 -->
             <div class="mb-3">
-              <label for="content" class="form-label">Content</label>
+              <label for="content" class="form-label"></label>
               <textarea
                 class="form-control"
                 id="content"
@@ -91,7 +104,8 @@
             <a
               th:href="@{/board/detail/{bno}(bno=${boardDto.bno})}"
               class="btn btn-secondary"
-            >Cancel</a>
+              >Cancel</a
+            >
           </form>
         </div>
       </div>

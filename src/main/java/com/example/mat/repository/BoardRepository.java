@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-        @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, b.nick " +
+        @Query("SELECT b.bno, b.title, b.viewCount, b.regDate, b.member.mid " +
                         "FROM Board b " +
+                        "JOIN b.member m " +
                         "ORDER BY b.regDate DESC")
         Page<Object[]> getListPage(Pageable pageable);
 
