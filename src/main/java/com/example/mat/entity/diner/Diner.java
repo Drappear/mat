@@ -3,9 +3,13 @@ package com.example.mat.entity.diner;
 import com.example.mat.entity.BaseEntity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+@ToString(exclude = { "dinerCategory" })
 @Entity
 public class Diner extends BaseEntity {
     @SequenceGenerator(name = "diner_seq_gen", sequenceName = "diner_seq", allocationSize = 1)
@@ -36,4 +40,7 @@ public class Diner extends BaseEntity {
     private String workTime;
     private Long viewCount;
     private String regNum;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private DinerCategory dinerCategory;
 }

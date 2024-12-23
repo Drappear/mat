@@ -34,12 +34,12 @@ public interface DinerService {
     List<DinerCategoryDto> getCategoryList();
 
     public default DinerCategoryDto entityToDto(DinerCategory entity) {
-      return DinerCategoryDto.builder().dcid(entity.getDcid()).name(entity.getName()).build();
-  }
+        return DinerCategoryDto.builder().dcid(entity.getDcid()).name(entity.getName()).build();
+    }
 
-  public default DinerCategory dtoToEntity(DinerCategoryDto dto) {
-      return DinerCategory.builder().dcid(dto.getDcid()).name(dto.getName()).build();
-  }
+    public default DinerCategory dtoToEntity(DinerCategoryDto dto) {
+        return DinerCategory.builder().dcid(dto.getDcid()).name(dto.getName()).build();
+    }
 
     default DinerDto entityToDto(Diner diner, List<DinerImage> dinerImages) {
         DinerDto dinerDto = DinerDto.builder()
@@ -47,11 +47,13 @@ public interface DinerService {
                 .name(diner.getName())
                 .address(diner.getAddress())
                 .addressDetail(diner.getAddressDetail())
+                .categoryName(diner.getDinerCategory().getName())
                 .content(diner.getContent())
                 .menu(diner.getMenu())
                 .workTime(diner.getWorkTime())
                 .phone(diner.getPhone())
                 .regNum(diner.getRegNum())
+                .regDate(diner.getRegDate())
                 // .viewCount(viewCount)
                 .build();
 
