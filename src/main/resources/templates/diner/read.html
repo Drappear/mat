@@ -76,47 +76,53 @@
           <div class="score-area col-lg-3">
             <span>맛</span>
             <div class="star-rating">
-              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+              <span class="star on" value="1"></span>
+              <span class="star" value="2"></span>
+              <span class="star" value="3"></span>
+              <span class="star" value="4"></span>
+              <span class="star" value="5"></span>              
             </div>
           </div>
           <div class="score-area col-lg-3">
             <span>가격</span>
             <div class="star-rating">
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <span class="star on" value="1"></span>
+              <span class="star" value="2"></span>
+              <span class="star" value="3"></span>
+              <span class="star" value="4"></span>
+              <span class="star" value="5"></span>              
             </div>
           </div>
           <div class="score-area col-lg-3">
             <span>서비스</span>
             <div class="star-rating">
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
-              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <span class="star on" value="1"></span>
+              <span class="star" value="2"></span>
+              <span class="star" value="3"></span>
+              <span class="star" value="4"></span>
+              <span class="star" value="5"></span>              
             </div>
           </div>
         </div>
         <div class="row">
           <div class="comment-area col-lg-12">
-            <textarea
+            <div class="input-group">
+              <div class="input-group-text">
+                <div>작성자</div>
+                <div>프로필</div>
+              </div>
+              <textarea
               class="review-comment-input form-control"
               name="review-comment-input"
               id="reviewCommentInput"
-              rows="5"
-            ></textarea>
+              rows="4"
+              ></textarea>
+            </div>
           </div>
         </div>
         <div class="row mt-2">
-          <div class="col-lg-10">
-            <input type="file" class="form-control" name="reviewImage" id="" />
+          <div class="input-group col-lg-10">
+            <input type="file" class="form-control" name="reviewImage"/>
           </div>
           <div class="col-lg-2">
             <button type="button" class="btn btn-success">리뷰 등록</button>
@@ -247,7 +253,7 @@
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
     <script>
-      const csrfValue = "[[${_csrf.token}]]";
+      const csrfValue = "[[${_csrf.token}]]";      
     </script>
     <script th:src="@{/js/diner/read.js}"></script>
     <script

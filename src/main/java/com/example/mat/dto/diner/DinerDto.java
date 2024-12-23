@@ -18,14 +18,14 @@ public class DinerDto {
     private String name;
     private String address;
     private String addressDetail;
-    private String categoryName;
     private String phone;
     private String content;
     private String menu;
     private String workTime;
     private Long viewCount;
     private String regNum;
-
+    private String categoryName;
+    
     @Builder.Default
     private List<DinerImageDto> dinerImageDtos = new ArrayList<>();
 
