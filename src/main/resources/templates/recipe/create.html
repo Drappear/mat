@@ -289,53 +289,81 @@
   <script>
     const csrfValue = '[[${_csrf.token}]]';
   </script>
-  <!-- 재료정보 row 추가 버튼 -->
+  <!-- TODO: 재료정보 row 추가 버튼 -->
   <script>
     document.getElementById("addIngredientBtn").addEventListener("click", () => {
-      try {
-        // 재료 컨테이너
-        const ingredientsContainer = document.getElementById("ingredientsContainer");
+        try {
+            // 재료 컨테이너
+            const ingredientsContainer = document.getElementById("ingredientsContainer");
 
-        // 현재 추가된 재료 정보들의 수 확인
-        const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
-        const newIndex = currentInputs.length + 1;
+            // 현재 추가된 재료 정보들의 수 확인
+            const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
+            const newIndex = currentInputs.length + 1;
 
-        // 최대 50개의 재료만 허용
-        if (newIndex > 50) {
-          alert("최대 50개의 재료만 추가할 수 있습니다.");
-          return;
-        }
+            // 최대 50개의 재료만 허용
+            if (newIndex > 50) {
+                alert("최대 50개의 재료만 추가할 수 있습니다.");
+                return;
+            }
 
-        // 새로운 재료 입력 필드 생성
-        const newIngredientDiv = document.createElement("div");
-        newIngredientDiv.className = "ingredient-input";
-        newIngredientDiv.innerHTML = `
-              <div class="grid grid-cols-4 gap-4 items-center">
-                <input id="ingreName${newIndex}" name="ingreName${newIndex}" type="text"
-                  class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                  placeholder="재료명" />
-                <input id="ingreAmount${newIndex}" name="ingreAmount${newIndex}" type="text"
-                  class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                  placeholder="용량 (예: 10g)" />
-              </div>
+            // 새로운 재료 입력 필드 생성
+            const newIngredientDiv = document.createElement("div");
+            newIngredientDiv.className = "ingredient-input";
+            newIngredientDiv.innerHTML = `
+                <div class="grid grid-cols-4 gap-4 items-center">
+                    <input id="ingreName${newIndex}" name="ingreName${newIndex}" type="text"
+                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="재료명" />
+                    <input id="ingreAmount${newIndex}" name="ingreAmount${newIndex}" type="text"
+                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="용량 (예: 10g)" />
+                    <button type="button" class="btn btn-danger delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md">X</button>
+                </div>
             `;
 
-        // 새로운 입력 필드를 컨테이너에 추가
-        ingredientsContainer.appendChild(newIngredientDiv);
+            // 새로운 입력 필드를 컨테이너에 추가
+            ingredientsContainer.appendChild(newIngredientDiv);
 
-        // 입력 필드가 10개를 초과할 경우 스크롤바 활성화
-        if (currentInputs.length >= 10) {
-          ingredientsContainer.style.maxHeight = "400px"; // 최대 높이 설정
-          ingredientsContainer.style.overflowY = "auto"; // 수직 스크롤 활성화
+            // 입력 필드가 10개를 초과할 경우 스크롤바 활성화
+            if (currentInputs.length >= 10) {
+                ingredientsContainer.style.maxHeight = "400px"; // 최대 높이 설정
+                ingredientsContainer.style.overflowY = "auto"; // 수직 스크롤 활성화
+            }
+
+            // 삭제 버튼 이벤트 추가
+            const deleteButton = newIngredientDiv.querySelector(".delete-row-btn");
+            deleteButton.addEventListener("click", () => handleDeleteRow(newIngredientDiv));
+        } catch (error) {
+            console.error("재료 정보 입력줄을 추가하는 중 오류가 발생했습니다:", error);
+            alert("재료 정보 입력줄을 추가하는 중 문제가 발생했습니다. 다시 시도해주세요.");
         }
-      } catch (error) {
-        console.error("재료 정보를 추가하는 중 오류가 발생했습니다:", error);
-        alert("재료 정보를 추가하는 중 문제가 발생했습니다. 다시 시도해주세요.");
-      }
     });
 
+    function handleDeleteRow(rowElement) {
+        const inputs = rowElement.querySelectorAll("input");
+        const hasInputValue = Array.from(inputs).some(input => input.value.trim() !== "");
+
+        if (hasInputValue) {
+            const confirmDelete = confirm("정말 삭제하시겠습니까?");
+            if (!confirmDelete) return;
+        }
+
+        rowElement.remove();
+    }
+
+    // 기존 입력 필드에 삭제 버튼 추가 (재료 정보 2줄 제외)
+    document.querySelectorAll("#ingredientsContainer .ingredient-input").forEach((rowElement, index) => {
+        if (index >= 2) {
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md";
+            deleteButton.textContent = "X";
+            deleteButton.addEventListener("click", () => handleDeleteRow(rowElement));
+            rowElement.querySelector(".grid").appendChild(deleteButton);
+        }
+    });
   </script>
-  <!-- step row 추가 버튼 / step 이미지 추가 -->
+  <!-- TODO: step row 추가 버튼 / step 이미지 추가 -->
   <script>
     // Step 추가 버튼 클릭 이벤트
     document.getElementById('addStepButton').addEventListener('click', function (event) {
@@ -433,7 +461,7 @@
       bindImageUploadEvent();
     });
   </script>
-  <!-- 요리 완성 사진 관련련 화면단 동작 -->
+  <!-- TODO: 요리 완성 사진 관련련 화면단 동작 -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const maxImages = 4; // 최대 사진 추가 가능 개수
