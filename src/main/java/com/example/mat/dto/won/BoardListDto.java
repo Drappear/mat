@@ -12,5 +12,5 @@ public class BoardListDto {
     private String title;
     private Long viewCount;
     private LocalDateTime regDate;
-    private String nickname;
+    private String userid;
 }

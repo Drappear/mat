@@ -35,7 +35,6 @@ public class BoardRepositoryTest {
             Board board = Board.builder()
                     .title("Test Title " + i)
                     .content("This is the content for test board " + i)
-                    .nick("User" + i)
                     .viewCount((long) (Math.random() * 100))
                     .boardCategory(category)
                     .build();
@@ -57,7 +56,7 @@ public class BoardRepositoryTest {
             System.out.println("Board ID: " + board.getBno());
             System.out.println("Title: " + board.getTitle());
             System.out.println("Content: " + board.getContent());
-            System.out.println("Nick: " + board.getNick());
+            System.out.println("Member: " + board.getMember());
             System.out.println("View Count: " + board.getViewCount());
         });
     }
