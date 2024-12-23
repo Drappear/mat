@@ -233,10 +233,12 @@
                 </div>
               </div>
             </div>
-            <!-- {/* Divider */} -->
-            <div class="border-t border-neutral-300 my-4"></div>
+          </div>
+          <!-- {/* Divider */} -->
+          <div class="border-t border-neutral-300 my-4"></div>
 
-            <!-- 요리 완성 사진 -->
+          <!-- 요리 완성 사진 -->
+          <div class="form-section">
             <div class="flex items-center gap-4 mb-6 mt-6">
               <h3 class="text-neutral-950 font-title mb-2">요리 완성 사진</h3>
               <div class="finalImgContainer flex items-center gap-2">
@@ -276,6 +278,8 @@
                 취소
               </button>
             </div>
+          </div>
+
         </form>
       </div>
     </div>
@@ -289,53 +293,106 @@
   <script>
     const csrfValue = '[[${_csrf.token}]]';
   </script>
-  <!-- 재료정보 row 추가 버튼 -->
+
+  <!-- TODO: 재료정보 row 추가 버튼 -->
   <script>
     document.getElementById("addIngredientBtn").addEventListener("click", () => {
-      try {
-        // 재료 컨테이너
-        const ingredientsContainer = document.getElementById("ingredientsContainer");
+        try {
+            // 재료 컨테이너
+            const ingredientsContainer = document.getElementById("ingredientsContainer");
 
-        // 현재 추가된 재료 정보들의 수 확인
-        const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
-        const newIndex = currentInputs.length + 1;
+            // 현재 추가된 재료 정보들의 수 확인
+            const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
+            const newIndex = currentInputs.length + 1;
 
-        // 최대 50개의 재료만 허용
-        if (newIndex > 50) {
-          alert("최대 50개의 재료만 추가할 수 있습니다.");
-          return;
-        }
+            // 최대 50개의 재료만 허용
+            if (newIndex > 50) {
+                alert("최대 50개의 재료만 추가할 수 있습니다.");
+                return;
+            }
 
-        // 새로운 재료 입력 필드 생성
-        const newIngredientDiv = document.createElement("div");
-        newIngredientDiv.className = "ingredient-input";
-        newIngredientDiv.innerHTML = `
-              <div class="grid grid-cols-4 gap-4 items-center">
-                <input id="ingreName${newIndex}" name="ingreName${newIndex}" type="text"
-                  class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                  placeholder="재료명" />
-                <input id="ingreAmount${newIndex}" name="ingreAmount${newIndex}" type="text"
-                  class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                  placeholder="용량 (예: 10g)" />
-              </div>
+            // 새로운 재료 입력 필드 생성
+            const newIngredientDiv = document.createElement("div");
+            newIngredientDiv.className = "ingredient-input";
+            newIngredientDiv.innerHTML = `
+                <div class="grid grid-cols-4 gap-4 items-center">
+                    <input id="ingreName${newIndex}" name="ingreName${newIndex}" type="text"
+                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="재료명" />
+                    <input id="ingreAmount${newIndex}" name="ingreAmount${newIndex}" type="text"
+                        class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                        placeholder="용량 (예: 10g)" />
+                    <button type="button" class="btn btn-danger delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md">X</button>
+                </div>
             `;
 
-        // 새로운 입력 필드를 컨테이너에 추가
-        ingredientsContainer.appendChild(newIngredientDiv);
+            // 새로운 입력 필드를 컨테이너에 추가
+            ingredientsContainer.appendChild(newIngredientDiv);
 
-        // 입력 필드가 10개를 초과할 경우 스크롤바 활성화
-        if (currentInputs.length >= 10) {
-          ingredientsContainer.style.maxHeight = "400px"; // 최대 높이 설정
-          ingredientsContainer.style.overflowY = "auto"; // 수직 스크롤 활성화
+            // 입력 필드가 10개를 초과할 경우 스크롤바 활성화
+            if (currentInputs.length >= 10) {
+                ingredientsContainer.style.maxHeight = "400px"; // 최대 높이 설정
+                ingredientsContainer.style.overflowY = "auto"; // 수직 스크롤 활성화
+            }
+
+            // 삭제 버튼 이벤트 추가
+            const deleteButton = newIngredientDiv.querySelector(".delete-row-btn");
+            deleteButton.addEventListener("click", () => handleDeleteRow(newIngredientDiv));
+        } catch (error) {
+            console.error("재료 정보 입력줄을 추가하는 중 오류가 발생했습니다:", error);
+            alert("재료 정보 입력줄을 추가하는 중 문제가 발생했습니다. 다시 시도해주세요.");
         }
-      } catch (error) {
-        console.error("재료 정보를 추가하는 중 오류가 발생했습니다:", error);
-        alert("재료 정보를 추가하는 중 문제가 발생했습니다. 다시 시도해주세요.");
-      }
     });
 
+    function handleDeleteRow(rowElement) {
+        const inputs = rowElement.querySelectorAll("input");
+        const hasInputValue = Array.from(inputs).some(input => input.value.trim() !== "");
+
+        if (hasInputValue) {
+            const confirmDelete = confirm("정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.");
+            if (!confirmDelete) return;
+        }
+
+        // 삭제된 행 제거
+        rowElement.remove();
+
+        // 재료 정보 재정렬
+        reorderIngredients();
+    }
+
+    function reorderIngredients() {
+        const ingredientsContainer = document.getElementById("ingredientsContainer");
+        const rows = ingredientsContainer.querySelectorAll(".ingredient-input");
+
+        rows.forEach((rowElement, index) => {
+            const newIndex = index + 1;
+
+            // 재료명 Input ID 및 Name 변경
+            const ingreNameInput = rowElement.querySelector('input[id^="ingreName"]');
+            ingreNameInput.id = `ingreName${newIndex}`;
+            ingreNameInput.name = `ingreName${newIndex}`;
+
+            // 용량 Input ID 및 Name 변경
+            const ingreAmountInput = rowElement.querySelector('input[id^="ingreAmount"]');
+            ingreAmountInput.id = `ingreAmount${newIndex}`;
+            ingreAmountInput.name = `ingreAmount${newIndex}`;
+        });
+    }
+
+    // 기존 입력 필드에 삭제 버튼 추가 (재료 정보 2줄 제외)
+    document.querySelectorAll("#ingredientsContainer .ingredient-input").forEach((rowElement, index) => {
+        if (index >= 2) {
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md";
+            deleteButton.textContent = "X";
+            deleteButton.addEventListener("click", () => handleDeleteRow(rowElement));
+            rowElement.querySelector(".grid").appendChild(deleteButton);
+        }
+    });
   </script>
-  <!-- step row 추가 버튼 / step 이미지 추가 -->
+
+  <!-- TODO: step row 추가 버튼 / step 이미지 추가 -->
   <script>
     // Step 추가 버튼 클릭 이벤트
     document.getElementById('addStepButton').addEventListener('click', function (event) {
@@ -358,29 +415,37 @@
         const newStep = document.createElement('div');
         newStep.className = 'flex items-center gap-4 mb-6';
         newStep.innerHTML = `
-            <div class="text-lime-500 font-semibold text-lg">Step${nextStepNumber}</div>
-            <textarea
-              id="stepText${nextStepNumber}"
-              name="stepText${nextStepNumber}"
-              class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
-              placeholder="{\`step${nextStepNumber}\`}"></textarea>
-            <div
-              id="stepImg${nextStepNumber}"
-              name="stepImg${nextStepNumber}"
-              class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-              <span class="material-symbols-outlined text-neutral-400">add</span>
-            </div>
-          `;
+                <div class="text-lime-500 font-semibold text-lg">Step${nextStepNumber}</div>
+                <textarea
+                    id="stepText${nextStepNumber}"
+                    name="stepText${nextStepNumber}"
+                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
+                    placeholder="{\`step${nextStepNumber}\`}"></textarea>
+                <div
+                    id="stepImg${nextStepNumber}"
+                    name="stepImg${nextStepNumber}"
+                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                </div>
+                <button type="button" class="btn btn-danger delete-step-btn bg-red-500 text-white px-3 py-2 rounded-md">X</button>
+            `;
 
         // 새 Step 요소를 stepContainer의 맨 뒤에 추가
         stepContainer.appendChild(newStep);
+
+        // 스크롤바 동작 처리 (5개 이상의 Step일 경우)
+        if (stepCount >= 4) {
+          stepContainer.style.maxHeight = '800px';
+          stepContainer.style.overflowY = 'auto';
+        }
 
         // step 추가 버튼을 새로 추가된 Step 아래로 이동
         const addButton = document.getElementById('addStepButton');
         stepContainer.appendChild(addButton);
 
-        // 새로 추가된 Step에도 이미지 업로드 이벤트 추가
+        // 새로 추가된 Step에도 이벤트 추가
         bindImageUploadEvent();
+        bindDeleteStepEvent(newStep);
 
       } catch (error) {
         // 예외 처리
@@ -390,50 +455,102 @@
     });
 
     // stepImg 클릭 이벤트 바인딩 함수
-    function bindImageUploadEvent() {
-      // 각 stepImg 요소에 클릭 이벤트 추가
-      document.querySelectorAll('[id^="stepImg"]').forEach(stepImg => {
-        // stepImg를 클릭했을 때, 이미지가 업로드되었거나 업로드되지 않았더라도 파일 선택 창을 열 수 있도록 설정
-        stepImg.addEventListener('click', function () {
-          // 파일 선택을 위한 input 요소 생성
-          const inputFile = document.createElement('input');
-          inputFile.type = 'file';
-          inputFile.accept = 'image/*'; // 이미지 파일만 선택 가능
+function bindImageUploadEvent() {
+    // 각 stepImg 요소에 클릭 이벤트 추가
+    document.querySelectorAll('[id^="stepImg"]').forEach(stepImg => {
+        // 중복 이벤트 방지를 위해 기존 이벤트 제거
+        stepImg.replaceWith(stepImg.cloneNode(true)); // 기존 노드를 복제하여 모든 이벤트 제거
+        const clonedStepImg = document.querySelector(`#${stepImg.id}`);
 
-          // 파일 선택 후 이미지 표시하기
-          inputFile.addEventListener('change', function (event) {
-            const file = event.target.files[0]; // 첫 번째 파일 선택
+        // 새로운 클릭 이벤트 추가
+        clonedStepImg.addEventListener('click', function () {
+            // 파일 선택을 위한 input 요소 생성
+            const inputFile = document.createElement('input');
+            inputFile.type = 'file';
+            inputFile.accept = 'image/*'; // 이미지 파일만 선택 가능
 
-            if (file) {
-              // 선택한 파일을 이미지로 표시
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                // 이미지를 미리보기로 추가
-                const imgElement = document.createElement('img');
-                imgElement.src = e.target.result;
-                imgElement.alt = 'Uploaded Image';
-                imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
+            // 파일 선택 후 이미지 표시하기
+            inputFile.addEventListener('change', function (event) {
+                const file = event.target.files[0]; // 첫 번째 파일 선택
 
-                // stepImg 영역에 이미지를 표시하고, 'add' 아이콘을 숨김
-                stepImg.innerHTML = ''; // 기존 내용 지우기
-                stepImg.appendChild(imgElement);
-              };
-              reader.readAsDataURL(file); // 파일을 data URL로 읽어 미리보기 생성
-            }
-          });
+                if (file) {
+                    // 선택한 파일을 이미지로 표시
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        // 이미지를 미리보기로 추가
+                        const imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imgElement.alt = 'Uploaded Image';
+                        imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
 
-          // 파일 선택 창 열기
-          inputFile.click();
+                        // stepImg 영역에 이미지를 표시하고, 'add' 아이콘을 숨김
+                        clonedStepImg.innerHTML = ''; // 기존 내용 지우기
+                        clonedStepImg.appendChild(imgElement);
+                    };
+                    reader.readAsDataURL(file); // 파일을 data URL로 읽어 미리보기 생성
+                }
+            });
+
+            // 파일 선택 창 열기
+            inputFile.click();
         });
+    });
+}
+
+    // Step 삭제 버튼 이벤트 바인딩 함수
+    function bindDeleteStepEvent(stepElement) {
+      const deleteButton = stepElement.querySelector('.delete-step-btn');
+      deleteButton.addEventListener('click', function () {
+        const textArea = stepElement.querySelector('textarea');
+        const hasInputValue = textArea && textArea.value.trim() !== '';
+
+        if (hasInputValue) {
+          const confirmDelete = confirm('정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.');
+          if (!confirmDelete) return;
+        }
+
+        // Step 삭제
+        stepElement.remove();
+
+        // Step 재정렬
+        reorderSteps();
       });
     }
 
-    // 페이지 로딩 시에도 기존 step들에 이벤트 바인딩
+    // Step 재정렬 함수
+    function reorderSteps() {
+      const stepContainer = document.querySelector('.stepContainer');
+      const stepElements = stepContainer.querySelectorAll('.flex.items-center.gap-4.mb-6');
+
+      stepElements.forEach((stepElement, index) => {
+        const newStepNumber = index + 1;
+
+        // Step 번호 변경
+        stepElement.querySelector('.text-lime-500').textContent = `Step${newStepNumber}`;
+
+        // Textarea ID 및 Name 변경
+        const textArea = stepElement.querySelector('textarea');
+        textArea.id = `stepText${newStepNumber}`;
+        textArea.name = `stepText${newStepNumber}`;
+
+        // Image ID 및 Name 변경
+        const stepImg = stepElement.querySelector('[id^="stepImg"]');
+        stepImg.id = `stepImg${newStepNumber}`;
+        stepImg.name = `stepImg${newStepNumber}`;
+      });
+    }
+
+    // 페이지 로딩 시 기존 Step들에 이벤트 바인딩
     document.addEventListener('DOMContentLoaded', function () {
       bindImageUploadEvent();
+
+      document.querySelectorAll('.flex.items-center.gap-4.mb-6').forEach(stepElement => {
+        bindDeleteStepEvent(stepElement);
+      });
     });
   </script>
-  <!-- 요리 완성 사진 관련련 화면단 동작 -->
+
+  <!-- TODO: 요리 완성 사진 관련련 화면단 동작 -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const maxImages = 4; // 최대 사진 추가 가능 개수
