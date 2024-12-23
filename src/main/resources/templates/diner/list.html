@@ -66,7 +66,7 @@
 
                 <div class="select-btn-element">
                   <a href="#" class="btn-keyword" title="키워드검색 메뉴 열기"
-                    ><i class="fa-solid fa-magnifying-glass"></i>  검색</a
+                    ><i class="fa-solid fa-magnifying-glass"></i> 검색</a
                   >
                   <div class="search-layer" style="display: none">
                     <div class="search-layer-inner">
@@ -91,7 +91,11 @@
         <div class="row">
           <th:block th:each="diner : ${result.dtoList}">
             <div class="col-lg-3 col-md-3 col-sm-6">
-              <div class="blog__item" style="cursor: pointer;" th:onclick="|location.href='@{/diner/read(did=${diner.did})}'|">
+              <div
+                class="blog__item"
+                style="cursor: pointer"
+                th:onclick="|location.href='@{/diner/read(did=${diner.did})}'|"
+              >
                 <div class="blog__item__pic">
                   <img
                     th:src="|/upload/display?fileName=${diner.dinerImageDtos[0].getImageURL()}|"
@@ -104,7 +108,10 @@
                 </div>
                 <div class="blog__item__text">
                   <ul>
-                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                    <li>
+                      <i class="fa fa-calendar-o"></i
+                      ><span th:text="${#temporals.format(diner.regDate, 'yyyy-MM-dd')}"></span>
+                    </li>
                     <li><i class="fa fa-comment-o"></i> 5</li>
                   </ul>
                   <h5><a href="#" th:text="${diner.name}"></a></h5>
@@ -125,13 +132,25 @@
             <nav aria-label="Page navigation">
               <ul class="pagination">
                 <li class="page-item" th:if="${result.prev}">
-                  <a class="page-link" th:href="@{list(page=${result.start-1},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
+                  <a
+                    class="page-link"
+                    th:href="@{list(page=${result.start-1},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
+                    >Previous</a
+                  >
                 </li>
                 <li class="page-item" th:each="page : ${result.pageList}">
-                  <a class="page-link" th:href="@{list(page=${page},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}" th:text="${page}"></a>
+                  <a
+                    class="page-link"
+                    th:href="@{list(page=${page},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
+                    th:text="${page}"
+                  ></a>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" th:href="@{list(page=${result.end+1},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
+                  <a
+                    class="page-link"
+                    th:href="@{list(page=${result.end+1},size=${result.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
+                    >Next</a
+                  >
                 </li>
               </ul>
             </nav>

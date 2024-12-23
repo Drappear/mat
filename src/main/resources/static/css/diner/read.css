@@ -21,6 +21,16 @@
   border: 1px solid;
 }
 
+.review-input-section {
+  border: 1px solid;
+}
+
+.review-comment-input {
+  resize: none;
+  width: 100%;
+  height: 80px;
+}
+
 .review-image-section {
   padding: 5px;
   border: 1px solid;

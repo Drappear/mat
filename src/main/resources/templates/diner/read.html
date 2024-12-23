@@ -9,13 +9,13 @@
       <div class="diner-main-img-and-map">
         <div class="col-lg-9 diner-main-img">
           <img
-                    th:src="|/upload/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
-                    th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
-                    alt=""
-                    loading="lazy"
-                    width="1080px"
-                    height="420px"
-                  />
+            th:src="|/upload/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
+            th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
+            alt=""
+            loading="lazy"
+            width="1080px"
+            height="420px"
+          />
         </div>
         <div class="col-lg-3 diner-map">
           <div class="row"><img src="https://placehold.co/320x320" alt="" /></div>
@@ -35,7 +35,7 @@
           <div class="row"><h3 th:text="${dinerDto.name}"></h3></div>
           <div class="row">
             <div class="col">지역명</div>
-            <div class="col">카테고리</div>
+            <div class="col">카테고리<span th:text="${dinerDto.categoryName}"></span></div>
           </div>
           <div class="row" th:text="${dinerDto.phone}"></div>
           <div class="row" th:text="${dinerDto.workTime}">영업시간</div>
@@ -56,11 +56,90 @@
         <div class="col">
           <button class="btn btn-info" id="modBtn">수정</button>
           <button class="btn btn-primary" id="listBtn">목록</button>
-          <button class="btn btn-success" id="reviewBtn">리뷰쓰기</button>
-          
+          <button
+            class="btn btn-success"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#reviewCollapse"
+            aria-expanded="false"
+            aria-controls="reviewCollapse"
+          >
+            리뷰쓰기
+          </button>
         </div>
       </div>
     </div>
+    <!-- 리뷰 collapse 시작 -->
+    <div class="container mt-3 review-input-section">
+      <div class="collapse" id="reviewCollapse">
+        <div class="row p-3 justify-content-center">
+          <div class="score-area col-lg-3">
+            <span>맛</span>
+            <div class="star-rating">
+              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39" />
+            </div>
+          </div>
+          <div class="score-area col-lg-3">
+            <span>가격</span>
+            <div class="star-rating">
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+            </div>
+          </div>
+          <div class="score-area col-lg-3">
+            <span>서비스</span>
+            <div class="star-rating">
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+              <img src="https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="comment-area col-lg-12">
+            <textarea
+              class="review-comment-input form-control"
+              name="review-comment-input"
+              id="reviewCommentInput"
+              rows="5"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-lg-10">
+            <input type="file" class="form-control" name="reviewImage" id="" />
+          </div>
+          <div class="col-lg-2">
+            <button type="button" class="btn btn-success">리뷰 등록</button>
+          </div>
+        </div>
+        <div class="row mt-2 p-3 review-input-img-preview">
+          <ul>
+            <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+              <img
+                th:attr="data-file=${dinerImage.getThumbImageURL()}"
+                data-bs-toggle="modal"
+                data-bs-target="#imgModal"
+                th:src="|/upload/display?fileName=${dinerImage.getThumbImageURL()}|"
+                th:if="${dinerImage.path != null}"
+                alt=""
+                class="block"
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 리뷰 collapse 끝 -->
     <div class="container mt-3">
       <div class="row review-two-column">
         <ul class="review-two-column-list">
@@ -158,11 +237,11 @@
       </div>
     </div>
     <form action="" method="post" id="actionForm">
-      <input type="hidden" name="did" th:value="${dinerDto.did}">
-      <input type="hidden" name="page" th:value="${requestDto.page}">
-      <input type="hidden" name="size" th:value="${requestDto.size}">
-      <input type="hidden" name="type" th:value="${requestDto.type}">
-      <input type="hidden" name="keyword" th:value="${requestDto.keyword}">
+      <input type="hidden" name="did" th:value="${dinerDto.did}" />
+      <input type="hidden" name="page" th:value="${requestDto.page}" />
+      <input type="hidden" name="size" th:value="${requestDto.size}" />
+      <input type="hidden" name="type" th:value="${requestDto.type}" />
+      <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
     </form>
   </div>
   <!-- 페이지 별 js 영역 -->
@@ -171,5 +250,10 @@
       const csrfValue = "[[${_csrf.token}]]";
     </script>
     <script th:src="@{/js/diner/read.js}"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
   </th:block>
 </html>
