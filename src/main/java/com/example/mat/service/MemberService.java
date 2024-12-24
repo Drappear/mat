@@ -1,10 +1,15 @@
 package com.example.mat.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.constant.MemberRole;
 import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
 
 public interface MemberService {
     // 닉네임 수정
@@ -59,4 +64,22 @@ public interface MemberService {
                 .role(MemberRole.MEMBER)
                 .build();
     }
+
+    // default MemberImageDto entityToDto(Member member, List<MemberImage>
+    // memberImages) {
+    // // MovieImage => MovieImageDto 변경 후 리스트 작업
+    // List<MemberImageDto> memberImageDtos = memberImages.stream().map(memberImage
+    // -> {
+    // return MemberImageDto.builder()
+    // .inum(memberImage.getInum())
+    // .uuid(memberImage.getUuid())
+    // .imgName(memberImage.getImgName())
+    // .path(memberImage.getPath())
+    // .build();
+    // }).collect(Collectors.toList());
+
+    // memberDto.setMemberImageDtos(memberImageDtos);
+
+    // return memberDto;
+    // }
 }

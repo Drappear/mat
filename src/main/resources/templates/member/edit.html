@@ -71,23 +71,34 @@
         }
         return true; // 검증 완료 시 폼 제출 허용
       }
+      // 버튼을 클릭해서 파일 선택 창 열기
       document
         .getElementById("uploadBtn")
         .addEventListener("click", function () {
-          const fileInput = document.getElementById("fileInput");
-          const formData = new FormData();
-          formData.append("file", fileInput.files[0]);
+          // 파일 입력을 클릭하여 파일 선택 창을 열도록 함
+          document.getElementById("fileInput").click();
+        });
 
-          fetch("/profile/upload-photo", {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              // Update the profile photo
-              document.getElementById("profilePhoto").src = data.imageUrl;
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function () {
+          const fileInput = document.getElementById("fileInput");
+
+          if (fileInput.files && fileInput.files[0]) {
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("/profile/upload-photo", {
+              method: "POST",
+              body: formData,
             })
-            .catch((error) => console.error("Error uploading image:", error));
+              .then((response) => response.json())
+              .then((data) => {
+                // 업로드 후 프로필 이미지 업데이트
+                document.getElementById("profilePhoto").src = data.imageUrl;
+              })
+              .catch((error) => console.error("Error uploading image:", error));
+          }
         });
     </script>
   </head>
@@ -98,11 +109,20 @@
         <h1 class="title">마이 페이지</h1>
         <div class="profile-section">
           <div class="profile-photo">
-            <img id="profilePhoto" src="" alt="Profile Photo" />
+            <img
+              id="profilePhoto"
+              src="https://via.placeholder.com/120"
+              alt="Profile Photo"
+            />
             <!-- <img src="https://via.placeholder.com/120" alt="프로필 사진" /> -->
+            <!-- 실제 파일 입력 요소는 숨김 처리 -->
             <input type="file" id="fileInput" accept="image/*" />
-            <button id="uploadBtn" class="photo-upload-btn">+</button>
+            <!-- 버튼을 클릭하면 파일 선택 창이 열리게 함 -->
+            <button type="button" id="uploadBtn" class="photo-upload-btn">
+              +
+            </button>
           </div>
+
           <div class="profile-info">
             <form
               th:action="@{/member/edit/nickname}"
