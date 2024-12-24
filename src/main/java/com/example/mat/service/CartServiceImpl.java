@@ -18,6 +18,7 @@ import com.example.mat.repository.CartRepository;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.ProductRepository;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.prequelConstruct_return;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -76,28 +77,29 @@ public class CartServiceImpl implements CartService {
         List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
 
         Member member = memberRepository.findByEmail(email);
+        Product product = productRepository.findByPid();
        
         Cart cart = cartRepository.findByMember_mid(member.getMid());
 
-        if(cart == null){ // 위에서 유저 카트 조회해서, 없으면은 그냥 반환하고
+        if(cart == null){ // 위에서 유저 카트 조회해서, 없으면은 그냥 반환
             return cartDetailDtoList;
         }
 
         cartDetailDtoList 
-        = cartItemRepository.findCartDetailDtoList(cart.getCartid());
-        return cartDetailDtoList; // 카트 있으면은 cartItemRepository 의 JPQL 쿼리로 걸러진 아이템들을 담영서 반환
+        = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
+        return cartDetailDtoList; 
     }
 
 
     @Override
     public void updateCartItemQuantity(Long cartitemid, int quantity) {
-        // TODO Auto-generated method stub
+        
         throw new UnsupportedOperationException("Unimplemented method 'updateCartItemQuantity'");
     }
 
     @Override
     public void deleteCartItem(Long cartitemid) {
-        // TODO Auto-generated method stub
+        
         throw new UnsupportedOperationException("Unimplemented method 'deleteCartItem'");
     }
 

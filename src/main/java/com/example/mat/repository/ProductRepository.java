@@ -6,4 +6,7 @@ import com.example.mat.entity.market.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    Product findByPid(Long pid);
+
+
 }
