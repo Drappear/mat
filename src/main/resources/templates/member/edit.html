@@ -71,6 +71,24 @@
         }
         return true; // 검증 완료 시 폼 제출 허용
       }
+      document
+        .getElementById("uploadBtn")
+        .addEventListener("click", function () {
+          const fileInput = document.getElementById("fileInput");
+          const formData = new FormData();
+          formData.append("file", fileInput.files[0]);
+
+          fetch("/profile/upload-photo", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Update the profile photo
+              document.getElementById("profilePhoto").src = data.imageUrl;
+            })
+            .catch((error) => console.error("Error uploading image:", error));
+        });
     </script>
   </head>
   <body>
@@ -80,26 +98,10 @@
         <h1 class="title">마이 페이지</h1>
         <div class="profile-section">
           <div class="profile-photo">
-            <img src="https://via.placeholder.com/120" alt="프로필 사진" />
-            <!-- <img
-              data-bs-toggle="modal"
-              data-bs-target="#imgModal"
-              th:attr="data-file=${memberImage.getThumbImageURL()}"
-              th:src="|/upload/display?fileName=${memberImage.getThumbImageURL()}|"
-              th:if="${memberImage.path != null}"
-              alt="프로필 사진"
-              class="block"
-            />
-            <label class="photo-upload-btn">
-              <input
-                type="file"
-                class="form-control block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                placeholder="+"
-                multiple
-                accept="image/png, image/jpeg"
-              />
-            </label> -->
-            <button class="photo-upload-btn">+</button>
+            <img id="profilePhoto" src="" alt="Profile Photo" />
+            <!-- <img src="https://via.placeholder.com/120" alt="프로필 사진" /> -->
+            <input type="file" id="fileInput" accept="image/*" />
+            <button id="uploadBtn" class="photo-upload-btn">+</button>
           </div>
           <div class="profile-info">
             <form
