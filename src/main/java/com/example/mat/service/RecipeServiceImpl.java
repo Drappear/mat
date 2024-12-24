@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +22,10 @@ import com.example.mat.repository.RecipeRepository;
 import com.example.mat.repository.RecipeStepRepository;
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.recipe.RecipeCategoryDto;
 import com.example.mat.dto.recipe.RecipeDto;
 import com.example.mat.entity.recipe.Recipe;
+import com.example.mat.entity.recipe.RecipeCategory;
 import com.example.mat.entity.recipe.RecipeImage;
 
 
@@ -42,31 +45,55 @@ public class RecipeServiceImpl implements RecipeService {
   private final RecipeStepRepository recipeStepRepository;
   private final RecipeCategoryRepository recipeCategoryRepository;
 
-  // @Override
-  // public PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto) {
+  @Override
+  public PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto) {
 
-  //   Pageable pageable = pageRequestDto.getPageable(Sort.by("rno").descending());
+    Pageable pageable = pageRequestDto.getPageable(Sort.by("rno").descending());
 
-  //   Page<Object[]> result = recipeImageRepository.getTotalList(pageRequestDto.getType(), pageRequestDto.getKeyword(),
-  //       pageable);
+    Page<Object[]> result = recipeImageRepository.getTotalList(pageRequestDto.getType(), pageRequestDto.getKeyword(),
+        pageable);
 
-  //   Function<Object[], RecipeDto> function = (en -> entityToDto((Recipe) en[0],
-  //       (List<RecipeImage>) Arrays.asList((RecipeImage) en[1]),
-  //       (Long) en[2], (Double) en[3]));
+        //TODO: 수정하기 2024-12-24
+    Function<Object[], RecipeDto> function = (en -> entityToDto((Recipe) en[0],
+        null, (List<RecipeImage>) Arrays.asList((RecipeImage) en[1]), null, null
+        )); //,(Long) en[2], (Double) en[3]
 
-  //   return new PageResultDto<>(result, function);
-  // }
+    return new PageResultDto<>(result, function);
+  }
 
   @Override
   public Long register(RecipeDto recipeDto) {
 
     Map<String, Object> entityMap = dtoToEntity(recipeDto);
 
+    // RecipeImage 처리
     Recipe recipe = (Recipe) entityMap.get("recipe");
     List<RecipeImage> recipeImages = (List<RecipeImage>) entityMap.get("recipeImages");
 
+    // RecipeCategory 처리
+    if (recipe.getRecipeCategory() != null) {
+      RecipeCategory category = recipe.getRecipeCategory();
+      RecipeCategory existingCategory = recipeCategoryRepository.findById(category.getRCateId()).orElse(null);
+
+      if (existingCategory == null) {
+          // 카테고리가 데이터베이스에 없으면 저장
+          recipeCategoryRepository.save(category);
+      } else {
+          // 기존 카테고리를 설정
+          recipe.setRecipeCategory(existingCategory);
+      }
+    }
+
+    // Recipe 저장
     recipeRepository.save(recipe);
-    recipeImages.forEach(recipeImage -> recipeImageRepository.save(recipeImage));
+    // RecipeImages 저장
+    if (recipeImages != null && !recipeImages.isEmpty()) {
+      recipeImages.forEach(recipeImage -> {
+          recipeImage.setRecipe(recipe);
+          recipeImageRepository.save(recipeImage);
+      });
+    } 
+    // recipeImages.forEach(recipeImage -> recipeImageRepository.save(recipeImage));
 
     return recipe.getRno();
   }
@@ -82,9 +109,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     recipeRepository.save(recipe);
 
-    // 기존의 영화 이미지 제거
+    // 기존의 recipe 이미지 제거
     recipeImageRepository.deleteByRecipe(recipe);
-
+    // recipeImageRepository.saveAll(recipeImages);
     recipeImages.forEach(recipeImage -> recipeImageRepository.save(recipeImage));
 
     return recipe.getRno();
@@ -101,12 +128,7 @@ public class RecipeServiceImpl implements RecipeService {
     recipeRepository.delete(recipe);
   }
 
-  @Override
-  public PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getList'");
-  }
-
+  //TODO: 상세조회
   @Override
   public RecipeDto get(Long rno) {
     // TODO Auto-generated method stub
@@ -134,6 +156,20 @@ public class RecipeServiceImpl implements RecipeService {
     // }
 }
 
+@Override
+public List<RecipeCategoryDto> getAllCategories() {
+        // 카테고리를 rCateId 기준으로 정렬하여 가져오기
+        List<RecipeCategory> categories = recipeCategoryRepository.findAllOrderByRCateId();
+        
+        // RecipeCategory -> RecipeCategoryDto로 변환
+        return categories.stream().map(category -> RecipeCategoryDto.builder()
+            .rCateId(category.getRCateId())
+            .name(category.getName())
+            .build()
+        ).collect(Collectors.toList());
+}
+
+
 // 엔티티 -> DTO 변환 메서드
 private RecipeDto convertToDto(Recipe recipe) {
     return RecipeDto.builder()
@@ -150,6 +186,7 @@ private RecipeDto convertToDto(Recipe recipe) {
             .updateDate(recipe.getUpdateDate())
             .build();
 }
+
 
   // @Override
   // public RecipeDto get(Long rno) {
