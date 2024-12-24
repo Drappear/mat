@@ -31,6 +31,17 @@ public class RecipeStepDto {
   private LocalDateTime regDate;
   private LocalDateTime updateDate;
 
+  // 원본 이미지 경로
+    public String getImageURL() {
+      String fullPath = "";
+      try {
+        fullPath = URLEncoder.encode(path + File.separator + uuid + "_" + imgName, "utf-8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+      return fullPath;
+    }
+    
   //TODO: 썸네일 서버저장 및 DB저장 필요없다 // 썸네일 경로
   // public String getThumbImageURL() {
   //   String fullPath = "";
@@ -41,15 +52,5 @@ public class RecipeStepDto {
   //   }
   //   return fullPath;
   // }
-
-  // 원본 이미지 경로
-  public String getImageURL() {
-    String fullPath = "";
-    try {
-      fullPath = URLEncoder.encode(path + File.separator + uuid + "_" + imgName, "utf-8");
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    }
-    return fullPath;
-  }
+  
 }

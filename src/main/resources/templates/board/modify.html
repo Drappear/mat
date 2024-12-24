@@ -26,7 +26,7 @@
 
             <!-- 카테고리 -->
             <div class="mb-3">
-              <label for="categoryId" class="form-label">Category</label>
+              <label for="categoryId" class="form-label"></label>
               <select
                 class="form-select"
                 id="categoryId"
@@ -46,7 +46,7 @@
 
             <!-- 제목 -->
             <div class="mb-3">
-              <label for="title" class="form-label">Title</label>
+              <label for="title" class="form-label"></label>
               <input
                 type="text"
                 class="form-control"
@@ -61,7 +61,7 @@
 
             <!-- 기존 이미지 표시 및 삭제 옵션 -->
             <div th:if="${boardDto.imageFileName}" class="mb-3">
-              <label for="currentImage" class="form-label">Current Image</label>
+              <label for="currentImage" class="form-label"></label>
               <div>
                 <img
                   th:src="@{/upload/{filename}(filename=${boardDto.imageFileName})}"
@@ -70,7 +70,7 @@
                 />
               </div>
               <div class="form-check">
-                <input
+                <!-- <input
                   type="checkbox"
                   class="form-check-input"
                   id="deleteImage"
@@ -79,13 +79,13 @@
                 />
                 <label for="deleteImage" class="form-check-label"
                   >Delete Current Image</label
-                >
+                > -->
               </div>
             </div>
 
             <!-- 새 이미지 업로드 -->
             <div class="mb-3">
-              <label for="image" class="form-label">Upload New Image</label>
+              <label for="image" class="form-label"></label>
               <input
                 type="file"
                 class="form-control"
@@ -96,7 +96,7 @@
 
             <!-- 내용 -->
             <div class="mb-3">
-              <label for="content" class="form-label">Content</label>
+              <label for="content" class="form-label"></label>
               <textarea
                 class="form-control"
                 id="content"

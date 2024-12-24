@@ -51,8 +51,9 @@ public class RecipeDto {
     private List<RecipeStepDto> recipeStepDtos = new ArrayList<>();
 
     // TODO: 레시피 카테고리
-    @Builder.Default
-    private List<RecipeCategoryDto> recipeCategoryDtos = new ArrayList<>();
+    // @Builder.Default
+    // private List<RecipeCategoryDto> recipeCategoryDtos = new ArrayList<>();
+    private RecipeCategoryDto recipeCategoryDto; // 단일 카테고리
 
     // TODO: 레시피 재료
     @Builder.Default
