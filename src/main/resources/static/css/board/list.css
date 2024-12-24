@@ -13,6 +13,7 @@ a {
 a.text-primary:focus,
 a.text-primary:hover {
   color: #7fad39 !important;
+  font-size: 111%;
 }
 .text-black,
 .text-hover-black:hover {
@@ -35,4 +36,8 @@ a.text-primary:hover {
 .pagination .page-item.active .page-link {
   background-color: #7fad39;
   border-color: #7fad39;
+}
+
+.op-6 {
+  font-size: small;
 }
