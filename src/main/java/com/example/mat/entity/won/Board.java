@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import com.example.mat.entity.BaseEntity;
+import com.example.mat.entity.shin.Member;
 
 @Entity
 @Table(name = "mat_board")
@@ -32,16 +33,20 @@ public class Board extends BaseEntity {
     @Column(nullable = true)
     private Long viewCount = 0L;
 
-    @Column(nullable = false)
-    private String nick = "Anonymous"; // 기본값 추가
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member; // Member 엔티티와 연결
 
-    // BoardCategory와의 연관 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private BoardCategory boardCategory;
 
-    // BoardImage와의 연관 관계 (이미지 필수 아님)
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", nullable = true) // 이미지가 선택사항이므로 nullable = true
     private BoardImage image;
+
+    // 기존 member와의 관계를 유지하면서, userid를 간접적으로 접근 가능
+    public String getUserid() {
+        return member != null ? member.getUserid() : null;
+    }
 }
