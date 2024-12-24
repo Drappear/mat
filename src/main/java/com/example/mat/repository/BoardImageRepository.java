@@ -26,4 +26,12 @@ public interface BoardImageRepository extends JpaRepository<BoardImage, Long> {
      * @return 연관된 이미지
      */
     BoardImage findByBoard(Board board);
+
+    /**
+     * UUID 중복 여부 확인
+     *
+     * @param uuid 중복 확인할 UUID
+     * @return UUID가 존재하면 true, 존재하지 않으면 false
+     */
+    boolean existsByUuid(String uuid);
 }

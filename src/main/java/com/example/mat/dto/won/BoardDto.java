@@ -28,7 +28,9 @@ public class BoardDto {
     @NotBlank(message = "내용은 필수 항목입니다.")
     private String content; // 게시물 내용
 
-    private String nick; // 작성자 닉네임
+    private Long memberId; // 클라이언트로부터 전달받을 Member ID
+
+    private String userid; // 작성자의 사용자 ID
 
     private Long viewCount; // 조회수
 

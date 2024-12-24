@@ -10,174 +10,193 @@
   <body>
     <div layout:fragment="content">
       <div class="container">
-          <div class="container">
-            <div class="row align-center">
-              <div class="custom-col m-15px-tb">
-                <!-- post content -->
-                <article class="blog-article">
-                  <div class="blog-article-header">
-                    <h4>
-                      <a th:text="${board.categoryId == 1 ? 'Free' 
+        <div class="container">
+          <div class="row align-center">
+            <div class="custom-col m-15px-tb">
+              <!-- post content -->
+              <article class="blog-article">
+                <div class="blog-article-header">
+                  <h4>
+                    <a
+                      th:text="${board.categoryId == 1 ? 'Free' 
                                      : (board.categoryId == 2 ? 'Q&A' 
-                                     : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}">
-                        Category
+                                     : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
+                    >
+                      Category
+                    </a>
+                  </h4>
+
+                  <h2 th:text="${board.title}">제목</h2>
+                  <div class="media">
+                    <div class="avatar">
+                      <img
+                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        title=""
+                        alt=""
+                      />
+                    </div>
+                    <div class="media-body">
+                      <label th:text="${board.userid}">UserId</label>
+                      <span
+                        th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
+                        >작성 시간</span
+                      >
+                      <!-- <label th:text="${board.viewCount}"></label> -->
+                    </div>
+                    <!-- TODO!!!(작성자만 볼 수 있게 기능 추가!!!) 작성자만 볼 수 있는 수정 및 삭제 버튼, 오른쪽 정렬 -->
+                    <div class="post-buttons">
+                      <a
+                        th:href="@{/board/modify/{bno}(bno=${board.bno})}"
+                        class="btn btn-secondary modify-btn"
+                      >
+                        Modify
                       </a>
-                    </h4>
-                    
-                    <h2 th:text="${board.title}">제목</h2>
-                    <div class="media">
-                      <div class="avatar">
-                        <img
-                          src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                          title=""
-                          alt=""
+                      <form
+                        th:action="@{/board/delete/{bno}(bno=${board.bno})}"
+                        method="post"
+                        style="display: inline"
+                      >
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          th:value="${_csrf.token}"
                         />
-                      </div>
-                      <div class="media-body">
-                        <label th:text="${board.nick}">닉네임</label>
-                        <span th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}">작성 시간</span>
-                        <!-- <label th:text="${board.viewCount}"></label> -->
-                      </div>
-                      <!-- TODO!!!(작성자만 볼 수 있게 기능 추가!!!) 작성자만 볼 수 있는 수정 및 삭제 버튼, 오른쪽 정렬 -->
-                      <div class="post-buttons">
-                        <a th:href="@{/board/modify/{bno}(bno=${board.bno})}" class="btn btn-secondary modify-btn">
-                          Modify
-                        </a>
-                        <form th:action="@{/board/delete/{bno}(bno=${board.bno})}" method="post" style="display: inline;">
-                          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                          <button type="submit" class="btn btn-danger delete-btn">Delete</button>
+                        <button type="submit" class="btn btn-danger delete-btn">
+                          Delete
+                        </button>
                       </form>
                       <!-- <a th:href="@{/board/list}" class="btn list-btn">
                         List
                       </a> -->
-                      </div>
                     </div>
                   </div>
-                  <div th:if="${board.imageFileName}" class="article-img">
-                    <img th:src="@{/upload/{filename}(filename=${board.imageFileName})}" alt="첨부 이미지" style="max-width: 100%; height: auto;">
-                  </div>
-                  <div class="blog-article-body">
-                    <p th:text="${board.content}" class="content-text">
-                      내용
-                  </p>
-                  </div>
-                </article>
-
-                <!-- 댓글 작성 폼 (글 내용과 댓글 목록 사이) -->
-                <div class="blog-comment-form">
-                  <form action="#" method="POST">
-                    <div class="form-group">
-                      <textarea
-                        id="comment"
-                        name="comment"
-                        rows="4"
-                        class="form-control"
-                        placeholder="주제와 무관한 댓글, 타인의 권리를 침해하거나 명예를 훼손하는 게시물은 별도의 통보 없이 제재를 받을 수 있습니다."
-                      ></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">
-                      New Comment
-                    </button>
-                  </form>
                 </div>
+                <div th:if="${board.imageFileName}" class="article-img">
+                  <img
+                    th:src="@{/upload/{filename}(filename=${board.imageFileName})}"
+                    alt="첨부 이미지"
+                    style="max-width: 100%; height: auto"
+                  />
+                </div>
+                <div class="blog-article-body">
+                  <p th:utext="${board.content}" class="content-text"></p>
+                </div>
+              </article>
 
-                <!-- reply content (댓글 목록 및 대댓글 포함) -->
-                <article class="blog-reply-content">
-                  <div class="container bootstrap snippets bootdey">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="blog-comment">
-                          <ul class="comments">
-                            <!-- 첫 번째 댓글 -->
-                            <li class="clearfix">
-                              <img
-                                src="https://bootdey.com/img/Content/user_1.jpg"
-                                class="avatar"
-                                alt=""
-                              />
-                              <div class="post-comments">
-                                <p class="meta">
-                                  Dec 18, 2014 <a href="#">JohnDoe</a> says :
-                                  <i class="pull-right">
-                                    <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                    <a href="#" class="modify-link"
-                                      ><small>Modify</small></a
-                                    >
-                                    |
-                                    <a href="#" class="delete-link"
-                                      ><small>Delete</small></a
-                                    >
-                                    |
-                                    <a href="#"><small>Reply</small></a>
-                                  </i>
-                                </p>
-                                <p>안녕하세요.</p>
-                              </div>
-                            </li>
+              <!-- 댓글 작성 폼 (글 내용과 댓글 목록 사이) -->
+              <div class="blog-comment-form">
+                <form action="#" method="POST">
+                  <div class="form-group">
+                    <textarea
+                      id="comment"
+                      name="comment"
+                      rows="4"
+                      class="form-control"
+                      placeholder="주제와 무관한 댓글, 타인의 권리를 침해하거나 명예를 훼손하는 게시물은 별도의 통보 없이 제재를 받을 수 있습니다."
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary submit-btn">
+                    New Comment
+                  </button>
+                </form>
+              </div>
 
-                            <!-- 두 번째 댓글 -->
-                            <li class="clearfix">
-                              <img
-                                src="https://bootdey.com/img/Content/user_2.jpg"
-                                class="avatar"
-                                alt=""
-                              />
-                              <div class="post-comments">
-                                <p class="meta">
-                                  Dec 19, 2014 <a href="#">JaneDoe</a> says :
-                                  <i class="pull-right">
-                                    <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                    <a href="#" class="modify-link"
-                                      ><small>Modify</small></a
-                                    >
-                                    |
-                                    <a href="#" class="delete-link"
-                                      ><small>Delete</small></a
-                                    >
-                                    |
-                                    <a href="#"><small>Reply</small></a>
-                                  </i>
-                                </p>
-                                <p>반가워요. 잘있어요. 다시만나요.</p>
-                              </div>
+              <!-- reply content (댓글 목록 및 대댓글 포함) -->
+              <article class="blog-reply-content">
+                <div class="container bootstrap snippets bootdey">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="blog-comment">
+                        <ul class="comments">
+                          <!-- 첫 번째 댓글 -->
+                          <li class="clearfix">
+                            <img
+                              src="https://bootdey.com/img/Content/user_1.jpg"
+                              class="avatar"
+                              alt=""
+                            />
+                            <div class="post-comments">
+                              <p class="meta">
+                                Dec 18, 2014 <a href="#">JohnDoe</a> says :
+                                <i class="pull-right">
+                                  <!-- 댓글 수정, 삭제, 및 reply 링크 -->
+                                  <a href="#" class="modify-link"
+                                    ><small>Modify</small></a
+                                  >
+                                  |
+                                  <a href="#" class="delete-link"
+                                    ><small>Delete</small></a
+                                  >
+                                  |
+                                  <a href="#"><small>Reply</small></a>
+                                </i>
+                              </p>
+                              <p>안녕하세요.</p>
+                            </div>
+                          </li>
 
-                              <!-- 대댓글 -->
-                              <ul class="comments">
-                                <li class="clearfix">
-                                  <img
-                                    src="https://bootdey.com/img/Content/user_3.jpg"
-                                    class="avatar"
-                                    alt=""
-                                  />
-                                  <div class="post-comments">
-                                    <p class="meta">
-                                      Dec 20, 2014 <a href="#">JohnDoe</a> says
-                                      :
-                                      <i class="pull-right">
-                                        <!-- 대댓글 수정, 삭제 링크 -->
-                                        <a href="#" class="modify-link"
-                                          ><small>Modify</small></a
-                                        >
-                                        |
-                                        <a href="#" class="delete-link"
-                                          ><small>Delete</small></a
-                                        >
-                                      </i>
-                                    </p>
-                                    <p>가나다라마바사아자차카타파하!!!</p>
-                                  </div>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </div>
+                          <!-- 두 번째 댓글 -->
+                          <li class="clearfix">
+                            <img
+                              src="https://bootdey.com/img/Content/user_2.jpg"
+                              class="avatar"
+                              alt=""
+                            />
+                            <div class="post-comments">
+                              <p class="meta">
+                                Dec 19, 2014 <a href="#">JaneDoe</a> says :
+                                <i class="pull-right">
+                                  <!-- 댓글 수정, 삭제, 및 reply 링크 -->
+                                  <a href="#" class="modify-link"
+                                    ><small>Modify</small></a
+                                  >
+                                  |
+                                  <a href="#" class="delete-link"
+                                    ><small>Delete</small></a
+                                  >
+                                  |
+                                  <a href="#"><small>Reply</small></a>
+                                </i>
+                              </p>
+                              <p>반가워요. 잘있어요. 다시만나요.</p>
+                            </div>
+
+                            <!-- 대댓글 -->
+                            <ul class="comments">
+                              <li class="clearfix">
+                                <img
+                                  src="https://bootdey.com/img/Content/user_3.jpg"
+                                  class="avatar"
+                                  alt=""
+                                />
+                                <div class="post-comments">
+                                  <p class="meta">
+                                    Dec 20, 2014 <a href="#">JohnDoe</a> says :
+                                    <i class="pull-right">
+                                      <!-- 대댓글 수정, 삭제 링크 -->
+                                      <a href="#" class="modify-link"
+                                        ><small>Modify</small></a
+                                      >
+                                      |
+                                      <a href="#" class="delete-link"
+                                        ><small>Delete</small></a
+                                      >
+                                    </i>
+                                  </p>
+                                  <p>가나다라마바사아자차카타파하!!!</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
-                </article>
-              </div>
+                </div>
+              </article>
             </div>
-          </div>  
+          </div>
+        </div>
       </div>
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

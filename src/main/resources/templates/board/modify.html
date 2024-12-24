@@ -11,8 +11,17 @@
       <div class="write-content">
         <div class="write-article">
           <!-- 글 수정 폼 -->
-          <form th:action="@{/board/modify}" th:object="${boardDto}" method="post" enctype="multipart/form-data">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <form
+            th:action="@{/board/modify}"
+            th:object="${boardDto}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <input
+              type="hidden"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
             <input type="hidden" th:field="*{bno}" />
 
             <!-- 카테고리 -->
@@ -50,15 +59,31 @@
               />
             </div>
 
-            <!-- 기존 이미지 표시 -->
+            <!-- 기존 이미지 표시 및 삭제 옵션 -->
             <div th:if="${boardDto.imageFileName}" class="mb-3">
               <label for="currentImage" class="form-label">Current Image</label>
               <div>
-                <img th:src="@{/upload/{filename}(filename=${boardDto.imageFileName})}" alt="Current Image" style="max-width: 100%; height: auto;" />
+                <img
+                  th:src="@{/upload/{filename}(filename=${boardDto.imageFileName})}"
+                  alt="Current Image"
+                  style="max-width: 100%; height: auto"
+                />
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="deleteImage"
+                  name="deleteImage"
+                  value="true"
+                />
+                <label for="deleteImage" class="form-check-label"
+                  >Delete Current Image</label
+                >
               </div>
             </div>
 
-            <!-- 이미지 업로드 -->
+            <!-- 새 이미지 업로드 -->
             <div class="mb-3">
               <label for="image" class="form-label">Upload New Image</label>
               <input
@@ -81,6 +106,7 @@
                 placeholder="Enter the content"
                 maxlength="1300"
                 required
+                th:text="${#strings.replace(boardDto.content, '<br>', '\n')}"
               ></textarea>
             </div>
 
@@ -91,7 +117,8 @@
             <a
               th:href="@{/board/detail/{bno}(bno=${boardDto.bno})}"
               class="btn btn-secondary"
-            >Cancel</a>
+              >Cancel</a
+            >
           </form>
         </div>
       </div>

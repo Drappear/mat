@@ -13,7 +13,7 @@ body {
   padding: 15px;
   padding-bottom: 5px;
   margin: 15px 0 30px;
-  
+
   min-width: 888px; /* 최소 너비 */
   min-height: 444px; /* 최소 높이 */
   max-width: 888px;
@@ -32,7 +32,7 @@ body {
   border-bottom: 1px solid #1d7117;
 }
 .blog-article-header h2 {
-  color: #7FAD39;
+  color: #7fad39;
   font-weight: 600;
 }
 .blog-article-header .media {
@@ -96,7 +96,6 @@ img {
   margin-bottom: 15px;
   word-wrap: break-word;
 }
-
 
 /* Comment Section */
 .blog-comment::before,
@@ -175,7 +174,7 @@ img {
   border-color: #fff;
 }
 .blog-comment-form button {
-  background-color: #7FAD39;
+  background-color: #7fad39;
   color: #fff;
   font-size: 12px;
   padding: 8px 16px;
@@ -187,13 +186,13 @@ img {
   border-color: #fff;
 }
 .blog-comment-form button:hover {
-  background-color: #7FAD39;
+  background-color: #7fad39;
   border-color: #fff;
 }
 
 /* Buttons */
 .modify-btn {
-  background-color: #7FAD39;
+  background-color: #7fad39;
   color: #fff;
   margin-top: 20px;
   margin-right: 5px;
@@ -201,7 +200,7 @@ img {
   font-size: 12px;
 }
 .modify-btn:hover {
-  background-color: #7FAD39;
+  background-color: #7fad39;
   border-color: #fff;
 }
 .delete-btn {
@@ -218,10 +217,10 @@ img {
 }
 .blog-comment ul.comments li .meta i a.reply-link {
   display: block;
-  color: #7FAD39;
+  color: #7fad39;
   border-color: #fff;
 }
 .blog-comment ul.comments li .meta i a.reply-link:hover {
-  color: #7FAD39;
+  color: #7fad39;
   border-color: #fff;
 }
