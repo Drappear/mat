@@ -1,11 +1,8 @@
-package com.example.mat.repository;
+package com.example.mat.repository.diner;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,24 +28,26 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
 
     @Override
     public List<Object[]> getDinerRow(Long did) {
-      QDinerImage dinerImage = QDinerImage.dinerImage;
-      // QReview review = QReview.review;
-      QDiner diner = QDiner.diner;
+        QDinerImage dinerImage = QDinerImage.dinerImage;
+        // QReview review = QReview.review;
+        QDiner diner = QDiner.diner;
 
-      JPQLQuery<DinerImage> query = from(dinerImage).leftJoin(diner).on(diner.eq(dinerImage.diner));
+        JPQLQuery<DinerImage> query = from(dinerImage).leftJoin(diner).on(diner.eq(dinerImage.diner));
 
-      // JPQLQuery<Long> rCnt = JPAExpressions.select(review.countDistinct()).from(review)
-      //                 .where(review.diner.eq(dinerImage.diner));
-      // JPQLQuery<Double> rAvg = JPAExpressions.select(review.grade.avg().round()).from(review)
-      //                 .where(review.diner.eq(dinerImage.diner));
+        // JPQLQuery<Long> rCnt =
+        // JPAExpressions.select(review.countDistinct()).from(review)
+        // .where(review.diner.eq(dinerImage.diner));
+        // JPQLQuery<Double> rAvg =
+        // JPAExpressions.select(review.grade.avg().round()).from(review)
+        // .where(review.diner.eq(dinerImage.diner));
 
-      JPQLQuery<Tuple> tuple = query.select(diner, dinerImage)
-                      .where(dinerImage.diner.did.eq(did))
-                      .orderBy(dinerImage.inum.desc());
+        JPQLQuery<Tuple> tuple = query.select(diner, dinerImage)
+                .where(dinerImage.diner.did.eq(did))
+                .orderBy(dinerImage.inum.desc());
 
-      List<Tuple> result = tuple.fetch();
+        List<Tuple> result = tuple.fetch();
 
-      return result.stream().map(t -> t.toArray()).collect(Collectors.toList());
+        return result.stream().map(t -> t.toArray()).collect(Collectors.toList());
     }
 
     @Override
