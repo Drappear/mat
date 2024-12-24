@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.Page;
 
-import org.springframework.data.domain.Pageable;
+// import org.springframework.data.domain.Pageable;
 
 import com.example.mat.entity.shin.MemberImage;
 import com.example.mat.entity.shin.QMember;
@@ -50,12 +50,6 @@ public class ProfileImageRepositoryImpl extends QuerydslRepositorySupport implem
                 List<Tuple> result = tuple.fetch();
 
                 return result.stream().map(t -> t.toArray()).collect(Collectors.toList());
-        }
-
-        @Override
-        public Page<Object[]> getTotalList(String type, String keyword, Pageable pageable) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTotalList'");
         }
 
 }
