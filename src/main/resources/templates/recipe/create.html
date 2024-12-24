@@ -41,16 +41,17 @@
             </div>
           </div>
         </div>
-        <form>
+
+        <form th:action="@{create}" method="post" id="createForm" th:object="${recipeDto}">
           <!-- 레시피 제목 및 요약 -->
           <div class="form-section">
             <div class="space-y-4">
               <div class="p-4 bg-neutral-50 rounded-lg">
                 <div class="grid grid-cols-3 gap-4 items-center">
                   <label for="recipeTitle" class="text-neutral-950 form-label">레시피 제목</label>
-                  <input type="text" id="recipeTitle" placeholder="예) 소고기 만두국 끓이기"
+                  <input type="text" id="recipeTitle" placeholder="예) 소고기 만두국 끓이기" th:value="${recipeDto.title}"
                     class="col-span-2 border-neutral-300 border rounded-md px-3 py-2 form-control" />
-                  <!-- <div th:if="${#fields.hasErrors('recipeTitle')}" th:errors="*{recipeTitle}" class="text-danger"></div> -->
+                  <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
                 </div>
               </div>
             </div>
@@ -89,7 +90,7 @@
                 <div class="col-span-2 flex justify-end gap-4">
                   <div>
                     <!-- <label for="servings" class="form-label text-neutral-950">인원</label> -->
-                    <select id="servings" name="servings"
+                    <select id="serving" name="serving"
                       class="select-info form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
                       <option value>인원 선택</option>
                       <option value="1">1인분</option>
@@ -271,12 +272,14 @@
             </p>
             <!-- button -->
             <div class="flex justify-center items-center gap-4">
-              <button class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm">
+              <button type="submit" class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm">
                 저장 후 공개하기
               </button>
-              <button class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm">
+              <a 
+              th:href="@{list(page=${requestDto.page},size=${requestDto.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm">
                 취소
-              </button>
+              </a>
             </div>
           </div>
 
@@ -662,6 +665,44 @@ function bindImageUploadEvent() {
         }
       }
     });      
+  </script>
+
+  <!-- TODO:::::upload.js -->
+  <script>
+    // x 를 누르면 삭제 요청 => 부모 이벤트
+    document.querySelector(".uploadResult").addEventListener("click", (e) => {
+      // a 태그 기능 중지
+      e.preventDefault();
+
+      // href 값 가져오기
+      const element = e.target.closest("a");
+
+      // 이미지 삭제
+      const removeLi = e.target.closest("li");
+
+      // 삭제 할 이미지 경로 추출
+      const filePath = element.getAttribute("href");
+
+      let formData = new FormData();
+      formData.append("filePath", filePath);
+
+      fetch("/upload/remove", {
+        method: "post",
+        headers: {
+          "X-CSRF-TOKEN": csrfValue,
+        },
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error("에러 발생");
+
+          return response.text();
+        })
+        .then((data) => {
+          // 화면 이미지 제거
+          if (data) removeLi.remove();
+        });
+    });
   </script>
 
   <!-- <script th:src="@{/js/upload.js}"></script> -->

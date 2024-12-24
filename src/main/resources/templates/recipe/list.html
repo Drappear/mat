@@ -212,30 +212,35 @@
     </section>
     <!-- Categories Section End -->
   </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const buttons = document.querySelectorAll(".category-btn");
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          // 모든 버튼을 비활성화 상태로 설정
-          buttons.forEach((btn) => {
-            btn.classList.remove("bg-lime-100", "text-lime-500", "font-title");
-            btn.classList.add("bg-neutral-100", "text-neutral-500");
-          });
-
-          // 클릭한 버튼에 활성화 상태 설정
-          button.classList.add("bg-lime-100", "text-lime-500", "font-title");
-          button.classList.remove("bg-neutral-100", "text-neutral-500");
-        });
-      });
-    });
-  </script>
   <th:block layout:fragment="js">
     <!-- <script>
       const csrfValue = "[[${_csrf.token}]]";
     </script> -->
     <script th:src="@{/js/recipeMain.js}"></script>
     <!-- <script th:src="@{/js/create.js}"></script> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const buttons = document.querySelectorAll(".category-btn");
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // 모든 버튼을 비활성화 상태로 설정
+            buttons.forEach((btn) => {
+              btn.classList.remove(
+                "bg-lime-100",
+                "text-lime-500",
+                "font-title"
+              );
+              btn.classList.add("bg-neutral-100", "text-neutral-500");
+            });
+
+            // 클릭한 버튼에 활성화 상태 설정
+            button.classList.add("bg-lime-100", "text-lime-500", "font-title");
+            button.classList.remove("bg-neutral-100", "text-neutral-500");
+          });
+        });
+      });
+    </script>
   </th:block>
 </html>
