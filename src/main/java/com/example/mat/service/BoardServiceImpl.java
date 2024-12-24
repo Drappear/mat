@@ -8,6 +8,7 @@ import com.example.mat.repository.BoardCategoryRepository;
 import com.example.mat.repository.BoardRepository;
 import com.example.mat.repository.BoardImageRepository;
 import com.example.mat.repository.MemberRepository;
+import com.example.mat.util.HtmlUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -115,7 +116,7 @@ public class BoardServiceImpl implements BoardService {
                 return BoardDto.builder()
                                 .bno(board.getBno())
                                 .title(board.getTitle())
-                                .content(board.getContent())
+                                .content(HtmlUtil.convertNewlinesToHtml(board.getContent()))
                                 .memberId(board.getMember().getMid())
                                 .userid(board.getMember().getUserid())
                                 .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
