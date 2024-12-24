@@ -1,37 +1,64 @@
 package com.example.mat.repository;
 
-import com.example.mat.entity.won.Board;
+import java.util.stream.IntStream;
 
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.LongStream;
+import com.example.mat.entity.won.Board;
+import com.example.mat.entity.won.BoardCategory;
 
-@SpringBootTest // Spring Boot의 전체 컨텍스트를 로드
+@SpringBootTest
 public class BoardRepositoryTest {
 
     @Autowired
-    private BoardRepository boardRepository; // 테스트할 BoardRepository
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardCategoryRepository boardCategoryRepository;
 
     @Commit
     @Transactional
     @Test
-    public void testSavePost() {
+    public void testInsert() {
+        // Ensure a category exists for the boards
+        BoardCategory category = boardCategoryRepository.findById(1L)
+                .orElseGet(() -> boardCategoryRepository.save(BoardCategory.builder()
+                        .name("General")
+                        .build()));
 
-        LongStream.rangeClosed(1, 5).forEach(i -> {
-            // Board 엔티티 객체를 생성
+        // Insert test boards
+        IntStream.rangeClosed(1, 50).forEach(i -> {
             Board board = Board.builder()
-                    .title("title" + i) // 제목 설정
-                    .content("content" + i) // 내용 설정
-                    .viewCount(0L) // 조회수 초기값 설정 (기본값 0)
-                    .boardCategory("cate" + i) // 카테고리 설정
+                    .title("Test Title " + i)
+                    .content("This is the content for test board " + i)
+                    .nick("User" + i)
+                    .viewCount((long) (Math.random() * 100))
+                    .boardCategory(category)
                     .build();
-            boardRepository.save(board); // Board 엔티티 저장
+            boardRepository.save(board);
         });
-
     }
 
+    @Test
+    public void testPaging() {
+        int page = 0; // Page number (0-based index)
+        int size = 10; // Number of items per page
+
+        var pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        var result = boardRepository.findAll(pageable);
+
+        System.out.println("Total Pages: " + result.getTotalPages());
+        System.out.println("Total Elements: " + result.getTotalElements());
+        result.getContent().forEach(board -> {
+            System.out.println("Board ID: " + board.getBno());
+            System.out.println("Title: " + board.getTitle());
+            System.out.println("Content: " + board.getContent());
+            System.out.println("Nick: " + board.getNick());
+            System.out.println("View Count: " + board.getViewCount());
+        });
+    }
 }

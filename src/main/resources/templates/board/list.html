@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zxx" layout:decorate="~{/layouts/layout}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Board List</title>
+    <!-- CSS 파일 경로 지정 -->
+    <link rel="stylesheet" th:href="@{/css/board/list.css}" />
+    <!-- FontAwesome CDN 추가 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Content SECTION Begin -->
+    <div layout:fragment="content">
+      <div class="container">
+        <div class="row justify-content-center">
+          <!-- Main content section -->
+          <div class="col-lg-9 mb-3">
+            <h1 class="text-center">Forum</h1>
+
+            <!-- 글 작성 버튼 추가 -->
+            <div class="text-center mb-4">
+              <a th:href="@{/board/register}" class="btn btn-success"> 글 작성 </a>
+            </div>
+
+            <!-- Form container for category selection and search -->
+            <div class="mb-4">
+              <form class="d-flex align-items-center justify-content-center" th:action="@{/board/list}" method="GET">
+                <!-- Category Selection -->
+                <div class="me-2">
+                  <label for="categorySelect" class="form-label d-block"></label>
+                  <select id="categorySelect" name="category" class="form-select">
+                    <option value="" th:selected="${#strings.isEmpty(param.category)}">Select Category</option>
+                    <option th:each="category : ${categories}" 
+                            th:value="${category.boardCNo}" 
+                            th:text="${category.name}" 
+                            th:selected="${param.category == category.boardCNo}">
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Search Input -->
+                <div class="flex-grow-1 mx-2">
+                  <label for="searchInput" class="form-label d-block"></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="searchInput"
+                    name="keyword"
+                    placeholder="Search for posts..."
+                    th:value="${param.keyword}"
+                  />
+                </div>
+
+                <!-- Search Button -->
+                <div class="align-self-center">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Posts container -->
+            <div class="post-list">
+              <div th:each="post : ${boards}" 
+                   class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
+                <div class="row align-items-center">
+                  <div class="col-md-8 mb-3 mb-sm-0">
+                    <h5>
+                      <a th:href="@{/board/detail/{bno}(bno=${post.bno})}" class="text-primary" th:text="${post.title}"></a>
+                    </h5>
+                    <p class="text-sm">
+                      <span class="op-6">Posted</span>
+                      <span th:text="${post.formattedRegDate}">작성 시간</span>
+                      <span class="op-6">by</span>
+                      <span th:text="${post.nick}">Nicknmame</span>
+                    </p>
+                    <p class="text-sm op-5" th:text="${post.contentPreview}">Sample content...</p>
+                  </div>
+                  <div class="col-md-4 op-7">
+                    <div class="row text-center op-7">
+                      <div class="col px-1">
+                        <i class="fa-solid fa-comment icon-1x"></i>
+                        <span class="d-block text-sm">0 Replies</span> <!-- 댓글은 임시로 표시 -->
+                      </div>
+                      <div class="col px-1">
+                        <i class="fa-solid fa-eye icon-1x"></i>
+                        <span class="d-block text-sm" th:text="${post.viewCount} + ' Views'"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li th:classappend="${boards.hasPrevious()} ? '' : 'disabled'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${boards.number - 1})}" aria-label="Previous">
+                    Previous
+                  </a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(1, boards.totalPages)}" 
+                    th:classappend="${pageNum == boards.number + 1} ? 'active'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${pageNum - 1})}" th:text="${pageNum}"></a>
+                </li>
+                <li th:classappend="${boards.hasNext()} ? '' : 'disabled'" class="page-item">
+                  <a class="page-link" th:href="@{/board/list(page=${boards.number + 1})}" aria-label="Next">
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

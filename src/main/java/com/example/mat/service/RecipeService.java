@@ -31,9 +31,12 @@ public interface RecipeService {
   // 상세조회
   RecipeDto get(Long rno);
 
-  default RecipeDto entityToDto(Recipe recipe, List<RecipeImage> recipeImages, Double en) {
+  // 조회수
+  RecipeDto incrementViewCount(Long rno);
 
-    // recipe => RecipeDto
+
+  //TODO: recipe => RecipeDto
+  default RecipeDto entityToDto(Recipe recipe, List<RecipeImage> recipeImages, Double en) {
     RecipeDto recipeDto = RecipeDto.builder()
         .rno(recipe.getRno())
         .title(recipe.getTitle())
@@ -63,6 +66,8 @@ public interface RecipeService {
     return recipeDto;
   }
 
+  
+  //TODO: dto => entity
   default Map<String, Object> dtoToEntity(RecipeDto recipeDto) {
 
     Map<String, Object> resultMap = new HashMap<>();
