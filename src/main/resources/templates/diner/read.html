@@ -71,38 +71,41 @@
     </div>
     <!-- 리뷰 collapse 시작 -->
     <div class="container mt-3 review-input-section">
-      <form action="" method="post">
+      <form action="" method="post" id="reviewForm">
         <div class="collapse" id="reviewCollapse">
           <div class="row p-3 justify-content-center">
             <div class="score-area col-lg-3">
               <span>맛</span>
-              <div class="star-rating">
-                <span class="star on" value="1"></span>
-                <span class="star" value="2"></span>
-                <span class="star" value="3"></span>
-                <span class="star" value="4"></span>
-                <span class="star" value="5"></span>
+              <div class="star-rating taste-score">
+                <span class="star on" data-value="1"></span>
+                <span class="star" data-value="2"></span>
+                <span class="star" data-value="3"></span>
+                <span class="star" data-value="4"></span>
+                <span class="star" data-value="5"></span>
               </div>
+              <input type="hidden" name="tasteScore" id="tasteScore" value="" />
             </div>
             <div class="score-area col-lg-3">
               <span>가격</span>
-              <div class="star-rating">
-                <span class="star on" value="1"></span>
-                <span class="star" value="2"></span>
-                <span class="star" value="3"></span>
-                <span class="star" value="4"></span>
-                <span class="star" value="5"></span>
+              <div class="star-rating price-score">
+                <span class="star on" data-value="1"></span>
+                <span class="star" data-value="2"></span>
+                <span class="star" data-value="3"></span>
+                <span class="star" data-value="4"></span>
+                <span class="star" data-value="5"></span>
               </div>
+              <input type="hidden" name="priceScore" id="priceScore" value="" />
             </div>
             <div class="score-area col-lg-3">
               <span>서비스</span>
-              <div class="star-rating">
-                <span class="star on" value="1"></span>
-                <span class="star" value="2"></span>
-                <span class="star" value="3"></span>
-                <span class="star" value="4"></span>
-                <span class="star" value="5"></span>
+              <div class="star-rating service-score">
+                <span class="star on" data-value="1"></span>
+                <span class="star" data-value="2"></span>
+                <span class="star" data-value="3"></span>
+                <span class="star" data-value="4"></span>
+                <span class="star" data-value="5"></span>
               </div>
+              <input type="hidden" name="serviceScore" id="serviceScore" value="" />
             </div>
           </div>
           <div class="row">
@@ -114,7 +117,7 @@
                 </div>
                 <textarea
                   class="review-comment-input form-control"
-                  name="review-comment-input"
+                  name="content"
                   id="reviewCommentInput"
                   rows="4"
                 ></textarea>

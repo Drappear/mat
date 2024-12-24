@@ -63,7 +63,34 @@ listBtn.addEventListener("click", () => {
 // });
 
 // 별점 기능
-$('.star-rating > .star').click(function() {
-  $(this).parent().children('span').removeClass('on');
-  $(this).addClass('on').prevAll('span').addClass('on');
+$(".star-rating > .star").click(function () {
+  $(this).parent().children("span").removeClass("on");
+  $(this).addClass("on").prevAll("span").addClass("on");
+});
+
+$(".taste-score > .star").click(function () {
+  let val = $(this).attr("data-value");
+  console.log(val);
+
+  document.querySelector("#tasteScore").value = val;
+
+  return false;
+});
+
+$(".price-score > .star").click(function () {
+  let val = $(this).attr("data-value");
+  console.log(val);
+
+  document.querySelector("#priceScore").value = val;
+
+  return false;
+});
+
+$(".service-score > .star").click(function () {
+  let val = $(this).attr("data-value");
+  console.log(val);
+
+  document.querySelector("#serviceScore").value = val;
+
+  return false;
 });
