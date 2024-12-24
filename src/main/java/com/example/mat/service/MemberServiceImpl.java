@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.PasswordDto;
-
+import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.shin.Member;
 import com.example.mat.repository.MemberRepository;
 
@@ -50,6 +50,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
                 .nickname(member.getNickname())
                 .password(member.getPassword())
                 .email(member.getEmail())
+                .tel(member.getTel())
                 .addr(member.getAddr())
                 .detailAddr(member.getDetailAddr())
                 .role(member.getRole())
@@ -85,15 +86,58 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    @Transactional
     @Override
     public void nickUpdate(MemberDto memberDto) {
         memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
     }
 
+    @Transactional
     @Override
-    public void passwordUpdate(PasswordDto passwordDto) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'passwordUpdate'");
+    public void personalUpdate(UpdateMemberDto updatememberDto) {
+
+        log.info("서비스단 {}", updatememberDto);
+        // 레포지토리 메서드를 호출하여 모든 정보를 한 번에 업데이트
+        memberRepository.updatePersonalInfo(
+                updatememberDto.getEmail(),
+                updatememberDto.getAddr(),
+                updatememberDto.getDetailAddr(),
+                updatememberDto.getTel(),
+                updatememberDto.getUserid());
     }
 
+    @Override
+    public void passwordUpdate(PasswordDto passwordDto) throws Exception {
+        // email 을 이용해 사용자 찾기
+        // Optional<Member> result =
+        // memberRepository.findByEmail(passwordDto.getEmail());
+        // if (!result.isPresent()) throw new UsernameNotFoundException("이메일 확인");
+
+        Member member = memberRepository.findByUserid(passwordDto.getUserid()).get();
+
+        // 현재 비밀번호(db에 저장된 값)가 입력 비밀번호(입력값)와 일치하는지 검증
+        if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), member.getPassword())) {
+            // false : 되돌리기
+            throw new Exception("현재 비밀번호를 확인해 주세요");
+        } else {
+            // true : 새 비밀번호로 수정
+            member.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+            memberRepository.save(member);
+
+        }
+    }
+
+    @Transactional
+    @Override
+    public void leave(PasswordDto passwordDto) throws Exception {
+        Member member = memberRepository.findByUserid(passwordDto.getUserid()).get();
+
+        if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), member.getPassword())) {
+            throw new Exception("현재 비밀번호를 확인");
+        }
+
+        // reviewRepository.deleteByMember(member);
+
+        memberRepository.deleteById(member.getMid());
+    }
 }

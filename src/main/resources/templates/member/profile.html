@@ -18,7 +18,7 @@
             <img src="https://via.placeholder.com/120" alt="프로필 사진" />
           </div>
           <div class="profile-info">
-            <form action="#">
+            <form th:action="@{/member/edit}">
               <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input
@@ -33,15 +33,24 @@
                 <label for="bio">소개</label>
                 <textarea id="bio" name="bio" rows="3" readonly>Value</textarea>
               </div>
+
               <div class="form-actions">
-                <a class="submit-btn" th:href="@{/member/edit}"> 수정 </a>
+                <a class="submit-btn" th:href="@{/member/personalInformation}"
+                  >회원 정보</a
+                ><a class="submit-btn" th:href="@{/member/editPassword}"
+                  >비밀번호 변경</a
+                >
+                <button class="submit-btn">수정하기</button>
               </div>
             </form>
           </div>
         </div>
         <div class="stats">
           <ul>
-            <a href="">value 님의 작성 글</a>
+            <a
+              href=""
+              th:text="${#authentication.principal.memberDto.nickname + '님의 작성글'}"
+            ></a>
           </ul>
           <ul>
             <a href="">⭐ 스크랩한 글</a>

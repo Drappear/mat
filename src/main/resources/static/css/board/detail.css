@@ -1,0 +1,226 @@
+/* ------------------------------------------------------------ */
+/* Global Styles */
+body {
+  margin-top: 20px;
+}
+
+/* Article Styles */
+.blog-article {
+  box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
+  border-radius: 5px;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 15px;
+  padding-bottom: 5px;
+  margin: 15px 0 30px;
+
+  min-width: 888px; /* 최소 너비 */
+  min-height: 444px; /* 최소 높이 */
+  max-width: 888px;
+}
+.blog-article-header {
+  padding: 15px 0 20px;
+}
+.blog-article-header h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.blog-article-header h4 a {
+  text-transform: uppercase;
+  color: #1d7117;
+  border-bottom: 1px solid #1d7117;
+}
+.blog-article-header h2 {
+  color: #7fad39;
+  font-weight: 600;
+}
+.blog-article-header .media {
+  padding-top: 15px;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 20px;
+}
+.blog-article-header .media .avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.blog-article-header .media .media-body {
+  padding-left: 8px;
+}
+.blog-article-header .media .media-body label {
+  font-weight: 600;
+  color: #1d7117;
+  margin: 0;
+}
+.blog-article-header .media .media-body span {
+  display: block;
+  font-size: 12px;
+}
+.blog-article-body {
+  color: #20247b;
+  line-height: 1.8; /* Readability improvement */
+}
+img {
+  max-width: 100%;
+}
+
+.article-img img {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+.align-center {
+  display: flex;
+  justify-content: center;
+}
+.custom-col {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+/* Content Placeholder */
+.content-text {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+}
+
+/* Comment Section */
+.blog-comment::before,
+.blog-comment::after,
+.blog-comment-form::before,
+.blog-comment-form::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.blog-comment {
+  padding-left: 0%;
+  padding-right: 0%;
+}
+.blog-comment ul {
+  list-style-type: none;
+  padding: 0;
+}
+.blog-comment img {
+  opacity: 1;
+  border-radius: 4px;
+}
+.blog-comment img.avatar {
+  float: left;
+  width: 65px;
+  height: 65px;
+}
+.blog-comment .post-comments {
+  border: 1px solid #eee;
+  margin-bottom: 5px;
+  margin-left: 85px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background: #fff;
+  color: #6b6e80;
+}
+.blog-comment .meta {
+  font-size: 13px;
+  color: #aaaaaa;
+  padding-bottom: 8px;
+  margin-bottom: 10px !important;
+  border-bottom: 1px solid #eee;
+}
+.blog-comment ul.comments ul {
+  margin-left: 85px;
+}
+
+/* Comment Form */
+.blog-comment-form {
+  background-color: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.blog-comment-form h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #20247b;
+}
+.blog-comment-form .form-group {
+  margin-bottom: 5px;
+}
+.blog-comment-form textarea {
+  min-height: 100px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: #333;
+  resize: vertical;
+}
+.blog-comment-form textarea:focus {
+  outline: none;
+  border-color: #fff;
+}
+.blog-comment-form button {
+  background-color: #7fad39;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+  margin-left: auto;
+  border-color: #fff;
+}
+.blog-comment-form button:hover {
+  background-color: #7fad39;
+  border-color: #fff;
+}
+
+/* Buttons */
+.modify-btn {
+  background-color: #7fad39;
+  color: #fff;
+  margin-top: 20px;
+  margin-right: 5px;
+  border-color: #fff;
+  font-size: 12px;
+}
+.modify-btn:hover {
+  background-color: #7fad39;
+  border-color: #fff;
+}
+.delete-btn {
+  background-color: #c3303f;
+  color: #fff;
+  margin-top: 20px;
+  margin-right: 10px;
+  border-color: #fff;
+  font-size: 12px;
+}
+.delete-btn:hover {
+  background-color: c3303f(134, 38, 47);
+  border-color: #fff;
+}
+.blog-comment ul.comments li .meta i a.reply-link {
+  display: block;
+  color: #7fad39;
+  border-color: #fff;
+}
+.blog-comment ul.comments li .meta i a.reply-link:hover {
+  color: #7fad39;
+  border-color: #fff;
+}

@@ -49,6 +49,16 @@
             />
           </div>
           <div class="form-group">
+            <label for="tel">전화번호</label>
+            <input
+              type="text"
+              id="tel"
+              name="tel"
+              th:value="${#authentication.principal.memberDto.tel}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
             <label for="address">주소</label>
             <input
               type="text"
@@ -68,9 +78,10 @@
               readonly
             />
           </div>
-          <div class="form-actions">
-            <a th:href="@{/member/editpi}" class="save-button">수정하기</a>
-          </div>
+
+          <a th:href="@{/member/profile}" class="save-button">프로필로 이동</a>
+
+          <a th:href="@{/member/editpi}" class="save-button">수정하기</a>
         </form>
       </div>
     </div>

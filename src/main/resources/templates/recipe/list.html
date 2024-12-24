@@ -8,20 +8,6 @@
     <!-- Categories Section Begin -->
     <section class="categories">
       <div class="container">
-        <div class="row mb-3">
-          <div class="col-lg-12">
-            <!-- search box -->
-            <div class="hero__search">
-              <div class="hero__search__form">
-                <form action="#">
-                  <input type="text" placeholder="What do yo u need?" />
-                  <button type="submit" class="site-btn">SEARCH</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="row">
           <!-- main 카테고리 및 card -->
           <div id="webcrumbs">
@@ -31,96 +17,57 @@
               >
                 <span class="text-lime-500 font-title">카테고리 닫기 &gt;</span>
               </div> -->
+
+              <!-- search box 영역 -->
+              <!-- 제목 or 설명 검색 -->
+              <div class="row mb-3">
+                <div class="col-lg-12">
+                  <!-- search box -->
+                  <div class="hero__search">
+                    <div class="hero__search__form">
+                      <form action="#">
+                        <input type="text" placeholder="What do yo u need?" />
+                        <button type="submit" class="site-btn">SEARCH</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <nav
-                class="bg-white flex gap-4 text-lime-950 mb-6 items-center border-y border-neutral-200 py-2"
+                class="bg-white flex gap-4 text-lime-950 mb-6 items-center border-y border-neutral-200 py-2 row"
               >
-                <span class="text-lg text-lime-500 font-title">종류별</span>
-                <div class="flex gap-4">
+                <span class="text-lg text-lime-500 font-title col-2"
+                  >종류별</span
+                >
+                <div class="flex flex-wrap gap-4 col-9">
                   <button
                     type="button"
-                    class="px-4 py-1 bg-lime-100 text-lime-500 font-title rounded-full"
+                    class="category-btn px-4 py-1 bg-lime-100 text-lime-500 font-title rounded-full active"
                   >
                     전체
                   </button>
+                  <!-- RecipeCategory의 name 반복 출력 -->
                   <button
                     type="button"
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    th:each="category : ${categoryList}"
+                    class="category-btn px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    th:text="${category.name}"
                   >
-                    밑반찬
+                    <!-- 카테고리 이름이 여기에 들어감 -->
                   </button>
-                  <button
-                    type="button"
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                  >
-                    메인반찬
-                  </button>
-                  <button
-                    type="button"
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                  >
-                    국/탕
-                  </button>
-                  <!-- <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >찌개</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >디저트</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >면/만두</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >밥/죽/떡</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >퓨전</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >김치/젓갈/장류</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >양념/소스/잼</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >양식</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >샐러드</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >스프</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >빵</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >과자</span
-                  >
-                  <span
-                    class="px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
-                    >차/음료/술</span
-                  > -->
                 </div>
               </nav>
               <div class="bg-white flex justify-between items-center mb-6">
                 <p class="text-lime-950 text-lg">
                   총 <span class="text-lime-500">234,946</span>개의 맛있는
                   레시피가 있습니다.&nbsp;
-                  <button type="button" class="btn btn-outline-warning">
+                  <!-- 작성 버튼 -->
+                  <a
+                    class="btn btn-outline-warning"
+                    th:href="@{/recipe/create}"
+                  >
                     <i class="fa-solid fa-square-pen"></i>
-                  </button>
+                  </a>
                 </p>
 
                 <div class="flex space-x-4">
@@ -138,6 +85,7 @@
                   </button>
                 </div>
               </div>
+              <!-- 카드그룹 -->
               <div
                 class="bg-neutral-100 p-4 rounded-lg card-group"
                 name="cardGroup"
@@ -242,164 +190,21 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title5</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title6</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title7</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title8</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <!-- Card-Group 끝 -->
+              <!-- Pagination 영역 -->
+              <div class="row mt-5 mb-5">
+                <div class="col-lg-12">
+                  <div class="product__pagination blog__pagination">
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
                   </div>
                 </div>
-                <!-- <div
-                  class="grid grid-cols-4 gap-6 bg-white p-6 rounded-lg"
-                  name="card"
-                  id="card"
-                >
-                  {[ { imgSrc: "https://placehold.co/300x300/png", title:
-                  "[슈퍼푸드샐러드] 질리언 앱산 주는 슈퍼푸드 샐러드", author:
-                  "싱글맘대장", profileImg: "https://i.pravatar.cc/40", views:
-                  "조회수 20" }, { imgSrc: "https://placehold.co/300x300/png",
-                  title: "치킨보다 교촌 허니콤보 만들기", author: "태평체질",
-                  profileImg: "https://i.pravatar.cc/40", views: "조회수 1,972"
-                  }, { imgSrc: "https://placehold.co/300x300/png", title:
-                  "일본요리 만들기 일본 겨울 가정식요리 츄우", author:
-                  "일본사는누아", profileImg: "https://i.pravatar.cc/40", views:
-                  "조회수 313" }, { imgSrc: "https://placehold.co/300x300/png",
-                  title: "즉석,오이 부추 무침(백종원임방)", author: "탱글스윗",
-                  profileImg: "https://i.pravatar.cc/40", views: "조회수 3,836"
-                  }, { imgSrc: "https://placehold.co/300x300/png", title:
-                  "이사할때 콩나물무침 레시피/ 하얀 콩나물무침 만들기", author:
-                  "써니지", profileImg: "https://i.pravatar.cc/40", views:
-                  "조회수 2,005" }, { imgSrc:
-                  "https://placehold.co/300x300/png", title: "매운맛콩나물무침
-                  레시피 매일반찬", author: "라피네", profileImg:
-                  "https://i.pravatar.cc/40", views: "조회수 2,275" }, { imgSrc:
-                  "https://placehold.co/300x300/png", title: "시금치무침
-                  (시금치데치기 방법/ 시금치나물 요리 나물반찬 한접시레시피)",
-                  author: "ariel1007", profileImg: "https://i.pravatar.cc/40",
-                  views: "조회수 5,090" }, { imgSrc:
-                  "https://placehold.co/300x300/png", title: "오이고추된장무침
-                  (사계절 먹기좋은 만찬 고추무침 5분 레시피)", author:
-                  "ariel1007", profileImg: "https://i.pravatar.cc/40", views:
-                  "조회수 19,910" } ].map((item, idx) => (
-                  <div
-                    key="{idx}"
-                    class="flex flex-col bg-white border p-4 rounded-md"
-                  >
-                    <img
-                      src="{item.imgSrc}"
-                      alt="{item.title}"
-                      class="w-[300px] h-[300px] rounded-md object-cover mb-2"
-                    />
-                    <p class="text-lime-950 text-sm mb-1">{item.title}</p>
-                    <div
-                      class="flex items-center space-x-2 text-neutral-500 text-xs"
-                    >
-                      <img
-                        src="{item.profileImg}"
-                        alt="{item.author}"
-                        class="w-[20px] h-[20px] rounded-full object-cover"
-                      />
-                      <span>{item.author}</span>
-                      <span>{item.views}</span>
-                    </div>
-                  </div>
-                  ))}
-                </div> -->
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- Pagination 영역 -->
-
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-12">
-            <div class="product__pagination blog__pagination">
-              <a href="#">1</a>
-              <a href="#">2</a>
-              <a href="#">3</a>
-              <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+              <!-- Pagination 영역 끝 -->
             </div>
           </div>
         </div>
@@ -407,6 +212,25 @@
     </section>
     <!-- Categories Section End -->
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".category-btn");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // 모든 버튼을 비활성화 상태로 설정
+          buttons.forEach((btn) => {
+            btn.classList.remove("bg-lime-100", "text-lime-500", "font-title");
+            btn.classList.add("bg-neutral-100", "text-neutral-500");
+          });
+
+          // 클릭한 버튼에 활성화 상태 설정
+          button.classList.add("bg-lime-100", "text-lime-500", "font-title");
+          button.classList.remove("bg-neutral-100", "text-neutral-500");
+        });
+      });
+    });
+  </script>
   <th:block layout:fragment="js">
     <!-- <script>
       const csrfValue = "[[${_csrf.token}]]";
