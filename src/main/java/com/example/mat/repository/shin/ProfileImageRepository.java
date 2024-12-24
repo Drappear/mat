@@ -1,16 +1,33 @@
 package com.example.mat.repository.shin;
 
+import java.lang.reflect.Member;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.mat.entity.shin.MemberImage;
 import java.util.List;
 
-// import org.springframework.data.domain.Page;
-// import org.springframework.data.domain.Pageable;
+/**
+ * 게시판 이미지 Repository 인터페이스
+ * Spring Data JPA를 사용하여 데이터베이스와 상호작용합니다.
+ */
+@Repository
+public interface ProfileImageRepository extends JpaRepository<MemberImage, Long> {
 
-public interface ProfileImageRepository {
+    /**
+     * 게시글에 연관된 이미지를 조회합니다.
+     *
+     * @param
+     * @return 연관된 이미지
+     */
+    List<MemberImage> findByMember(Member member);
 
-    // 페이지 나누기 + 검색
-    // Page<Object[]> getTotalList(String type, String keyword, Pageable pageable);
-
-    // 특정 멤버 정보 조회
-    List<Object[]> getMemberRow(Long mid);
-
+    /**
+     * UUID 중복 여부 확인
+     *
+     * @param uuid 중복 확인할 UUID
+     * @return UUID가 존재하면 true, 존재하지 않으면 false
+     */
+    boolean existsByUuid(String uuid);
 }
