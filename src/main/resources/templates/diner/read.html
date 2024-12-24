@@ -71,79 +71,81 @@
     </div>
     <!-- 리뷰 collapse 시작 -->
     <div class="container mt-3 review-input-section">
-      <div class="collapse" id="reviewCollapse">
-        <div class="row p-3 justify-content-center">
-          <div class="score-area col-lg-3">
-            <span>맛</span>
-            <div class="star-rating">
-              <span class="star on" value="1"></span>
-              <span class="star" value="2"></span>
-              <span class="star" value="3"></span>
-              <span class="star" value="4"></span>
-              <span class="star" value="5"></span>              
-            </div>
-          </div>
-          <div class="score-area col-lg-3">
-            <span>가격</span>
-            <div class="star-rating">
-              <span class="star on" value="1"></span>
-              <span class="star" value="2"></span>
-              <span class="star" value="3"></span>
-              <span class="star" value="4"></span>
-              <span class="star" value="5"></span>              
-            </div>
-          </div>
-          <div class="score-area col-lg-3">
-            <span>서비스</span>
-            <div class="star-rating">
-              <span class="star on" value="1"></span>
-              <span class="star" value="2"></span>
-              <span class="star" value="3"></span>
-              <span class="star" value="4"></span>
-              <span class="star" value="5"></span>              
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="comment-area col-lg-12">
-            <div class="input-group">
-              <div class="input-group-text">
-                <div>작성자</div>
-                <div>프로필</div>
+      <form action="" method="post">
+        <div class="collapse" id="reviewCollapse">
+          <div class="row p-3 justify-content-center">
+            <div class="score-area col-lg-3">
+              <span>맛</span>
+              <div class="star-rating">
+                <span class="star on" value="1"></span>
+                <span class="star" value="2"></span>
+                <span class="star" value="3"></span>
+                <span class="star" value="4"></span>
+                <span class="star" value="5"></span>
               </div>
-              <textarea
-              class="review-comment-input form-control"
-              name="review-comment-input"
-              id="reviewCommentInput"
-              rows="4"
-              ></textarea>
+            </div>
+            <div class="score-area col-lg-3">
+              <span>가격</span>
+              <div class="star-rating">
+                <span class="star on" value="1"></span>
+                <span class="star" value="2"></span>
+                <span class="star" value="3"></span>
+                <span class="star" value="4"></span>
+                <span class="star" value="5"></span>
+              </div>
+            </div>
+            <div class="score-area col-lg-3">
+              <span>서비스</span>
+              <div class="star-rating">
+                <span class="star on" value="1"></span>
+                <span class="star" value="2"></span>
+                <span class="star" value="3"></span>
+                <span class="star" value="4"></span>
+                <span class="star" value="5"></span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row mt-2">
-          <div class="input-group col-lg-10">
-            <input type="file" class="form-control" name="reviewImage"/>
+          <div class="row">
+            <div class="comment-area col-lg-12">
+              <div class="input-group">
+                <div class="input-group-text">
+                  <div>작성자</div>
+                  <div>프로필</div>
+                </div>
+                <textarea
+                  class="review-comment-input form-control"
+                  name="review-comment-input"
+                  id="reviewCommentInput"
+                  rows="4"
+                ></textarea>
+              </div>
+            </div>
           </div>
-          <div class="col-lg-2">
-            <button type="button" class="btn btn-success">리뷰 등록</button>
+          <div class="row mt-2">
+            <div class="input-group col-lg-10">
+              <input type="file" class="form-control" name="reviewImage" />
+            </div>
+            <div class="col-lg-2">
+              <button type="button" class="btn btn-success">리뷰 등록</button>
+            </div>
+          </div>
+          <div class="row mt-2 p-3 review-input-img-preview">
+            <ul>
+              <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+                <img
+                  th:attr="data-file=${dinerImage.getThumbImageURL()}"
+                  data-bs-toggle="modal"
+                  data-bs-target="#imgModal"
+                  th:src="|/upload/display?fileName=${dinerImage.getThumbImageURL()}|"
+                  th:if="${dinerImage.path != null}"
+                  alt=""
+                  class="block"
+                />
+              </li>
+            </ul>
           </div>
         </div>
-        <div class="row mt-2 p-3 review-input-img-preview">
-          <ul>
-            <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
-              <img
-                th:attr="data-file=${dinerImage.getThumbImageURL()}"
-                data-bs-toggle="modal"
-                data-bs-target="#imgModal"
-                th:src="|/upload/display?fileName=${dinerImage.getThumbImageURL()}|"
-                th:if="${dinerImage.path != null}"
-                alt=""
-                class="block"
-              />
-            </li>
-          </ul>
-        </div>
-      </div>
+      </form>
     </div>
     <!-- 리뷰 collapse 끝 -->
     <div class="container mt-3">
@@ -253,7 +255,7 @@
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
     <script>
-      const csrfValue = "[[${_csrf.token}]]";      
+      const csrfValue = "[[${_csrf.token}]]";
     </script>
     <script th:src="@{/js/diner/read.js}"></script>
     <script

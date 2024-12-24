@@ -45,4 +45,14 @@ public class DinerImageDto {
         }
         return fullPath;
     }
+
+    public String getReviewImageURL() {
+        String fullPath = "";
+        try {
+            fullPath = URLEncoder.encode(path + File.separator + "r_" + uuid + "_" + imgName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return fullPath;
+    }
 }
