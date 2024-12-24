@@ -1,4 +1,4 @@
-package com.example.mat.repository;
+package com.example.mat.repository.diner;
 
 import java.util.List;
 
