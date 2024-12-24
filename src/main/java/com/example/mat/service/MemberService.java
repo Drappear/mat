@@ -65,21 +65,4 @@ public interface MemberService {
                 .build();
     }
 
-    // default MemberImageDto entityToDto(Member member, List<MemberImage>
-    // memberImages) {
-    // // MovieImage => MovieImageDto 변경 후 리스트 작업
-    // List<MemberImageDto> memberImageDtos = memberImages.stream().map(memberImage
-    // -> {
-    // return MemberImageDto.builder()
-    // .inum(memberImage.getInum())
-    // .uuid(memberImage.getUuid())
-    // .imgName(memberImage.getImgName())
-    // .path(memberImage.getPath())
-    // .build();
-    // }).collect(Collectors.toList());
-
-    // memberDto.setMemberImageDtos(memberImageDtos);
-
-    // return memberDto;
-    // }
 }
