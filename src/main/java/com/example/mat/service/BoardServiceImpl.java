@@ -2,102 +2,149 @@ package com.example.mat.service;
 
 import com.example.mat.dto.won.BoardDto;
 import com.example.mat.entity.won.Board;
+import com.example.mat.entity.won.BoardImage;
+import com.example.mat.repository.BoardCategoryRepository;
 import com.example.mat.repository.BoardRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardCategoryRepository boardCategoryRepository;
 
-    // 게시물 등록
+    @Value("${com.example.mat.upload.path}")
+    private String uploadPath;
+
     @Override
     @Transactional
-    public Long createPost(BoardDto boardDto) {
-        // DTO를 Entity로 변환
-        Board board = dtoToEntity(boardDto);
-        // 게시물 저장
-        Board savedBoard = boardRepository.save(board);
-        // 저장된 게시물의 번호 반환
-        return savedBoard.getBno();
-    }
+    public Long register(BoardDto boardDto) {
+        if (boardDto.getNick() == null || boardDto.getNick().isBlank()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boardDto.setNick(authentication.getName());
+        }
 
-    // 게시물 수정
-    @Override
-    @Transactional
-    public void updatePost(Long bno, BoardDto boardDto) {
-        // 게시물 조회
-        Board board = boardRepository.findById(bno)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다. bno=" + bno));
-
-        // 게시물 정보 수정
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
-        board.setBoardCategory(boardDto.getBoardCategory());
-
-        // 수정된 게시물 저장
-        boardRepository.save(board);
-    }
-
-    // 게시물 삭제
-    @Override
-    @Transactional
-    public void deletePost(Long bno) {
-        // 게시물 삭제
-        boardRepository.deleteById(bno);
-    }
-
-    // 게시물 단일 조회
-    @Override
-    @Transactional(readOnly = true)
-    public BoardDto getPost(Long bno) {
-        // 게시물 조회
-        Board board = boardRepository.findById(bno)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다. bno=" + bno));
-
-        // Entity를 DTO로 변환하여 반환
-        return entityToDto(board);
-    }
-
-    // 게시물 목록 조회
-    @Override
-    @Transactional(readOnly = true)
-    public List<BoardDto> getPostList() {
-        // 모든 게시물 목록 조회 후 DTO로 변환하여 반환
-        return boardRepository.findAll()
-                .stream()
-                .map(this::entityToDto)
-                .collect(Collectors.toList());
-    }
-
-    // DTO를 Entity로 변환
-    @Override
-    public Board dtoToEntity(BoardDto boardDto) {
-        return Board.builder()
-                .bno(boardDto.getBno())
+        Board board = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .viewCount(boardDto.getViewCount())
-                .boardCategory(boardDto.getBoardCategory())
+                .nick(boardDto.getNick())
+                .viewCount(0L)
+                .boardCategory(boardCategoryRepository.findById(boardDto.getCategoryId())
+                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID입니다.")))
                 .build();
+
+        // 이미지 파일 처리
+        if (boardDto.getImageFile() != null && !boardDto.getImageFile().isEmpty()) {
+            String savedFilePath = saveFile(boardDto.getImageFile());
+            board.setImage(BoardImage.builder()
+                    .imgName(savedFilePath)
+                    .board(board)
+                    .build());
+        }
+
+        return boardRepository.save(board).getBno();
     }
 
-    // Entity를 DTO로 변환
     @Override
-    public BoardDto entityToDto(Board board) {
+    @Transactional
+    public Long modify(BoardDto boardDto) {
+        Board board = boardRepository.findById(boardDto.getBno())
+                .orElseThrow(() -> new IllegalArgumentException("수정하려는 게시물을 찾을 수 없습니다. ID: " + boardDto.getBno()));
+
+        board.setTitle(boardDto.getTitle());
+        board.setContent(boardDto.getContent());
+        board.setNick(boardDto.getNick());
+
+        // 이미지 파일 처리
+        if (boardDto.getImageFile() != null && !boardDto.getImageFile().isEmpty()) {
+            String savedFilePath = saveFile(boardDto.getImageFile());
+            board.setImage(BoardImage.builder()
+                    .imgName(savedFilePath)
+                    .board(board)
+                    .build());
+        } else if (board.getImage() != null) {
+            boardDto.setImageFileName(board.getImage().getImgName());
+        }
+
+        return board.getBno();
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long bno) {
+        Board board = boardRepository.findById(bno)
+                .orElseThrow(() -> new IllegalArgumentException("삭제하려는 게시물을 찾을 수 없습니다. ID: " + bno));
+        boardRepository.delete(board);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BoardDto getDetail(Long bno) {
+        Board board = boardRepository.findById(bno)
+                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. ID: " + bno));
+
         return BoardDto.builder()
                 .bno(board.getBno())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .viewCount(board.getViewCount())
-                .boardCategory(board.getBoardCategory())
+                .nick(board.getNick() != null ? board.getNick() : "Anonymous")
+                .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
+                .regDate(board.getRegDate())
+                .updateDate(board.getUpdateDate())
+                .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo() : null)
+                .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BoardDto> getList(String keyword, Long category, Pageable pageable) {
+        return boardRepository.findByKeywordAndCategory(keyword, category, pageable)
+                .map(board -> BoardDto.builder()
+                        .bno(board.getBno())
+                        .title(board.getTitle())
+                        .content(board.getContent())
+                        .nick(board.getNick() != null ? board.getNick() : "Anonymous")
+                        .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
+                        .regDate(board.getRegDate())
+                        .updateDate(board.getUpdateDate())
+                        .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo() : null)
+                        .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
+                        .build());
+    }
+
+    private String saveFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(uploadPath, fileName);
+
+        try {
+            Files.createDirectories(filePath.getParent());
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드 실패: " + e.getMessage(), e);
+        }
     }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class RecipeDto {
     @NotBlank(message = "난이도 선택은 필수 항목입니다.")
     private String difficulty;
 
-    private Long viewCount; // 조회수
+    private int viewCount; // 조회수
 
     // TODO: mid -> Member 에서 가져오기
     private Long mid;
@@ -60,4 +61,12 @@ public class RecipeDto {
     private LocalDateTime regDate; // 등록일
     private LocalDateTime updateDate; // 수정일
 
+    // 날짜 포멧팅
+    public String getFormattedRegDate() {
+        if (regDate == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return regDate.format(formatter);
+    }
 }

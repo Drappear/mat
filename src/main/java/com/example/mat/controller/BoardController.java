@@ -1,89 +1,150 @@
 package com.example.mat.controller;
 
+import com.example.mat.dto.won.BoardCategoryDto;
 import com.example.mat.dto.won.BoardDto;
+import com.example.mat.service.BoardCategoryService;
 import com.example.mat.service.BoardService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Log4j2
 @Controller
+@RequestMapping("/board")
 @RequiredArgsConstructor
-@RequestMapping("/board") // 모든 경로를 /board로 묶음
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardCategoryService boardCategoryService;
 
-    // 게시물 작성 페이지 이동
-    @GetMapping("/write") // /board/write 경로
-    public String showWritePostPage() {
-        return "board/boardWrite"; // boardWrite.html 페이지로 이동
+    // 게시판 목록 페이지
+    @GetMapping("/list")
+    public String list(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long category,
+            Pageable pageable,
+            Model model) {
+
+        List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+        var boards = boardService.getList(keyword, category, pageable);
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("boards", boards);
+
+        return "board/list";
+    }
+
+    // 게시물 등록 페이지
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("boardDto", new BoardDto());
+
+        return "board/register";
     }
 
     // 게시물 등록 처리
-    @PostMapping("/submit") // /board/submit 경로
-    public String submitPost(BoardDto boardDto,
-            @RequestParam(value = "image", required = false) MultipartFile image,
-            Model model) {
+    @PostMapping("/register")
+    public String register(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+        try {
+            if (boardDto.getNick() == null || boardDto.getNick().isBlank()) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                boardDto.setNick(authentication.getName());
+            }
 
-        // 게시물 등록
-        Long bno = boardService.createPost(boardDto);
-        model.addAttribute("bno", bno); // 등록된 게시물 번호 전달
-        return "redirect:/board/content/" + bno; // 게시물 상세 페이지로 리다이렉트
+            boardDto.setImageFile(file);
+
+            boardService.register(boardDto);
+            return "redirect:/board/list";
+        } catch (Exception e) {
+            System.err.println("[ERROR] 게시물 등록 중 오류 발생: " + e.getMessage());
+            return "redirect:/board/register?error=true";
+        }
     }
 
-    // 게시물 목록 조회
-    @GetMapping("/list") // /board/list 경로
-    public String listPosts(Model model) {
-        // 게시물 목록을 가져와서 boardList.html에 전달
-        List<BoardDto> boardList = boardService.getPostList();
-        model.addAttribute("boardList", boardList);
-        return "board/boardList"; // boardList.html 페이지로 이동
+    // 게시물 상세보기
+    @GetMapping("/detail/{bno}")
+    public String detail(@PathVariable Long bno, Model model) {
+        try {
+            BoardDto boardDto = boardService.getDetail(bno);
+            model.addAttribute("board", boardDto);
+            return "board/detail";
+        } catch (Exception e) {
+            System.err.println("[ERROR] 게시물 상세보기 중 오류 발생: " + e.getMessage());
+            return "redirect:/board/list?error=true";
+        }
     }
 
-    // 게시물 상세 조회
-    @GetMapping("/content/{bno}") // /board/content/{bno} 경로
-    public String viewPost(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getPost(bno);
-        model.addAttribute("board", boardDto); // 게시물 정보 전달
-        return "board/boardContent"; // boardContent.html 페이지로 이동
-    }
+    // 게시물 수정 페이지
+    @GetMapping("/modify/{bno}")
+    public String modifyForm(@PathVariable Long bno, Model model) {
+        try {
+            BoardDto boardDto = boardService.getDetail(bno);
+            List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
-    // 게시물 수정 페이지 이동
-    @GetMapping("/edit/{bno}") // /board/edit/{bno} 경로
-    public String showEditPostPage(@PathVariable Long bno, Model model) {
-        BoardDto boardDto = boardService.getPost(bno);
-        model.addAttribute("board", boardDto); // 게시물 정보 전달
-        return "board/boardEdit"; // boardEdit.html 페이지로 이동
+            model.addAttribute("boardDto", boardDto);
+            model.addAttribute("categories", categories);
+            return "board/modify";
+        } catch (Exception e) {
+            System.err.println("[ERROR] 게시물 수정 페이지 로드 중 오류 발생: " + e.getMessage());
+            return "redirect:/board/list?error=true";
+        }
     }
 
     // 게시물 수정 처리
-    @PostMapping("/update/{bno}") // /board/update/{bno} 경로
-    public String updatePost(@PathVariable Long bno, BoardDto boardDto) {
-        boardService.updatePost(bno, boardDto); // 게시물 수정
-        return "redirect:/board/content/" + bno; // 수정된 게시물 상세 페이지로 리다이렉트
+    @PostMapping("/modify")
+    public String modify(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+        System.out.println("[DEBUG] modify() called with BoardDto: " + boardDto);
+        System.out.println("[DEBUG] Received file: " + (file != null ? file.getOriginalFilename() : "No file"));
+
+        try {
+            // 파일이 있는 경우, BoardDto에 설정
+            if (file != null && !file.isEmpty()) {
+                boardDto.setImageFile(file);
+            }
+
+            // 데이터 유효성 검사
+            if (boardDto.getTitle() == null || boardDto.getTitle().trim().isEmpty()) {
+                System.err.println("[ERROR] 제목이 비어 있습니다.");
+                return "redirect:/board/modify/" + boardDto.getBno() + "?error=title";
+            }
+
+            if (boardDto.getContent() == null || boardDto.getContent().trim().isEmpty()) {
+                System.err.println("[ERROR] 내용이 비어 있습니다.");
+                return "redirect:/board/modify/" + boardDto.getBno() + "?error=content";
+            }
+
+            // 게시물 수정 서비스 호출
+            boardService.modify(boardDto);
+            System.out.println("[INFO] 게시물 수정 성공. 게시물 번호: " + boardDto.getBno());
+            return "redirect:/board/detail/" + boardDto.getBno();
+        } catch (Exception e) {
+            // 예외 발생 시 오류 로그 출력
+            System.err.println("[ERROR] 게시물 수정 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/board/modify/" + boardDto.getBno() + "?error=true";
+        }
     }
 
     // 게시물 삭제 처리
-    @GetMapping("/delete/{bno}") // /board/delete/{bno} 경로
-    public String deletePost(@PathVariable Long bno) {
-        boardService.deletePost(bno); // 게시물 삭제
-        return "redirect:/board/"; // 게시물 목록 페이지로 리다이렉트
+    @PostMapping("/delete/{bno}")
+    public String delete(@PathVariable Long bno) {
+        try {
+            boardService.delete(bno);
+            return "redirect:/board/list";
+        } catch (Exception e) {
+            System.err.println("[ERROR] 게시물 삭제 중 오류 발생: " + e.getMessage());
+            return "redirect:/board/list?error=true";
+        }
     }
-
-    @GetMapping("/exContent") // boardContent 임시보여주기
-    public String testshowContent() {
-        return "board/boardContent";
-    }
-
 }

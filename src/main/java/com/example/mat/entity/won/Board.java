@@ -1,49 +1,47 @@
+// Board 엔티티
 package com.example.mat.entity.won;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import com.example.mat.entity.BaseEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-/**
- * 게시물(Post) 엔티티 클래스
- */
+@Entity
+@Table(name = "mat_board")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-@Entity
-@Table(name = "mat_board") // 테이블 이름 매핑
+@ToString(exclude = { "image", "boardCategory" })
 public class Board extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "mat_board_seq_gen", sequenceName = "mat_board_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mat_board_seq_gen")
-    private Long bno; // 게시물 번호 (Primary Key)
-
-    @Column(nullable = false, length = 100)
-    private String title; // 게시물 제목
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content; // 게시물 내용 (긴 텍스트 처리)
+    @SequenceGenerator(name = "mat_board_seq_gen", sequenceName = "mat_board_seq", allocationSize = 1, initialValue = 1)
+    private Long bno;
 
     @Column(nullable = false)
-    private Long viewCount; // 게시물 조회수
+    @Size(max = 50, message = "제목은 최대 50자까지 작성할 수 있습니다.")
+    private String title;
 
     @Column(nullable = false)
-    private String boardCategory; // 게시판 카테고리
+    @Size(max = 1300, message = "내용은 최대 1300자까지 작성할 수 있습니다.")
+    private String content;
+
+    @Column(nullable = true)
+    private Long viewCount = 0L;
+
+    @Column(nullable = false)
+    private String nick = "Anonymous"; // 기본값 추가
+
+    // BoardCategory와의 연관 관계
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private BoardCategory boardCategory;
+
+    // BoardImage와의 연관 관계 (이미지 필수 아님)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id", nullable = true) // 이미지가 선택사항이므로 nullable = true
+    private BoardImage image;
 }

@@ -1,16 +1,14 @@
 package com.example.mat.repository;
 
-import com.example.mat.entity.recipe.Recipe;
-import com.example.mat.entity.recipe.RecipeCategory;
-import com.example.mat.entity.won.Board;
-
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
-import java.util.stream.LongStream;
+import com.example.mat.entity.recipe.Recipe;
+import com.example.mat.entity.recipe.RecipeCategory;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest // Spring Boot의 전체 컨텍스트를 로드
 public class RecipeRepositoryTest {
@@ -51,7 +49,6 @@ public class RecipeRepositoryTest {
     @Test
     public void testCategoryAdd(){
         RecipeCategory recipeCategory = RecipeCategory.builder()
-        // .name("전체")
         // .name("반찬")
         // .name("국/탕/찌개")
         // .name("디저트")
