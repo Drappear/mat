@@ -12,7 +12,7 @@ public interface CartService {
     // 장바구니 상품 추가
     public Long addCart(CartItemDto cartItemDto, MemberDto memberDto);
 
-    // mid 이용하여 카트 리스트 조회
+    // 이메일을 이용하여 카트 리스트 조회
     //public List<CartDetailDto> getCartList = new ArrayList<>();
     public List<CartDetailDto> getCartList(String email);
   

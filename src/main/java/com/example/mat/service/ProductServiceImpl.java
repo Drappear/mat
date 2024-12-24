@@ -46,9 +46,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductCategoryDto> getProductCateList() {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'getProductCateList'");
+    public List<ProductCategoryDto> getProductCateList(Long cateid) {
+      
+    
+        return null;
     }
 
 }

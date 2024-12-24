@@ -79,8 +79,7 @@ public class MarketController {
         public @ResponseBody ResponseEntity<String> cart(CartItemDto cartItemDto) {
             log.info("카트 추가 정보 {}",cartItemDto);          
         
-      
-
+      // 수정 필요
        MemberDto memberDto = MemberDto.builder().mid(22L).build();
        Long cartItemId;
 

@@ -1,9 +1,11 @@
 package com.example.mat.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.entity.market.Cart;
@@ -14,10 +16,18 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long>{
 
     //카드 아이디와 상품 아이디로 상품이 장바구니에 들어있는지 조회
    //CartItem findByCart_cartidAndProduct_pid(Long cartid, Long pid);
-
-
+   
    @Query("select ci from CartItem ci where ci.cart = :cart and ci.product = :product")
    CartItem findByProductCart(Cart cart, Product product);
+
+   // 오버로드
+   // @Query("select ci from CartItem ci where ci.cart.cartid = :cartId and ci.product.pid = :productId")
+   // CartItem findByProductCart(@Param("cartid") Long cartid, @Param("pid") Long pid);
+
+
+
+
+
 
   
 

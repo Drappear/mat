@@ -48,12 +48,12 @@ public class CartServiceTest {
         // 카트에 담을 상품, 수량을 cartItemDto 객체에 넣기
         CartItemDto cartItemDto = new CartItemDto();
         cartItemDto.setQuantity(3);
-        cartItemDto.setCartitemid(product.getPid());
+        cartItemDto.setPid(product.getPid());
 
         // 생성된 카트 상품 아이디를 cartitemid 변수에 저장장
         Long cartitemid = cartService.addCart(cartItemDto, member.getEmail());
         // 카트 상품 아이디를 이용해 생성된 카트 상품 정보 조회회
-        CartItem cartItem = cartItemRepository.findById(cartitemid)
+        CartItem cartItem = cartItemRepository.
                 .orElseThrow(EntityNotFoundException::new);
 
         // 상품 아이디와 카트에 저장된 상품 아이디가 같다면 테스트 성공
