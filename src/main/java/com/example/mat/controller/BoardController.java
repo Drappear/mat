@@ -4,6 +4,7 @@ import com.example.mat.dto.won.BoardCategoryDto;
 import com.example.mat.dto.won.BoardDto;
 import com.example.mat.service.BoardCategoryService;
 import com.example.mat.service.BoardService;
+import com.example.mat.util.HtmlUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -72,6 +73,7 @@ public class BoardController {
 
         try {
             BoardDto boardDto = boardService.getDetail(bno);
+            boardDto.setContent(HtmlUtil.convertTextToHtml(boardDto.getContent())); // 줄바꿈 -> <br>
             model.addAttribute("board", boardDto);
             return "board/detail";
         } catch (Exception e) {
@@ -86,6 +88,7 @@ public class BoardController {
 
         try {
             BoardDto boardDto = boardService.getDetail(bno);
+            boardDto.setContent(HtmlUtil.convertHtmlToText(boardDto.getContent())); // <br> -> 줄바꿈 복원
             List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
             model.addAttribute("boardDto", boardDto);

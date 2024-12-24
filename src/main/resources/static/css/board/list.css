@@ -12,7 +12,7 @@ a {
 .text-primary,
 a.text-primary:focus,
 a.text-primary:hover {
-  color: #00adbb !important;
+  color: #7fad39 !important;
 }
 .text-black,
 .text-hover-black:hover {
@@ -23,7 +23,16 @@ a.text-primary:hover {
 }
 .btn-primary {
   margin-top: 6px;
+  background-color: #7fad39;
+  border-color: #7fad39;
 }
 .btn-success {
   margin-top: 10px;
+  background-color: #7fad39;
+  border-color: #7fad39;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #7fad39;
+  border-color: #7fad39;
 }
