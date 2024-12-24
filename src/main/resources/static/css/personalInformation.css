@@ -76,5 +76,6 @@ body {
   background-color: #7ac142;
 }
 a.save-button {
+  text-align: right;
   text-decoration: none;
 }

@@ -21,23 +21,23 @@ public class MemberDto {
     private Long mid;
 
     @NotBlank(message = "아이디는 필수 항목입니다.")
-
     private String userid;
-    @NotBlank(message = "비밀번호는 필수 항목입니다.")
 
+    @NotBlank(message = "비밀번호는 필수 항목입니다.")
     private String password;
 
     @NotBlank(message = "이름은 필수 항목입니다.")
-
     private String username;
 
     @NotBlank(message = "닉네임은 필수 항목입니다.")
-
     private String nickname;
 
     @NotBlank(message = "이메일은 필수 항목입니다.")
     @Email(message = "유효한 이메일 주소를 입력해주세요.")
     private String email;
+
+    @NotBlank(message = "전화번호는 필수 항목입니다.")
+    private String tel;
 
     private String addr;
 

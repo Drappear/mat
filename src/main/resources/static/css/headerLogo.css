@@ -1,0 +1,10 @@
+.logo {
+  width: 66%; /* 원하는 너비 */
+  height: auto; /* 비율 유지 */
+  align-items: center;
+  position: relative; /* 위치 조정을 가능하게 설정 */
+  top: 6px; /* 위에서 아래로 10px 이동 */
+  left: 0px; /* 필요시 왼쪽으로 이동 */
+  margin: 0; /* 여백 초기화 */
+  padding: 0; /* 패딩 초기화 */
+}

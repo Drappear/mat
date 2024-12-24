@@ -5,6 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/profile.css}" />
+    <script>
+      let isNicknameChecked = false; // 닉네임 중복 확인 여부 플래그
+
+      function checkDuplicateNickname() {
+        const nicknameInput = document.getElementById("nickname");
+        const nickname = nicknameInput.value.trim();
+        const currentNickname = nicknameInput
+          .getAttribute("data-current-nickname")
+          .trim();
+        const message = document.getElementById("nickname-message");
+
+        // 중복 확인 플래그 초기화
+        isNicknameChecked = false;
+
+        switch (true) {
+          // 닉네임이 비어있으면
+          case nickname === "":
+            message.textContent = "닉네임을 입력해주세요.";
+            message.style.color = "red";
+            // console.log("닉네임이 비어있음");
+
+            return;
+
+          // 중복 확인 API 호출
+          default:
+            fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
+              .then((response) => response.json())
+              .then((isDuplicate) => {
+                if (isDuplicate && nickname !== currentNickname) {
+                  // 중복된 닉네임일 경우
+                  message.textContent = "이미 사용 중인 닉네임입니다.";
+                  message.style.color = "red";
+                  isNicknameChecked = false;
+                  // console.log("입력된 닉네임:", nickname);
+                  // console.log("현재 닉네임:", currentNickname);
+                  // console.log("비교 결과:", nickname === currentNickname);
+                } else if (nickname === currentNickname) {
+                  message.textContent =
+                    "닉네임 변경을 원치 않으시면 저장을 눌러주세요.";
+                  message.style.color = "green";
+                  isNicknameChecked = true;
+                  // console.log("닉네임이 현재 닉네임과 동일");
+                } else {
+                  // 사용 가능한 닉네임일 경우
+                  message.textContent = "사용 가능한 닉네임입니다.";
+                  message.style.color = "green";
+                  isNicknameChecked = true;
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                message.textContent = "중복 확인 중 오류가 발생했습니다.";
+                message.style.color = "red";
+                isNicknameChecked = false;
+              });
+        }
+      }
+
+      // 폼 제출 시 중복 확인 여부를 검증
+      function validateForm() {
+        if (!isNicknameChecked) {
+          alert("닉네임 중복 확인을 해주세요.");
+          return false; // 폼 제출 막기
+        }
+        return true; // 검증 완료 시 폼 제출 허용
+      }
+    </script>
   </head>
   <body>
     <div th:replace="~{/fragments/profileheader::profileheader}"></div>
@@ -17,7 +84,11 @@
             <button class="photo-upload-btn">+</button>
           </div>
           <div class="profile-info">
-            <form action="" method="post">
+            <form
+              th:action="@{/member/edit/nickname}"
+              method="post"
+              onsubmit="return validateForm();"
+            >
               <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input
@@ -25,14 +96,27 @@
                   id="nickname"
                   name="nickname"
                   th:value="${#authentication.principal.memberDto.nickname}"
+                  th:data-current-nickname="${#authentication.principal.memberDto.nickname}"
                 />
+                <span class="input-group-btn">
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    onclick="checkDuplicateNickname()"
+                  >
+                    중복 확인
+                  </button>
+                </span>
               </div>
+              <div class="text-danger" id="nickname-message"></div>
+              <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
+
               <div class="form-group">
                 <label for="bio">소개</label>
                 <textarea id="bio" name="bio" rows="3">Value</textarea>
               </div>
               <div class="form-actions">
-                <a class="submit-btn" th:href="@{/member/profile}"> 저장 </a>
+                <button class="submit-btn">저장</button>
               </div>
             </form>
           </div>
