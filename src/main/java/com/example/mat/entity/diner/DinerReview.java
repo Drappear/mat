@@ -1,6 +1,7 @@
 package com.example.mat.entity.diner;
 
 import com.example.mat.entity.BaseEntity;
+import com.example.mat.entity.shin.Member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,28 +20,31 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "diner", "dinerReview" })
+@ToString(exclude = { "diner", "member", "dinerImage" })
 @Setter
 @Getter
 @Entity
-public class DinerImage extends BaseEntity {
-    @SequenceGenerator(name = "diner_img_seq_gen", sequenceName = "diner_img_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "diner_img_seq_gen")
+public class DinerReview extends BaseEntity {
+
+    @SequenceGenerator(name = "diner_review_seq_gen", sequenceName = "diner_review_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "diner_review_seq_gen")
     @Id
-    private Long inum;
+    private Long rvid;
 
-    private String uuid;
+    private String content;
+    private int tasteScore;
+    private int priceScore;
+    private int serviceScore;
 
-    private String imgName;
-
-    private String path;
-
-    private Long imgCate;
-
+    // Diner
     @ManyToOne(fetch = FetchType.LAZY)
     private Diner diner;
 
+    // Member
     @ManyToOne(fetch = FetchType.LAZY)
-    private DinerReview dinerReview;
+    private Member member;
 
+    // DinerImage
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DinerImage dinerImage;
 }
