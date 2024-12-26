@@ -124,7 +124,43 @@
       </div>
     </div>
 
+    <!-- External JavaScript Dependencies -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const imageInput = document.querySelector("#image");
+        const deleteImageCheckbox = document.querySelector("#deleteImage");
+
+        // 디버깅용 로그
+        if (!imageInput) {
+          console.error("Image input field (#image) not found.");
+        } else {
+          console.log("Image input field found:", imageInput);
+        }
+
+        if (!deleteImageCheckbox) {
+          console.error("Delete image checkbox (#deleteImage) not found.");
+        } else {
+          console.log("Delete image checkbox found:", deleteImageCheckbox);
+        }
+
+        // 이미지 선택 시 체크박스 상태 업데이트
+        if (imageInput && deleteImageCheckbox) {
+          imageInput.addEventListener("input", function () {
+            console.log("File input changed. Files:", imageInput.files);
+            if (imageInput.files && imageInput.files.length > 0) {
+              console.log("File selected:", imageInput.files[0].name);
+              deleteImageCheckbox.checked = true; // 파일이 선택되었을 경우 체크
+            } else {
+              console.log("No file selected.");
+              deleteImageCheckbox.checked = false; // 파일 선택 취소 시 체크 해제
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
