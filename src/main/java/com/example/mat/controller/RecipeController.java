@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -70,6 +71,8 @@ public class RecipeController {
         model.addAttribute("categories", categories);
         return "recipe/create";
   }
+  
+  // @PreAuthorize("hasRole('MEMBER')")
   @PostMapping("/create")
   public String postCreate(@Valid RecipeDto recipeDto, BindingResult result, @ModelAttribute("requestDto") PageRequestDto pageRequestDto, RedirectAttributes rttr) {
     log.info("레시피 등록 {}", recipeDto);
@@ -80,12 +83,13 @@ public class RecipeController {
       // 서비스
     Long rno = recipeService.register(recipeDto);
 
+    rttr.addFlashAttribute("message", "레시피가 성공적으로 등록되었습니다.");
     rttr.addAttribute("rno", rno);
     rttr.addAttribute("page", 1);
     rttr.addAttribute("size", pageRequestDto.getSize());
     rttr.addAttribute("type", pageRequestDto.getType());
     rttr.addAttribute("keyword", pageRequestDto.getKeyword());
-    return "redirect:/recipe/read";
+    return "redirect:/recipe/read" + rno;
   }
   
 

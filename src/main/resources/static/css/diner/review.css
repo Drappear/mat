@@ -1,0 +1,11 @@
+.upload-box .drag-file {
+  height: 240px;
+}
+.title-row h4 {
+  text-align: center;
+}
+
+.star-rating-row {
+  display: inline;
+  white-space: nowrap;
+}
