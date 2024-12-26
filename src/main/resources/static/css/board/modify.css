@@ -16,8 +16,8 @@ body {
 /* 수정 폼 제목 스타일 */
 .form-title {
   font-size: 4rem;
-  font-weight: 400;
-  color: #333;
+  font-weight: 600;
+  color: #7fad39;
   text-align: center;
   margin-bottom: 20px; /* 제목 아래 여백 */
 }
@@ -136,7 +136,7 @@ body {
 
 /* Save 버튼 스타일 */
 .write-article button[type="submit"] {
-  background-color: #426b1f;
+  background-color: #7fad39;
   color: #fff;
   border: none;
   margin-left: 10px; /* Cancel 버튼과 간격 추가 */

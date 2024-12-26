@@ -13,6 +13,15 @@ body {
   padding: 20px;
 }
 
+/* 글 작성 폼 제목 스타일 */
+.form-title {
+  font-size: 4rem;
+  font-weight: 600;
+  color: #7fad39;
+  text-align: center;
+  margin-bottom: 20px; /* 제목 아래 여백 */
+}
+
 /* 글 작성 페이지 스타일 */
 .write-content {
   display: flex;

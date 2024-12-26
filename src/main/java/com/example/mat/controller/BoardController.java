@@ -31,10 +31,14 @@ public class BoardController {
     @GetMapping("/list")
     public String list(@RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String userid,
             Pageable pageable, Model model) {
         log.info("[REQUEST] board list page");
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
-        var boards = boardService.getList(keyword, category, pageable);
+
+        var boards = (userid != null && !userid.isEmpty())
+                ? boardService.getListByUserid(userid, pageable)
+                : boardService.getList(keyword, category, pageable);
 
         model.addAttribute("categories", categories);
         model.addAttribute("boards", boards);
