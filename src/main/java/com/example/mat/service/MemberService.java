@@ -1,11 +1,17 @@
 package com.example.mat.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.constant.MemberRole;
 import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
 
 public interface MemberService {
     // 닉네임 수정
@@ -30,7 +36,7 @@ public interface MemberService {
 
     boolean checkDuplicateNickname(String nickname);
 
-    void saveProfileImage(Long memberId, MemberImageDto memberImageDto);
+    void saveProfileImage(Long mid, MemberImageDto memberImageDto);
 
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
@@ -63,4 +69,21 @@ public interface MemberService {
                 .build();
     }
 
+    // default Map<String, Object> dtoToEntity(MemberDto mmberDto) {
+
+    // if (memberImageDtos != null && memberImageDtos.size() > 0) {
+    // List<MemberImage> memberImages = memberImageDtos.stream().map(dto -> {
+    // MemberImage memberImage = MemberImage.builder()
+    // .uuid(dto.getUuid())
+    // .imgName(dto.getImgName())
+    // .path(dto.getPath())
+    // .member(member)
+    // .build();
+    // return movieImage;
+    // }).collect(Collectors.toList());
+
+    // resultMap.put("memberImages", memberImages);
+    // }
+    // return resultMap;
+    // }
 }
