@@ -1,4 +1,5 @@
 const af = document.querySelector("#actionForm");
+const reviewForm = document.querySelector("#reviewForm");
 const modBtn = document.querySelector("#modBtn");
 const listBtn = document.querySelector("#listBtn");
 
@@ -70,7 +71,6 @@ $(".star-rating > .star").click(function () {
 
 $(".taste-score > .star").click(function () {
   let val = $(this).attr("data-value");
-  console.log(val);
 
   document.querySelector("#tasteScore").value = val;
 
@@ -79,7 +79,6 @@ $(".taste-score > .star").click(function () {
 
 $(".price-score > .star").click(function () {
   let val = $(this).attr("data-value");
-  console.log(val);
 
   document.querySelector("#priceScore").value = val;
 
@@ -88,9 +87,125 @@ $(".price-score > .star").click(function () {
 
 $(".service-score > .star").click(function () {
   let val = $(this).attr("data-value");
-  console.log(val);
 
   document.querySelector("#serviceScore").value = val;
 
   return false;
 });
+
+// 영화의 전체 리뷰 가져오기
+// const reviewLoaded = () => {
+//   fetch(`/reviews/${did}/all`)
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       // 도착한 data 화면에 보여주기
+
+//       document.querySelector(".review-cnt").innerHTML = data.length;
+
+//       if (data.length > 0) {
+//         reviewList.classList.remove("hidden");
+//       }
+
+//       let result = "";
+
+//       data.forEach((review) => {
+//         result += `<div class="d-flex justify-content-between my-2 border-bottom py-2 review-row" data-rno="${review.reviewNo}">`;
+//         result += `  <div class="flex-grow-1 align-self-center">`;
+//         result += `    <div>`;
+//         result += `      <span class="font-semibold">${review.text}</span>`;
+//         result += `    </div>`;
+//         result += `    <div class="small text-muted">`;
+//         result += `      <span class="d-inline-block mr-3">${review.nickName}</span>`;
+//         result += `      <span class="grade">${review.grade}</span><div class="starrr"></div>`;
+//         result += `    </div>`;
+//         result += `    <div class="text-muted">`;
+//         result += `      평점 : <span class="small">${formatDate(review.regDate)}</span>`;
+//         result += `    </div>`;
+//         result += `  </div>`;
+
+//         // 리뷰 작성자 == 로그인 사용자
+//         if (review.email === loginUser) {
+//           result += `  <div class="d-flex flex-column align-self-center">`;
+//           result += `    <div class="mb-2">`;
+//           result += `      <button class="btn btn-outline-danger btn-sm">삭제</button>`;
+//           result += `    </div>`;
+//           result += `    <div class="mb-2">`;
+//           result += `      <button class="btn btn-outline-success btn-sm">수정</button>`;
+//           result += `    </div>`;
+//           result += `  </div>`;
+//         }
+//         result += `</div>`;
+//       });
+
+//       // 리뷰 영역에 보여주기
+//       reviewList.innerHTML = result;
+//     });
+// };
+
+// 리뷰 등록
+reviewForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const content = reviewForm.content.value;
+  const tasteScore = reviewForm.tasteScore.value;
+  const priceScore = reviewForm.priceScore.value;
+  const serviceScore = reviewForm.serviceScore.value;
+  const mid = reviewForm.mid.value;
+
+  const review = {
+    content: content,
+    tasteScore: tasteScore || 1,
+    priceScore: priceScore || 1,
+    serviceScore: serviceScore || 1,
+    did: did,
+    mid: mid,
+    // nickname: nickname,
+  };
+  // 신규 작성
+  fetch(`/review/${did}`, {
+    headers: {
+      "content-type": "application/json",
+      "X-CSRF-TOKEN": csrfValue,
+    },
+    method: "post",
+    body: JSON.stringify(review),
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data) {
+        alert("리뷰 작성 완료.");
+        reviewForm.content.value = "";
+        reviewForm.querySelector(".taste-score > .star:first-child").click();
+        reviewForm.querySelector(".price-score > .star:first-child").click();
+        reviewForm.querySelector(".service-score > .star:first-child").click();
+
+        // 리뷰 새로고침
+        // reviewLoaded();
+      }
+    });
+});
+
+// 수정
+// fetch(`/reviews/${mno}/${reviewNo}`, {
+//   headers: {
+//     "content-type": "application/json",
+//     "X-CSRF-TOKEN": csrfValue,
+//   },
+//   method: "put",
+//   body: JSON.stringify(review),
+// })
+//   .then((response) => response.text())
+//   .then((data) => {
+//     console.log(data + " 번 리뷰 수정");
+
+//     if (data) {
+//       alert("리뷰가 수정되었습니다.");
+//       reviewForm.reviewNo.value = "";
+//       reviewForm.email.value = "";
+//       reviewForm.nickName.value = "";
+//       reviewForm.text.value = "";
+//       reviewForm.querySelector(".btn-outline-danger").innerHTML = "리뷰 등록";
+//       reviewLoaded();
+//     }
+//   });

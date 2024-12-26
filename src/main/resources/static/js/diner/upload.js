@@ -45,7 +45,7 @@ function DropFile(dropAreaId, fileListId) {
       formData.append("uploadFiles", files[index]);
     }
 
-    fetch("/upload/upload", {
+    fetch("/dfup/upload", {
       method: "post",
       headers: {
         "X-CSRF-TOKEN": csrfValue,
@@ -101,6 +101,7 @@ document.querySelector("#createForm").addEventListener("submit", (e) => {
     result += `<input type="hidden" name="dinerImageDtos[${idx}].path" value="${obj.dataset.path}" />`;
     result += `<input type="hidden" name="dinerImageDtos[${idx}].uuid" value="${obj.dataset.uuid}" />`;
     result += `<input type="hidden" name="dinerImageDtos[${idx}].imgName" value="${obj.dataset.name}" />`;
+    result += `<input type="hidden" name="dinerImageDtos[${idx}].imgCate" value="1" />`;
   });
 
   e.target.insertAdjacentHTML("beforeend", result);

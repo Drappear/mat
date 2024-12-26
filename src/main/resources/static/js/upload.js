@@ -26,7 +26,7 @@ fileInput.addEventListener("change", (e) => {
     formData.append("uploadFiles", files[index]);
   }
 
-  fetch("/upload/upload", {
+  fetch("/dfup/upload", {
     method: "post",
     headers: {
       "X-CSRF-TOKEN": csrfValue,
@@ -56,9 +56,9 @@ document.querySelector("#createForm").addEventListener("submit", (e) => {
     // console.log(obj.dataset.name);
     // console.log(obj.dataset.path);
     // console.log(obj.dataset.uuid);
-    result += `<input type="hidden" name="movieImageDtos[${idx}].path" value="${obj.dataset.path}">`;
-    result += `<input type="hidden" name="movieImageDtos[${idx}].uuid" value="${obj.dataset.uuid}">`;
-    result += `<input type="hidden" name="movieImageDtos[${idx}].imgName" value="${obj.dataset.name}">`;
+    result += `<input type="hidden" name="dinerImageDtos[${idx}].path" value="${obj.dataset.path}">`;
+    result += `<input type="hidden" name="dinerImageDtos[${idx}].uuid" value="${obj.dataset.uuid}">`;
+    result += `<input type="hidden" name="dinerImageDtos[${idx}].imgName" value="${obj.dataset.name}">`;
   });
   e.target.insertAdjacentHTML("beforeend", result);
 

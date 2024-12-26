@@ -98,7 +98,7 @@
               >
                 <div class="blog__item__pic">
                   <img
-                    th:src="|/upload/display?fileName=${diner.dinerImageDtos[0].getImageURL()}|"
+                    th:src="|/dfup/display?fileName=${diner.dinerImageDtos[0].getImageURL()}|"
                     th:if="${diner.dinerImageDtos.size() > 0 && diner.dinerImageDtos[0].path != null}"
                     alt=""
                     loading="lazy"
