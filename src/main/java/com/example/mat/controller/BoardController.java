@@ -57,10 +57,15 @@ public class BoardController {
         log.info("[REQUEST] board register process");
 
         try {
+            // 현재 로그인된 사용자 ID 설정
             setMemberIdFromAuth(boardDto);
-            boardService.register(boardDto, file);
-            log.info("[SUCCESS] 게시물 등록 성공");
-            return "redirect:/board/list";
+
+            // 게시물 등록 후 생성된 게시물 ID 반환
+            Long bno = boardService.register(boardDto, file);
+            log.info("[SUCCESS] 게시물 등록 성공, bno: {}", bno);
+
+            // 작성된 게시물의 상세 페이지로 이동
+            return "redirect:/board/detail/" + bno;
         } catch (Exception e) {
             log.error("[ERROR] 게시물 등록 중 오류 발생", e);
             return "redirect:/board/register?error=true&message=" + e.getMessage();
