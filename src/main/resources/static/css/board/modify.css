@@ -13,6 +13,15 @@ body {
   padding: 20px;
 }
 
+/* 수정 폼 제목 스타일 */
+.form-title {
+  font-size: 4rem;
+  font-weight: 400;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px; /* 제목 아래 여백 */
+}
+
 /* 글 작성 페이지 스타일 */
 .write-content {
   display: flex;
@@ -60,6 +69,52 @@ body {
   box-shadow: 0 0 5px rgba(252, 83, 86, 0.3);
 }
 
+/* 이미지 미리보기와 로고를 포함하는 컨테이너 스타일 */
+.image-container {
+  display: flex; /* 가로 방향 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  margin: 10px 0; /* 상하 여백 */
+  position: relative; /* 위치 기준 */
+}
+
+/* 이미지 미리보기와 로고를 포함하는 컨테이너 스타일 */
+.image-container {
+  display: flex; /* 가로 방향 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  margin: 10px 0; /* 상하 여백 */
+  position: relative; /* 위치 기준 */
+}
+
+/* 미리보기 이미지 스타일 */
+.preview-img {
+  width: auto;
+  height: auto;
+  max-width: 50%; /* 부모 컨테이너를 벗어나지 않도록 제한 */
+  max-height: 300px; /* 최대 높이 제한 */
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  object-fit: contain; /* 비율 유지 */
+}
+
+/* 로고 컨테이너 */
+.logo-container {
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  width: 50%; /* 여백으로 사용할 가로 공간 비율 */
+  height: 300px; /* 미리보기 이미지의 높이와 동일 */
+  position: relative; /* 위치 기준 */
+}
+
+/* 로고 이미지 스타일 */
+.logo-img {
+  max-width: 250px; /* 로고의 최대 너비 */
+  max-height: 250px; /* 로고의 최대 높이 */
+  object-fit: contain; /* 비율 유지 */
+  /* transform: translateX(-30%); */
+}
+
 /* 이미지 업로드 */
 .write-article input[type="file"] {
   display: block;
@@ -88,7 +143,6 @@ body {
   margin-top: 20px;
   align-self: flex-end; /* 버튼 오른쪽 정렬 */
   display: inline-block; /* 인라인 블록으로 설정 */
-  float: right; /* 오른쪽 정렬 */
 }
 
 .write-article button[type="submit"]:hover {
