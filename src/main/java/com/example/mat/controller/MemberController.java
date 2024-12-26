@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
@@ -20,14 +21,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.UploadResultDto;
 import com.example.mat.dto.shin.AuthMemberDto;
 // import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.service.MemberService;
+import com.example.mat.service.UploadService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Log4j2
@@ -37,6 +42,7 @@ import jakarta.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final UploadService uploadService;
 
     @GetMapping("/login")
     public void getMethodName(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
@@ -232,6 +238,45 @@ public class MemberController {
 
         boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
         return ResponseEntity.ok(isDuplicate);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/uploadProfilePicture")
+    public String uploadProfilePicture(@RequestParam("profileImage") MultipartFile file,
+            RedirectAttributes redirectAttributes) {
+        log.info("프로필 사진 업로드 요청");
+
+        // 인증된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+
+        try {
+            // 파일 저장 (UploadController의 로직을 사용하거나 UploadService를 통해 처리)
+            UploadResultDto uploadResult = uploadService.saveFile(file);
+
+            // MemberImage 엔티티 생성 및 저장
+            MemberImageDto memberImageDto = MemberImageDto.builder()
+                    .uuid(uploadResult.getUuid())
+                    .imgName(uploadResult.getFileName())
+                    .path(uploadResult.getFolderPath())
+                    .build();
+
+            memberService.saveProfileImage(authMemberDto.getMemberDto().getMid(), memberImageDto);
+
+            // SecurityContext의 프로필 사진 정보 업데이트
+            authMemberDto.getMemberDto().getMemberImageDtos().clear();
+            authMemberDto.getMemberDto().getMemberImageDtos().add(memberImageDto);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            redirectAttributes.addFlashAttribute("message", "프로필 사진이 성공적으로 업로드되었습니다!");
+
+        } catch (Exception e) {
+            log.error("프로필 사진 업로드 중 오류 발생", e);
+            redirectAttributes.addFlashAttribute("error", "프로필 사진 업로드에 실패했습니다.");
+        }
+
+        return "redirect:/member/profile";
     }
 
     // 개발자용 - Authentication 확인용

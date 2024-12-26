@@ -1,15 +1,11 @@
 package com.example.mat.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.constant.MemberRole;
 import com.example.mat.entity.shin.Member;
-import com.example.mat.entity.shin.MemberImage;
 
 public interface MemberService {
     // 닉네임 수정
@@ -33,6 +29,8 @@ public interface MemberService {
     // boolean checkDuplicateEmail(String email);
 
     boolean checkDuplicateNickname(String nickname);
+
+    void saveProfileImage(Long memberId, MemberImageDto memberImageDto);
 
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
