@@ -12,14 +12,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
+import com.example.mat.dto.won.BoardDto;
 import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.shin.MemberImage;
+import com.example.mat.entity.won.Board;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.shin.MemberImageRepository;
 
@@ -148,17 +151,19 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         memberRepository.deleteById(member.getMid());
     }
 
+    @Transactional
     @Override
     public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
-        MemberImage memberImage = MemberImage.builder()
-                .uuid(memberImageDto.getUuid())
-                .imgName(memberImageDto.getImgName())
-                .path(memberImageDto.getPath())
-                .member(memberRepository.findById(memberId).orElseThrow(
-                        () -> new IllegalArgumentException("Invalid member ID")))
-                .build();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
 
-        memberImageRepository.save(memberImage);
+        MemberImage memberImage = new MemberImage();
+        memberImage.setUuid(memberImageDto.getUuid());
+        memberImage.setImgName(memberImageDto.getImgName());
+        memberImage.setPath(memberImageDto.getPath());
+        memberImage.setMember(member);
+
+        memberImageRepository.save(memberImage); // MemberImageRepository 필요
     }
 
     @Transactional

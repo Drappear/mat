@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.entity.shin.Member;
@@ -32,4 +33,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member m SET m.email = :email, m.addr = :addr, m.detailAddr = :detailAddr, m.tel = :tel WHERE m.userid = :userid")
     void updatePersonalInfo(String email, String addr, String detailAddr, String tel, String userid);
 
+    @Modifying
+    @Query("UPDATE MemberImage mi SET mi.uuid = :uuid, mi.imgName = :imgName, mi.path = :path WHERE mi.member.id = :memberId")
+    int updateProfileImage(@Param("memberId") Long memberId, @Param("uuid") String uuid,
+            @Param("imgName") String imgName, @Param("path") String path);
 }

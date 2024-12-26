@@ -1,5 +1,17 @@
 package com.example.mat.controller;
 
+import java.io.File;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.hibernate.sql.model.jdbc.UpsertOperation;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +58,72 @@ public class MemberController {
 
     private final MemberService memberService;
     private final UploadService uploadService;
+
+    @Value("${com.example.mat.profile.path}")
+    private String uploadPath;
+
+    @PostMapping("/image")
+    public ResponseEntity<UploadResultDto> postUpload(MultipartFile uploadFiles) {
+
+        log.info("OriginalFilename {}", uploadFiles.getOriginalFilename());
+        log.info("Size {}", uploadFiles.getSize());
+        log.info("ContentType {}", uploadFiles.getContentType()); // image/png
+
+        // 이미지 파일 여부 확인
+        if (!uploadFiles.getContentType().startsWith("image")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        // 사용자가 올린 파일명
+        String originName = uploadFiles.getOriginalFilename();
+
+        // 년/월/일
+        // String saveFolderPath = makeFolder();
+
+        // 파일저장 - uuid(중복파일 해결)
+        String uuid = UUID.randomUUID().toString();
+        // upload/2024/11/26/9fae42cf-0733-453f-b3b9-3bfca31a6fe2_1.jpg
+        String saveName = uploadPath + File.separator + File.separator + uuid + "_" + originName;
+
+        Path savePath = Paths.get(saveName);
+
+        try {
+            // 폴더 저장
+            uploadFiles.transferTo(savePath);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        UploadResultDto uploadResultDto = new UploadResultDto(uuid, originName, "");
+
+        return new ResponseEntity<>(uploadResultDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/display")
+    public ResponseEntity<byte[]> getFile(String fileName, String size) {
+        ResponseEntity<byte[]> result = null;
+
+        try {
+            // "2024%2F11%2F27%5C7e9547c0-ba45-463b-a4ae-59a35d92962a_seoul1.jpg"
+            String srcFileName = URLDecoder.decode(fileName, "utf-8");
+            // upload/2024/11/27/s_C7e9547c0-ba45-463b-a4ae-59a35d92962a_seoul1.jpg
+            File file = new File(uploadPath + File.separator + srcFileName);
+
+            if (size != null && size.equals("1")) {
+                // upload/2024/11/27/, 원본파일명
+                file = new File(file.getParent(), file.getName().substring(2));
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            // Content-Type : image/png or text/html
+            headers.add("Content-Type", Files.probeContentType(file.toPath()));
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return result;
+    }
 
     @GetMapping("/login")
     public void getMethodName(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
@@ -244,14 +325,14 @@ public class MemberController {
     @PostMapping("/uploadProfilePicture")
     public String uploadProfilePicture(@RequestParam("profileImage") MultipartFile file,
             RedirectAttributes redirectAttributes) {
-        log.info("프로필 사진 업로드 요청");
+        log.info("프로필 사진 업로드 요청 {}", file);
 
         // 인증된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
 
         try {
-            // 파일 저장 (UploadController의 로직을 사용하거나 UploadService를 통해 처리)
+
             UploadResultDto uploadResult = uploadService.saveFile(file);
 
             // MemberImage 엔티티 생성 및 저장
