@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" layout:decorate="~{/layouts/layout}">
+<html lang="zxx" layout:decorate="~{/layouts/boardLayout}">
   <head>
     <meta charset="UTF-8" />
     <title>Board List</title>
@@ -103,11 +103,13 @@
                       <span class="op-6">작성 시간 : </span>
                       <span th:text="${post.formattedRegDate}">작성 시간</span>
                       <span class="op-6">작성자 : </span>
-                      <span
-                        th:text="${#authentication.principal.memberDto.nickname}"
-                        >Nickname</span
+                      <a
+                        th:href="@{/board/list(userid=${post.userid})}"
+                        th:text="${post.userid}"
+                        >작성자</a
                       >
                     </p>
+
                     <p class="text-sm op-5" th:text="${post.contentPreview}">
                       Sample content...
                     </p>

@@ -158,6 +158,27 @@ public class BoardServiceImpl implements BoardService {
 
         @Override
         @Transactional(readOnly = true)
+        public Page<BoardDto> getListByUserid(String userid, Pageable pageable) {
+                return boardRepository.findByUserid(userid, pageable)
+                                .map(board -> BoardDto.builder()
+                                                .bno(board.getBno())
+                                                .title(board.getTitle())
+                                                .content(board.getContent())
+                                                .memberId(board.getMember().getMid())
+                                                .userid(board.getMember().getUserid())
+                                                .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
+                                                .regDate(board.getRegDate())
+                                                .updateDate(board.getUpdateDate())
+                                                .categoryId(board.getBoardCategory() != null
+                                                                ? board.getBoardCategory().getBoardCNo()
+                                                                : null)
+                                                .imageFileName(board.getImage() != null ? board.getImage().getImgName()
+                                                                : null)
+                                                .build());
+        }
+
+        @Override
+        @Transactional(readOnly = true)
         public Long getMemberIdByUserId(String userId) {
                 Member member = memberRepository.findByUserid(userId)
                                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자 ID를 찾을 수 없습니다: " + userId));

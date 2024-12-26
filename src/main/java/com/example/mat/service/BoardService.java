@@ -56,6 +56,16 @@ public interface BoardService {
     Page<BoardDto> getList(String keyword, Long category, Pageable pageable);
 
     /**
+     * 게시물 목록 조회
+     *
+     * @param keyword  검색 키워드
+     * @param category 카테고리 ID
+     * @param pageable 페이징 정보
+     * @return 페이징 처리된 게시물 데이터
+     */
+    Page<BoardDto> getListByUserid(String userid, Pageable pageable);
+
+    /**
      * 사용자 ID를 통해 회원 ID 조회
      *
      * @param userId 사용자 ID
