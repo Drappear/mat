@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.entity.shin.Member;
 
 import jakarta.transaction.Transactional;
