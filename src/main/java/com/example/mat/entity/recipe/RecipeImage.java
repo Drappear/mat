@@ -5,6 +5,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,11 @@ public class RecipeImage extends BaseEntity {
   private Long rInum;
 
   private String uuid;
-
   private String imgName;
-
   private String path;
 
   // TODO: rno 가져오기 -> Recipe 에서
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "rno", nullable = false)
   private Recipe recipe;
 }

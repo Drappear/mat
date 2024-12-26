@@ -17,26 +17,32 @@
               <article class="blog-article">
                 <div class="blog-article-header">
                   <h4>
-                    <a
-                      th:text="${board.categoryId == 1 ? 'Free' 
-                                     : (board.categoryId == 2 ? 'Q&A' 
-                                     : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
-                    >
-                      Category
-                    </a>
+                    <h4>
+                      <a
+                        th:href="@{/board/list(category=${board.categoryId})}"
+                        th:text="${board.categoryId == 1 ? 'Free' 
+                                       : (board.categoryId == 2 ? 'Q&A' 
+                                       : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
+                      >
+                        Category
+                      </a>
+                    </h4>
                   </h4>
 
                   <h2 th:text="${board.title}">제목</h2>
                   <div class="media">
                     <div class="avatar">
                       <img
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                        title=""
-                        alt=""
+                        src="/sampleimg/hr1.jpg"
+                        title="My Avatar"
+                        alt="My Avatar"
                       />
                     </div>
                     <div class="media-body">
-                      <label th:text="${board.userid}">UserId</label>
+                      <label
+                        th:text="${#authentication.principal.memberDto.nickname}"
+                        >Nickname</label
+                      >
                       <span
                         th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
                         >작성 시간</span
@@ -111,7 +117,7 @@
                           <!-- 첫 번째 댓글 -->
                           <li class="clearfix">
                             <img
-                              src="https://bootdey.com/img/Content/user_1.jpg"
+                              src="/sampleimg/hr3.jpg"
                               class="avatar"
                               alt=""
                             />
@@ -138,7 +144,7 @@
                           <!-- 두 번째 댓글 -->
                           <li class="clearfix">
                             <img
-                              src="https://bootdey.com/img/Content/user_2.jpg"
+                              src="/sampleimg/hr1.jpg"
                               class="avatar"
                               alt=""
                             />
@@ -165,7 +171,7 @@
                             <ul class="comments">
                               <li class="clearfix">
                                 <img
-                                  src="https://bootdey.com/img/Content/user_3.jpg"
+                                  src="/sampleimg/hr3.jpg"
                                   class="avatar"
                                   alt=""
                                 />
