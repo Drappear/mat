@@ -105,17 +105,24 @@ public class BoardController {
             @RequestParam("imageFile") MultipartFile file,
             @RequestParam(value = "deleteImage", required = false) String deleteImage) {
         log.info("[REQUEST] board modify process");
-        log.info("[DATA] BoardDto: {}, file: {}", boardDto, (file != null ? file.getOriginalFilename() : "No file"));
+
+        boolean deleteFlag = "true".equals(deleteImage);
+
+        // 파일과 체크박스 상태 확인
+        if (!file.isEmpty()) {
+            log.info("File uploaded: " + file.getOriginalFilename());
+            deleteFlag = true; // 파일이 업로드된 경우, 기존 이미지 삭제
+        } else {
+            log.info("No file uploaded.");
+            deleteFlag = false; // 파일이 없으면 삭제하지 않음
+        }
 
         try {
-            setMemberIdFromAuth(boardDto);
-            boolean deleteFlag = "true".equals(deleteImage);
-            boardService.modify(boardDto, file, deleteFlag); // 수정된 시그니처 호출
-            log.info("[SUCCESS] 게시물 수정 성공. 게시물 번호: {}", boardDto.getBno());
+            boardService.modify(boardDto, file, deleteFlag);
             return "redirect:/board/detail/" + boardDto.getBno();
         } catch (Exception e) {
-            log.error("[ERROR] 게시물 수정 중 예외 발생: {}", e.getMessage(), e);
-            return "redirect:/board/modify/" + boardDto.getBno() + "?error=true&message=" + e.getMessage();
+            log.error("Error during board modification", e);
+            return "redirect:/board/modify/" + boardDto.getBno() + "?error=true";
         }
     }
 
