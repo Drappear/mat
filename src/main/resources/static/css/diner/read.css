@@ -1,12 +1,26 @@
 .diner-main-img-and-map {
   white-space: nowrap;
   display: flex;
+  border: 1px solid;
 }
 .diner-main-img {
   display: inline-block;
+  overflow: hidden;
+  padding: 0;
 }
 .diner-map {
   display: inline-block;
+}
+.main-img {
+  display: flex;
+}
+.sub-img {
+  white-space: nowrap;
+  display: block;
+  max-width: 20%;
+}
+.sub-img ul {
+  list-style-type: none;
 }
 .diner-overview-section {
   border: 1px solid;
@@ -36,7 +50,7 @@
   border: 1px solid;
   max-height: 220px;
 }
-.review-input-img-preview ul{
+.review-input-img-preview ul {
   list-style-type: none;
 }
 
@@ -64,28 +78,30 @@
 
 /* 별점 기능 */
 .star-rating {
-  width: 100%; 
-  box-sizing: border-box; 
-  display: inline-flex; 
+  width: 100%;
+  box-sizing: border-box;
+  display: inline-flex;
   float: left;
-  flex-direction: row; 
+  flex-direction: row;
   justify-content: flex-start;
 }
 .star-rating .star {
-  width: 25px; 
-  height: 25px; 
-  margin-right: 10px;
-  display: inline-block; 
-  background: url('https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39') no-repeat; 
-  background-size: 100%; 
-  box-sizing: border-box; 
-}
-.star-rating .star.on {
-  width: 25px; 
+  width: 25px;
   height: 25px;
   margin-right: 10px;
-  display: inline-block; 
-  background: url('https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39') no-repeat;
-  background-size: 100%; 
-  box-sizing: border-box; 
+  display: inline-block;
+  background: url("https://img.icons8.com/?size=30&id=EZ5j1vem6LAO&format=png&color=7fad39")
+    no-repeat;
+  background-size: 100%;
+  box-sizing: border-box;
+}
+.star-rating .star.on {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  display: inline-block;
+  background: url("https://img.icons8.com/?size=30&id=XghFnrM2lzSW&format=png&color=7fad39")
+    no-repeat;
+  background-size: 100%;
+  box-sizing: border-box;
 }
