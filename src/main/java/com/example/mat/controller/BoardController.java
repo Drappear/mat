@@ -101,13 +101,16 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String modify(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+    public String modify(@ModelAttribute BoardDto boardDto,
+            @RequestParam("imageFile") MultipartFile file,
+            @RequestParam(value = "deleteImage", required = false) String deleteImage) {
         log.info("[REQUEST] board modify process");
         log.info("[DATA] BoardDto: {}, file: {}", boardDto, (file != null ? file.getOriginalFilename() : "No file"));
 
         try {
             setMemberIdFromAuth(boardDto);
-            boardService.modify(boardDto, file);
+            boolean deleteFlag = "true".equals(deleteImage);
+            boardService.modify(boardDto, file, deleteFlag); // 수정된 시그니처 호출
             log.info("[SUCCESS] 게시물 수정 성공. 게시물 번호: {}", boardDto.getBno());
             return "redirect:/board/detail/" + boardDto.getBno();
         } catch (Exception e) {
