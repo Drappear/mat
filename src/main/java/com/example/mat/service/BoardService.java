@@ -20,12 +20,13 @@ public interface BoardService {
     /**
      * 게시물 수정
      *
-     * @param boardDto 수정할 게시물 데이터 (수정된 파일 포함)
-     * @param file     새로운 업로드된 이미지 파일 (없을 경우 기존 이미지 유지)
+     * @param boardDto    수정할 게시물 데이터 (수정된 파일 포함)
+     * @param file        새로운 업로드된 이미지 파일 (없을 경우 기존 이미지 유지)
+     * @param deleteImage 기존 이미지를 삭제할지 여부
      * @return 수정된 게시물 ID
      * @throws IllegalArgumentException 게시물 ID가 유효하지 않거나 데이터가 누락된 경우
      */
-    Long modify(BoardDto boardDto, MultipartFile file);
+    Long modify(BoardDto boardDto, MultipartFile file, boolean deleteImage);
 
     /**
      * 게시물 삭제
@@ -53,6 +54,16 @@ public interface BoardService {
      * @return 페이징 처리된 게시물 데이터
      */
     Page<BoardDto> getList(String keyword, Long category, Pageable pageable);
+
+    /**
+     * 게시물 목록 조회
+     *
+     * @param keyword  검색 키워드
+     * @param category 카테고리 ID
+     * @param pageable 페이징 정보
+     * @return 페이징 처리된 게시물 데이터
+     */
+    Page<BoardDto> getListByUserid(String userid, Pageable pageable);
 
     /**
      * 사용자 ID를 통해 회원 ID 조회
