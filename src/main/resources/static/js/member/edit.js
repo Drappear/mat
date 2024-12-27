@@ -18,6 +18,11 @@ document.querySelector("#profileImage").addEventListener("change", (e) => {
       showUploadImages(data);
     });
 });
+document.getElementById("profilePhoto").addEventListener("click", function () {
+  var imageUrl = this.getAttribute("data-file"); // 클릭한 이미지의 URL 가져오기
+  var modalImage = document.getElementById("modalImage");
+  modalImage.src = "/profile/display?fileName=" + imageUrl; // 모달에 이미지를 로드
+});
 
 let isNicknameChecked = false; // 닉네임 중복 확인 여부 플래그
 
