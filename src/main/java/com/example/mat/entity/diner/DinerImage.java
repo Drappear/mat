@@ -35,7 +35,7 @@ public class DinerImage extends BaseEntity {
 
     private String path;
 
-    private Long imgCate;
+    private int imgCate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Diner diner;

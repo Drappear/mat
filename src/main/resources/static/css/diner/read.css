@@ -18,6 +18,8 @@
   white-space: nowrap;
   display: block;
   max-width: 20%;
+  max-height: 420px;
+  overflow: hidden;
 }
 .sub-img ul {
   list-style-type: none;
@@ -52,6 +54,15 @@
 }
 .review-input-img-preview ul {
   list-style-type: none;
+}
+.review-input-img-preview ul li {
+  float: left;
+  padding: 1px;
+  width: 150px;
+}
+.review-input-img-preview ul li .review-file-name {
+  height: 50px;
+  overflow: hidden;
 }
 
 .review-two-column-list {

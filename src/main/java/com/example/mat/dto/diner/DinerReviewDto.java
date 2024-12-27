@@ -24,6 +24,7 @@ public class DinerReviewDto {
     private int priceScore;
     private int serviceScore;
 
+    @Builder.Default
     private List<DinerImageDto> dinerImageDtos = new ArrayList<>();
 
     // Diner
@@ -31,6 +32,9 @@ public class DinerReviewDto {
 
     // Member
     private Long mid;
+
+    // Image
+    private Long inum;
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;

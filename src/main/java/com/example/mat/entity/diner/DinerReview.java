@@ -1,6 +1,7 @@
 package com.example.mat.entity.diner;
 
 import com.example.mat.entity.BaseEntity;
+import com.example.mat.entity.Image;
 import com.example.mat.entity.shin.Member;
 
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "diner", "member", "dinerImage" })
+@ToString(exclude = { "diner", "member", "image" })
 @Setter
 @Getter
 @Entity
@@ -44,7 +45,7 @@ public class DinerReview extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    // DinerImage
+    // Image
     @ManyToOne(fetch = FetchType.LAZY)
-    private DinerImage dinerImage;
+    private Image image;
 }

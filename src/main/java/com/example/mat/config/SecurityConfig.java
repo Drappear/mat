@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
                 .requestMatchers("/member/register").permitAll()
                 .requestMatchers("/board/register").permitAll()
-                .requestMatchers("/diner/**", "/upload/**", "/review/**").permitAll()
+                .requestMatchers("/diner/**", "/dfup/**", "/review/**").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));

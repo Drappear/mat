@@ -143,7 +143,14 @@
           </div>
           <div class="row mt-2">
             <div class="input-group col-lg-10">
-              <input type="file" class="form-control" name="reviewImage" />
+              <input
+                type="file"
+                name="uploadFiles"
+                class="form-control"
+                id="reviewFile"
+                accept="image/png, image/jpg, image/jpeg"
+                multiple
+              />
             </div>
             <div class="col-lg-2">
               <input
@@ -154,7 +161,9 @@
               <button type="submit" class="btn btn-success">리뷰 등록</button>
             </div>
           </div>
-          <div class="row mt-2 p-3 review-input-img-preview"></div>
+          <div class="row mt-2 p-3 review-input-img-preview">
+            <ul></ul>
+          </div>
         </div>
       </form>
     </div>

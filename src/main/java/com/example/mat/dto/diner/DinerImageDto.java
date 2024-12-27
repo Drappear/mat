@@ -19,7 +19,7 @@ public class DinerImageDto {
     private String uuid;
     private String imgName;
     private String path;
-    private Long imgCate;
+    private int imgCate;
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;

@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.example.mat.dto.diner.DinerReviewDto;
-import com.example.mat.entity.diner.DinerImage;
+import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.DinerReview;
-import com.example.mat.repository.diner.DinerImageRepository;
+import com.example.mat.repository.ImageRepository;
 import com.example.mat.repository.diner.DinerReviewRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,16 +20,16 @@ import lombok.extern.log4j.Log4j2;
 public class DinerReviewServiceImpl implements DinerReviewService {
 
     private final DinerReviewRepository dinerReviewRepository;
-    private final DinerImageRepository dinerImageRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public Long insertReview(DinerReviewDto dinerReviewDto) {
         Map<String, Object> entityMap = dtoToEntity(dinerReviewDto);
         DinerReview dinerReview = (DinerReview) entityMap.get("dinerReview");
-        List<DinerImage> dinerImages = (List<DinerImage>) entityMap.get("dinerImages");
+        List<Image> dinerReviewImages = (List<Image>) entityMap.get("dinerReviewImages");
 
         dinerReviewRepository.save(dinerReview);
-        dinerImages.forEach(dinerImage -> dinerImageRepository.save(dinerImage));
+        dinerReviewImages.forEach(dinerReviewImage -> imageRepository.save(dinerReviewImage));
         return dinerReview.getRvid();
     }
 
