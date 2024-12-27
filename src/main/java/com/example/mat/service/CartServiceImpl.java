@@ -40,7 +40,8 @@ public class CartServiceImpl implements CartService {
     public Long addCart(CartItemDto cartItemDto, MemberDto memberDto) {
 
         //Cart 생성   
-        Cart cart = cartRepository.findByMember_mid(memberDto.getMid());
+        Member member = memberRepository.findById(memberDto.getMid()).get();   
+        Cart cart = cartRepository.findByMember(member);
 
         if (cart == null) {
             // 멤버에게 카트 없으면, 카트 생성
@@ -51,7 +52,7 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(cartItemDto.getPid())
                             .orElseThrow(EntityNotFoundException::new);   
 
-        CartItem savedCartItem = cartItemRepository.findByProductCart(cart, product);
+        CartItem savedCartItem = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
 
         if(savedCartItem != null){
             // 이미 상품이 있다면 개수를 +
@@ -72,22 +73,27 @@ public class CartServiceImpl implements CartService {
     }
 
 
-    public List<CartDetailDto> getCartList(String email){
+    public List<CartDetailDto> getCartList(Long mid){
 
-        List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
+        List<CartDetailDto> cartDetailDtoList;
 
-        Member member = memberRepository.findByEmail(email);
-        Product product = productRepository.findByPid();
-       
-        Cart cart = cartRepository.findByMember_mid(member.getMid());
+        //로그인 정보로 member 찾기기
+        //Member member = memberRepository.findByEmail(email).get();        
+
+        Member member = memberRepository.findById(mid).get();       
+        Cart cart = cartRepository.findByMember(member);
 
         if(cart == null){ // 위에서 유저 카트 조회해서, 없으면은 그냥 반환
-            return cartDetailDtoList;
+            return new ArrayList<>();
         }
 
-        cartDetailDtoList 
-        = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
-        return cartDetailDtoList; 
+        List<CartItem> cartItems  = cartItemRepository.findByCartItem(cart);
+
+        // entity => dto
+        //cartDetailDtoList = entityToDto()
+
+        //return cartDetailDtoList; 
+        return null;
     }
 
 

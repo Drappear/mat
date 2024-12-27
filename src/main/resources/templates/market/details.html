@@ -408,7 +408,7 @@
 
     <form th:action="@{/market/cart}" method="post" id="addCartForm">
       <input type="hidden" name="quantity" value="" />
-      <input type="hidden" name="pid" value="${dto.pid}" />
+      <input type="hidden" name="pid" th:value="${dto.pid}" />
     </form>
 
     <!-- Js Plugins -->

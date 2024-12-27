@@ -12,10 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CartItemDto {
+    
     // 장바구니에 담을 상품의 id와 수량 전달 받음
 
     private Long pid;
     
     private int quantity;
+
+
     
 }

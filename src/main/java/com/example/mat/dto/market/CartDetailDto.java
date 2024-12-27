@@ -14,13 +14,20 @@ public class CartDetailDto {
     // 장바구니 조회 페이지로 전달
     // 장바구니에 담겨있는 상품 조회
 
-    private Long cartitemid; 
+    private Long cartItemId; 
 
+    // 상품명
     private String itemName;
 
+    // 가격
     private String price;
 
     private int quantity;
+
+    // 합산가격
+    private int totalPrice;    
+
+    
     
    
 

@@ -22,7 +22,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"product","cart"})
 @Getter
 @Setter
 @Table(name = "mat_cartitem")
