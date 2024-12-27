@@ -154,4 +154,9 @@ public class BoardController {
         String currentUserId = authentication.getName();
         boardDto.setMemberId(boardService.getMemberIdByUserId(currentUserId));
     }
+
+    @ModelAttribute
+    public void addCategories(Model model) {
+        model.addAttribute("categories", boardCategoryService.getAllCategories());
+    }
 }

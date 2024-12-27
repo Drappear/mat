@@ -15,7 +15,7 @@
     <!-- Content SECTION Begin -->
     <div layout:fragment="content">
       <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-start">
           <!-- Main content section -->
           <div class="col-lg-9 mb-3">
             <h1 class="text-title">Forum</h1>
@@ -44,6 +44,7 @@
                     id="categorySelect"
                     name="category"
                     class="form-select"
+                    th:value="${param.category}"
                   >
                     <option
                       value=""
@@ -55,7 +56,6 @@
                       th:each="category : ${categories}"
                       th:value="${category.boardCNo}"
                       th:text="${category.name}"
-                      th:selected="${param.category == category.boardCNo}"
                     ></option>
                   </select>
                 </div>
