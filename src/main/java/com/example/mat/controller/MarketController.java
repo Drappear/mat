@@ -30,6 +30,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
 import com.example.mat.dto.market.ProductDto;
+import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.Product;
@@ -80,7 +81,7 @@ public class MarketController {
             log.info("카트 추가 정보 {}",cartItemDto);          
         
       // 수정 필요
-       MemberDto memberDto = MemberDto.builder().mid(22L).build();
+       MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
        Long cartItemId;
 
        try {
@@ -98,10 +99,9 @@ public class MarketController {
         log.info("카트 목록");        
 
 
-        String email = getAuthentication().getUsername();
-        List<CartDetailDto> cartDetailList = cartService.getCartList(email);
-        model.addAttribute("cartItems", cartDetailList);
-     
+        Long mid = getAuthentication().getMemberDto().getMid();
+        List<CartDetailDto> cartDetailList = cartService.getCartList(mid);
+        model.addAttribute("cartItems", cartDetailList);     
     }
 
 
@@ -119,17 +119,14 @@ public class MarketController {
     }   
 
    
-    private User getAuthentication() {
+    private AuthMemberDto getAuthentication() {
 
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
-
-
-        User user = (User) authentication.getPrincipal();
         
         // MemberDto 에 들어있는 값 접근 시
-        //AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-        return user;
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+        return authMemberDto;
     }
 
 }
