@@ -9,10 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import com.example.mat.entity.Image;
+import com.example.mat.entity.QImage;
 import com.example.mat.entity.diner.Diner;
-import com.example.mat.entity.diner.DinerImage;
 import com.example.mat.entity.diner.QDiner;
-import com.example.mat.entity.diner.QDinerImage;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
@@ -21,18 +21,18 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
-public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implements DinerImageReviewRepository {
+public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implements DinerImageRepository {
     public DinerImageRepositoryImpl() {
-        super(DinerImage.class);
+        super(Image.class);
     }
 
     @Override
     public List<Object[]> getDinerRow(Long did) {
-        QDinerImage dinerImage = QDinerImage.dinerImage;
+        QImage image = QImage.image;
         // QReview review = QReview.review;
         QDiner diner = QDiner.diner;
 
-        JPQLQuery<DinerImage> query = from(dinerImage).leftJoin(diner).on(diner.eq(dinerImage.diner));
+        JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
         // JPQLQuery<Long> rCnt =
         // JPAExpressions.select(review.countDistinct()).from(review)
@@ -41,9 +41,9 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
         // JPAExpressions.select(review.grade.avg().round()).from(review)
         // .where(review.diner.eq(dinerImage.diner));
 
-        JPQLQuery<Tuple> tuple = query.select(diner, dinerImage)
-                .where(dinerImage.diner.did.eq(did))
-                .orderBy(dinerImage.inum.desc());
+        JPQLQuery<Tuple> tuple = query.select(diner, image)
+                .where(image.diner.did.eq(did))
+                .orderBy(image.inum.desc());
 
         List<Tuple> result = tuple.fetch();
 
@@ -51,12 +51,12 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public Page<Object[]> getTotalList(String type, String keyword, Pageable pageable) {
-        QDinerImage dinerImage = QDinerImage.dinerImage;
+    public Page<Object[]> getTotalDinerList(String type, String keyword, Pageable pageable) {
+        QImage image = QImage.image;
         // QReview review = QReview.review;
         QDiner diner = QDiner.diner;
 
-        JPQLQuery<DinerImage> query = from(dinerImage).leftJoin(diner).on(diner.eq(dinerImage.diner));
+        JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
         // JPQLQuery<Long> rCnt =
         // JPAExpressions.select(review.countDistinct()).from(review)
@@ -66,14 +66,14 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
         // .where(review.movie.eq(movieImage.movie));
 
         JPQLQuery<Long> inum = JPAExpressions.select(
-                dinerImage.inum.max()).from(
-                        dinerImage)
-                .groupBy(dinerImage.diner);
+                image.inum.max()).from(
+                        image)
+                .groupBy(image.diner);
 
         JPQLQuery<Tuple> tuple = query.select(
                 diner,
-                dinerImage)
-                .where(dinerImage.inum.in(inum));
+                image)
+                .where(image.inum.in(inum));
 
         // bno > 0 조건
         BooleanBuilder builder = new BooleanBuilder();
@@ -111,5 +111,11 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
 
         return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
                 count);
+    }
+
+    @Override
+    public void deleteByDiner(Diner diner) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteByDiner'");
     }
 }

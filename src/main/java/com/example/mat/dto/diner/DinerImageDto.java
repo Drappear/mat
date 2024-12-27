@@ -24,18 +24,6 @@ public class DinerImageDto {
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 
-    // 썸네일 경로
-    // public String getThumbImageURL() {
-    // String fullPath = "";
-    // try {
-    // fullPath = URLEncoder.encode(path + File.separator + "s_" + uuid + "_" +
-    // imgName, "utf-8");
-    // } catch (UnsupportedEncodingException e) {
-    // e.printStackTrace();
-    // }
-    // return fullPath;
-    // }
-
     // 원본 경로
     public String getImageURL() {
         String fullPath = "";

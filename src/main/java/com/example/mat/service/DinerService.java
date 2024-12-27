@@ -10,9 +10,9 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.dto.diner.DinerImageDto;
+import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerCategory;
-import com.example.mat.entity.diner.DinerImage;
 
 public interface DinerService {
 
@@ -41,7 +41,7 @@ public interface DinerService {
         return DinerCategory.builder().dcid(dto.getDcid()).name(dto.getName()).build();
     }
 
-    default DinerDto entityToDto(Diner diner, List<DinerImage> dinerImages) {
+    default DinerDto entityToDto(Diner diner, List<Image> dinerImages) {
         DinerDto dinerDto = DinerDto.builder()
                 .did(diner.getDid())
                 .name(diner.getName())
@@ -94,18 +94,18 @@ public interface DinerService {
         List<DinerImageDto> dinerImageDtos = dinerDto.getDinerImageDtos();
 
         if (dinerImageDtos != null && dinerImageDtos.size() > 0) {
-            List<DinerImage> dinerImages = dinerImageDtos.stream().map(dto -> {
-                DinerImage dinerImage = DinerImage.builder()
+            List<Image> images = dinerImageDtos.stream().map(dto -> {
+                Image image = Image.builder()
                         .uuid(dto.getUuid())
                         .imgName(dto.getImgName())
                         .path(dto.getPath())
                         .imgCate(dto.getImgCate())
                         .diner(diner)
                         .build();
-                return dinerImage;
+                return image;
             }).collect(Collectors.toList());
 
-            resultMap.put("dinerImages", dinerImages);
+            resultMap.put("dinerImages", images);
         }
 
         return resultMap;
