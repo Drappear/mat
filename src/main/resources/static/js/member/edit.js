@@ -18,11 +18,6 @@ document.querySelector("#profileImage").addEventListener("change", (e) => {
       showUploadImages(data);
     });
 });
-document.getElementById("profilePhoto").addEventListener("click", function () {
-  var imageUrl = this.getAttribute("data-file"); // 클릭한 이미지의 URL 가져오기
-  var modalImage = document.getElementById("modalImage");
-  modalImage.src = "/profile/display?fileName=" + imageUrl; // 모달에 이미지를 로드
-});
 
 let isNicknameChecked = false; // 닉네임 중복 확인 여부 플래그
 
@@ -35,7 +30,7 @@ function checkDuplicateNickname() {
   const message = document.getElementById("nickname-message");
 
   // 중복 확인 플래그 초기화
-  isNicknameChecked = false;
+  isNicknameChecked = true;
 
   switch (true) {
     // 닉네임이 비어있으면
@@ -43,7 +38,7 @@ function checkDuplicateNickname() {
       message.textContent = "닉네임을 입력해주세요.";
       message.style.color = "red";
       // console.log("닉네임이 비어있음");
-
+      isNicknameChecked = false;
       return;
 
     // 중복 확인 API 호출
@@ -83,9 +78,17 @@ function checkDuplicateNickname() {
 
 // 폼 제출 시 중복 확인 여부를 검증
 function validateForm() {
-  if (!isNicknameChecked) {
+  const nicknameInput = document.getElementById("nickname");
+  const nickname = nicknameInput.value.trim();
+  const currentNickname = nicknameInput
+    .getAttribute("data-current-nickname")
+    .trim();
+
+  // 닉네임이 현재와 동일하면 중복 확인을 건너뜀
+  if (nickname !== currentNickname && !isNicknameChecked && nickname === "") {
     alert("닉네임 중복 확인을 해주세요.");
     return false; // 폼 제출 막기
   }
+
   return true; // 검증 완료 시 폼 제출 허용
 }

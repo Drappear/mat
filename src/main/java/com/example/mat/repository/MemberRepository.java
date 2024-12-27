@@ -33,8 +33,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member m SET m.email = :email, m.addr = :addr, m.detailAddr = :detailAddr, m.tel = :tel WHERE m.userid = :userid")
     void updatePersonalInfo(String email, String addr, String detailAddr, String tel, String userid);
 
-    @Modifying
-    @Query("UPDATE MemberImage mi SET mi.uuid = :uuid, mi.imgName = :imgName, mi.path = :path WHERE mi.member.id = :memberId")
-    int updateProfileImage(@Param("memberId") Long memberId, @Param("uuid") String uuid,
-            @Param("imgName") String imgName, @Param("path") String path);
+    // @Modifying
+    // @Query("UPDATE MemberImage mi SET mi.uuid = :uuid, mi.imgName = :imgName,
+    // mi.path = :path WHERE mi.member.id = :memberId")
+    // int updateProfileImage(@Param("memberId") Long memberId, @Param("uuid")
+    // String uuid,
+    // @Param("imgName") String imgName, @Param("path") String path);
 }

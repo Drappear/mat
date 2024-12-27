@@ -47,7 +47,7 @@ public class MemberDto {
 
     private String bio;
 
-    private String profileImageUrl;
+    private MemberImageDto memberImageDto;
     private MemberRole role;
 
     private LocalDateTime regDate;

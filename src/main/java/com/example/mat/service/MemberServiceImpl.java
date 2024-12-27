@@ -1,13 +1,12 @@
 package com.example.mat.service;
 
-import java.io.File;
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,10 +20,9 @@ import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
-import com.example.mat.dto.won.BoardDto;
+
 import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.shin.MemberImage;
-import com.example.mat.entity.won.Board;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.shin.MemberImageRepository;
 
@@ -37,8 +35,11 @@ import lombok.extern.log4j.Log4j2;
 public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final MemberImageRepository memberImageRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Value("${com.example.mat.profile.path}")
+    private String uploadPath;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -63,6 +64,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .tel(member.getTel())
+                .bio(member.getBio())
                 .addr(member.getAddr())
                 .detailAddr(member.getDetailAddr())
                 .role(member.getRole())
@@ -170,14 +172,26 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     // }
 
     @Transactional
-    public void deleteProfileImage(Long memberId) {
-        memberImageRepository.deleteByMemberMid(memberId);
+    @Override
+    public void updateProfile(MemberDto memberDto) {
+        memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
     }
 
     @Transactional
     @Override
-    public void updateProfile(MemberDto memberDto) {
-        memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
+    public void saveMemberWithImage(MemberImageDto memberImageDto) {
+
+        // 이미지 저장
+        if (memberImageDto.getImageURL() != null && memberImageDto.getImgName() != "") {
+            MemberImage memberImage = MemberImage.builder()
+                    .uuid(memberImageDto.getUuid())
+                    .imgName(memberImageDto.getImgName())
+                    .member(Member.builder().mid(memberImageDto.getMid()).build())
+                    .build();
+
+            memberImageRepository.save(memberImage);
+        }
+
     }
 
 }
