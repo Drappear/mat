@@ -45,8 +45,9 @@ public class MemberDto {
 
     private String detailAddr;
 
-    @Builder.Default
-    private List<MemberImageDto> memberImageDtos = new ArrayList<>();
+    private String bio;
+
+    private String profileImageUrl;
     private MemberRole role;
 
     private LocalDateTime regDate;

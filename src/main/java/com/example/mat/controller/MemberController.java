@@ -34,6 +34,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.UploadResultDto;
@@ -43,6 +44,7 @@ import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
+import com.example.mat.entity.shin.Member;
 import com.example.mat.service.MemberService;
 import com.example.mat.service.UploadService;
 
@@ -57,7 +59,6 @@ import jakarta.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-    private final UploadService uploadService;
 
     @Value("${com.example.mat.profile.path}")
     private String uploadPath;
@@ -92,6 +93,7 @@ public class MemberController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         UploadResultDto uploadResultDto = new UploadResultDto(uuid, originName, "");
@@ -143,35 +145,36 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/edit/nickname")
-    public String postUpdateName(MemberDto memberDto, BindingResult result) {
-        log.info("닉네임 수정 {}", memberDto);
+    @PostMapping("/edit/profile")
+    public String postUpdateProfile(@ModelAttribute MemberDto memberDto, BindingResult result,
+            RedirectAttributes redirectAttributes) {
+        log.info("프로필 수정 요청: {}", memberDto);
+        log.info("bio값: {}", memberDto.getBio());
 
-        Authentication authentication = getAuthentication();
-        // MemberDto 에 들어있는 값 접근 시
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-        memberDto.setUserid((authMemberDto.getMemberDto().getUserid()));
-        String currentNickname = authMemberDto.getMemberDto().getNickname();
 
-        if (currentNickname.equals(memberDto.getNickname())) {
-            log.info("입력된 닉네임이 현재 닉네임과 동일합니다.");
-            return "redirect:/member/profile";
-        }
-        if (result.hasErrors()) {
-            return "/member/edit";
-        }
-        if (memberService.checkDuplicateNickname(memberDto.getNickname())) {
+        // 현재 사용자 ID 설정
+        memberDto.setUserid(authMemberDto.getMemberDto().getUserid());
+
+        // 닉네임 중복 확인
+        if (!authMemberDto.getMemberDto().getNickname().equals(memberDto.getNickname()) &&
+                memberService.checkDuplicateNickname(memberDto.getNickname())) {
             result.rejectValue("nickname", "error.nickname", "이미 사용 중인 닉네임입니다.");
-            return "/member/edit";
+            return "/member/edit"; // 수정 페이지로 이동
         }
-        memberService.nickUpdate(memberDto);
 
-        // SecurityContext 에 보관된 값 업데이트
+        // 프로필 업데이트
+        memberService.updateProfile(memberDto);
+
+        // SecurityContextHolder 값 업데이트
         authMemberDto.getMemberDto().setNickname(memberDto.getNickname());
+        authMemberDto.getMemberDto().setBio(memberDto.getBio());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // 성공적으로 수정한 후 리다이렉트
+        redirectAttributes.addFlashAttribute("message", "프로필이 성공적으로 수정되었습니다.");
         return "redirect:/member/profile";
-
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -321,44 +324,47 @@ public class MemberController {
         return ResponseEntity.ok(isDuplicate);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/uploadProfilePicture")
-    public String uploadProfilePicture(@RequestParam("profileImage") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
-        log.info("프로필 사진 업로드 요청 {}", file);
+    // @PreAuthorize("isAuthenticated()")
+    // @PostMapping("/uploadProfilePicture")
+    // public String uploadProfilePicture(@RequestParam("profileImage")
+    // MultipartFile file,
+    // RedirectAttributes redirectAttributes) {
+    // log.info("프로필 사진 업로드 요청 {}", file);
 
-        // 인증된 사용자 정보 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+    // // 인증된 사용자 정보 가져오기
+    // Authentication authentication =
+    // SecurityContextHolder.getContext().getAuthentication();
+    // AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
 
-        try {
+    // try {
 
-            UploadResultDto uploadResult = uploadService.saveFile(file);
+    // UploadResultDto uploadResult = uploadService.saveFile(file);
 
-            // MemberImage 엔티티 생성 및 저장
-            MemberImageDto memberImageDto = MemberImageDto.builder()
-                    .uuid(uploadResult.getUuid())
-                    .imgName(uploadResult.getFileName())
-                    .path(uploadResult.getFolderPath())
-                    .build();
+    // // MemberImage 엔티티 생성 및 저장
+    // MemberImageDto memberImageDto = MemberImageDto.builder()
+    // .uuid(uploadResult.getUuid())
+    // .imgName(uploadResult.getFileName())
+    // .path(uploadResult.getFolderPath())
+    // .build();
 
-            memberService.saveProfileImage(authMemberDto.getMemberDto().getMid(), memberImageDto);
+    // memberService.saveProfileImage(authMemberDto.getMemberDto().getMid(),
+    // memberImageDto);
 
-            // SecurityContext의 프로필 사진 정보 업데이트
-            authMemberDto.getMemberDto().getMemberImageDtos().clear();
-            authMemberDto.getMemberDto().getMemberImageDtos().add(memberImageDto);
+    // // SecurityContext의 프로필 사진 정보 업데이트
+    // authMemberDto.getMemberDto().getMemberImageDto().clear();
+    // authMemberDto.getMemberDto().getMemberImageDto().add(memberImageDto);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+    // SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            redirectAttributes.addFlashAttribute("message", "프로필 사진이 성공적으로 업로드되었습니다!");
+    // redirectAttributes.addFlashAttribute("message", "프로필 사진이 성공적으로 업로드되었습니다!");
 
-        } catch (Exception e) {
-            log.error("프로필 사진 업로드 중 오류 발생", e);
-            redirectAttributes.addFlashAttribute("error", "프로필 사진 업로드에 실패했습니다.");
-        }
+    // } catch (Exception e) {
+    // log.error("프로필 사진 업로드 중 오류 발생", e);
+    // redirectAttributes.addFlashAttribute("error", "프로필 사진 업로드에 실패했습니다.");
+    // }
 
-        return "redirect:/member/profile";
-    }
+    // return "redirect:/member/profile";
+    // }
 
     // 개발자용 - Authentication 확인용
     @PreAuthorize("isAuthenticated()")

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -96,11 +98,12 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
-    @Transactional
-    @Override
-    public void nickUpdate(MemberDto memberDto) {
-        memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
-    }
+    // @Transactional
+    // @Override
+    // public void nickUpdate(MemberDto memberDto) {
+    // memberRepository.updateNickname(memberDto.getNickname(),
+    // memberDto.getUserid());
+    // }
 
     @Transactional
     @Override
@@ -151,23 +154,30 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         memberRepository.deleteById(member.getMid());
     }
 
-    @Transactional
-    @Override
-    public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
+    // @Transactional
+    // @Override
+    // public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
+    // Member member = memberRepository.findById(memberId)
+    // .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
 
-        MemberImage memberImage = new MemberImage();
-        memberImage.setUuid(memberImageDto.getUuid());
-        memberImage.setImgName(memberImageDto.getImgName());
-        memberImage.setPath(memberImageDto.getPath());
-        memberImage.setMember(member);
+    // MemberImage memberImage = new MemberImage();
+    // memberImage.setUuid(memberImageDto.getUuid());
+    // memberImage.setImgName(memberImageDto.getImgName());
+    // memberImage.setPath(memberImageDto.getPath());
+    // memberImage.setMember(member);
 
-        memberImageRepository.save(memberImage); // MemberImageRepository 필요
-    }
+    // memberImageRepository.save(memberImage); // MemberImageRepository 필요
+    // }
 
     @Transactional
     public void deleteProfileImage(Long memberId) {
         memberImageRepository.deleteByMemberMid(memberId);
     }
+
+    @Transactional
+    @Override
+    public void updateProfile(MemberDto memberDto) {
+        memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
+    }
+
 }

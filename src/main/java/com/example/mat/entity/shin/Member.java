@@ -55,7 +55,8 @@ public class Member extends BaseEntity {
     private String addr;
 
     private String detailAddr;
-
+    private String bio;
+    private String profileImageUrl; // 프로필 이미지 경로
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
