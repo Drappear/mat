@@ -1,16 +1,23 @@
 package com.example.mat.repository.diner;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.mat.entity.diner.Diner;
-import com.example.mat.entity.diner.DinerImage;
-import com.example.mat.repository.BoardImageRepository;
 
-public interface DinerImageRepository extends JpaRepository<DinerImage, Long>, DinerImageReviewRepository {
+public interface DinerImageRepository {
+  // 페이지 나누기, 검색
+  Page<Object[]> getTotalDinerList(String type, String keyword, Pageable pageable);
+
+  // 특정 식당 정보 조회
+  List<Object[]> getDinerRow(Long did);
+
   // diner.did 를 이용해 dinerImage제거
   @Modifying
-  @Query("DELETE FROM DinerImage di WHERE di.diner = :diner")
+  @Query("DELETE FROM Image di WHERE di.diner = :diner")
   void deleteByDiner(Diner diner);
 }

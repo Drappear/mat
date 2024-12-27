@@ -198,6 +198,7 @@ reviewForm.addEventListener("submit", (e) => {
         reviewForm.querySelector(".taste-score > .star:first-child").click();
         reviewForm.querySelector(".price-score > .star:first-child").click();
         reviewForm.querySelector(".service-score > .star:first-child").click();
+        $("#review-img-preview").html("");
 
         // 리뷰 새로고침
         // reviewLoaded();

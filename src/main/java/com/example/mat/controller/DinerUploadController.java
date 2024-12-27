@@ -41,13 +41,8 @@ public class DinerUploadController {
     @Value("${com.example.mat.upload.path}")
     private String uploadPath;
 
-    // @GetMapping("/upload")
-    // public void getUpload() {
-    // log.info("get 파일 업로드 페이지 요청");
-    // }
-
     @PostMapping("/upload")
-    public ResponseEntity<List<UploadResultDto>> postFileUpload(MultipartFile[] uploadFiles) {
+    public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles) {
 
         List<UploadResultDto> UploadResultDtos = new ArrayList<>();
 
@@ -76,15 +71,6 @@ public class DinerUploadController {
             try {
                 // 폴더 저장
                 multipartFile.transferTo(savePath);
-
-                // 썸네일 저장
-                // String thumbSaveName = uploadPath + File.separator + saveFolderPath +
-                // File.separator + "s_" + uuid + "_"
-                // + originName;
-
-                // File thumbFile = new File(thumbSaveName);
-
-                // Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 100, 100);
 
             } catch (Exception e) {
                 e.printStackTrace();

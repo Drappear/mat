@@ -1,5 +1,6 @@
 package com.example.mat.entity;
 
+import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerReview;
 import com.example.mat.entity.market.Product;
 
@@ -22,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "product", "dinerReview" })
+@ToString(exclude = { "product", "diner", "dinerReview" })
 @Entity
 public class Image extends BaseEntity {
     // inum(seq), uuid(문자), imgName(문자), path(문자)
@@ -42,6 +43,9 @@ public class Image extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Diner diner;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private DinerReview dinerReview;
