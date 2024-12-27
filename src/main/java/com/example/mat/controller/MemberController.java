@@ -46,7 +46,6 @@ import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.shin.Member;
 import com.example.mat.service.MemberService;
-import com.example.mat.service.UploadService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -64,11 +63,13 @@ public class MemberController {
     private String uploadPath;
 
     @PostMapping("/image")
-    public ResponseEntity<UploadResultDto> postUpload(MultipartFile uploadFiles) {
+    public ResponseEntity<MemberImageDto> postUpload(MultipartFile uploadFiles) {
 
         log.info("OriginalFilename {}", uploadFiles.getOriginalFilename());
         log.info("Size {}", uploadFiles.getSize());
         log.info("ContentType {}", uploadFiles.getContentType()); // image/png
+
+        MemberImageDto memberImageDto = null;
 
         // 이미지 파일 여부 확인
         if (!uploadFiles.getContentType().startsWith("image")) {
@@ -91,15 +92,31 @@ public class MemberController {
             // 폴더 저장
             uploadFiles.transferTo(savePath);
 
+            memberImageDto = new MemberImageDto();
+            memberImageDto.setUuid(uuid);
+            memberImageDto.setImgName(originName);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+            memberImageDto.setMid(authMemberDto.getMemberDto().getMid());
+            // db 저장
+            memberService.saveMemberWithImage(memberImageDto);
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        UploadResultDto uploadResultDto = new UploadResultDto(uuid, originName, "");
-
-        return new ResponseEntity<>(uploadResultDto, HttpStatus.OK);
+        return new ResponseEntity<>(memberImageDto, HttpStatus.OK);
     }
+
+    // public ResponseEntity<String> registerMemberWithImage(
+    // @ModelAttribute MemberDto memberDto,
+    // MultipartFile imageFile) {
+
+    // memberService.saveMemberWithImage(memberDto, imageFile);
+    // return new ResponseEntity<>("회원 등록 및 이미지 저장 완료", HttpStatus.OK);
+    // }
 
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName, String size) {
@@ -156,7 +173,6 @@ public class MemberController {
 
         // 현재 사용자 ID 설정
         memberDto.setUserid(authMemberDto.getMemberDto().getUserid());
-
         // 닉네임 중복 확인
         if (!authMemberDto.getMemberDto().getNickname().equals(memberDto.getNickname()) &&
                 memberService.checkDuplicateNickname(memberDto.getNickname())) {
@@ -226,10 +242,12 @@ public class MemberController {
     @PostMapping("/edit/password")
     public String postUpdatePassword(PasswordDto passwordDto, HttpSession session, RedirectAttributes rttr) {
         log.info("비밀번호 수정");
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
         // 서비스 호출
         try {
             memberService.passwordUpdate(passwordDto);
+
         } catch (Exception e) {
             // 실패시 /edit
             e.printStackTrace();

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
@@ -35,9 +36,6 @@ public class MemberImage extends BaseEntity {
 
     private String imgName;
 
-    private String path;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
 }

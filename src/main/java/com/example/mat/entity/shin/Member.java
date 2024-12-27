@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "movieImage")
 @Entity
 @Table(name = "Mat_Member")
 public class Member extends BaseEntity {
@@ -56,7 +56,7 @@ public class Member extends BaseEntity {
 
     private String detailAddr;
     private String bio;
-    private String profileImageUrl; // 프로필 이미지 경로
+
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
