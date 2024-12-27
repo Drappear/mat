@@ -9,11 +9,7 @@
     <div class="container">
       <h1 class="title">마이 페이지</h1>
       <div class="profile-section">
-        <form
-          th:action="@{/member/uploadProfilePicture}"
-          method="post"
-          enctype="multipart/form-data"
-        >
+        <form id="profileForm" method="post" enctype="multipart/form-data">
           <div class="profile-photo">
             <!-- 업로드한 이미지를 보여줄 img 태그 -->
             <img
@@ -39,16 +35,12 @@
             >
               +
             </button>
-            <!-- 버튼을 클릭하면 파일 선택 창이 열리게 함 -->
-            <!-- <button type="submit" id="uploadBtn" class="photo-upload-btn">
-                +
-              </button> -->
           </div>
         </form>
 
         <div class="profile-info">
           <form
-            th:action="@{/member/edit/nickname}"
+            th:action="@{/member/edit/profile}"
             method="post"
             onsubmit="return validateForm();"
           >
@@ -76,7 +68,12 @@
 
             <div class="form-group">
               <label for="bio">소개</label>
-              <textarea id="bio" name="bio" rows="3">Value</textarea>
+              <textarea
+                id="bio"
+                name="bio"
+                rows="3"
+                th:text="${#authentication.principal.memberDto.bio}"
+              ></textarea>
             </div>
             <div class="form-actions">
               <button class="submit-btn">저장</button>

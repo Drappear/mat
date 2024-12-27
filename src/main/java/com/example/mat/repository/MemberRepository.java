@@ -25,8 +25,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 닉네임 수정
     @Modifying
-    @Query("UPDATE Member m SET m.nickname=:nickname WHERE m.userid=:userid")
-    void updateNickname(String nickname, String userid);
+    @Query("UPDATE Member m SET m.nickname=:nickname ,m.bio=:bio WHERE m.userid=:userid")
+    void updateProfile(String nickname, String bio, String userid);
 
     @Modifying
     @Transactional

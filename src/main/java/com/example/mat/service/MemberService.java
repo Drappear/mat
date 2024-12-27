@@ -15,7 +15,9 @@ import com.example.mat.entity.shin.MemberImage;
 
 public interface MemberService {
     // 닉네임 수정
-    void nickUpdate(MemberDto memberDto);
+    // void nickUpdate(MemberDto memberDto);
+
+    void updateProfile(MemberDto memberDto);
 
     // 개인정보 수정
     void personalUpdate(UpdateMemberDto updatememberDto);
@@ -35,8 +37,6 @@ public interface MemberService {
     // boolean checkDuplicateEmail(String email);
 
     boolean checkDuplicateNickname(String nickname);
-
-    void saveProfileImage(Long mid, MemberImageDto memberImageDto);
 
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
@@ -71,8 +71,8 @@ public interface MemberService {
 
     // default Map<String, Object> dtoToEntity(MemberDto mmberDto) {
 
-    // if (memberImageDtos != null && memberImageDtos.size() > 0) {
-    // List<MemberImage> memberImages = memberImageDtos.stream().map(dto -> {
+    // if (memberImageDto != null && memberImageDto.size() > 0) {
+    // MemberImage memberImage = memberImageDto.stream().map(dto -> {
     // MemberImage memberImage = MemberImage.builder()
     // .uuid(dto.getUuid())
     // .imgName(dto.getImgName())
@@ -82,8 +82,9 @@ public interface MemberService {
     // return movieImage;
     // }).collect(Collectors.toList());
 
-    // resultMap.put("memberImages", memberImages);
+    // resultMap.put("memberImages", memberImage);
     // }
     // return resultMap;
     // }
+
 }
