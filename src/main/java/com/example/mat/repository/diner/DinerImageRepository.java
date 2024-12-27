@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerImage;
+import com.example.mat.repository.BoardImageRepository;
 
 public interface DinerImageRepository extends JpaRepository<DinerImage, Long>, DinerImageReviewRepository {
-  // dienr.did 를 이용해 dinerImage제거
+  // diner.did 를 이용해 dinerImage제거
   @Modifying
   @Query("DELETE FROM DinerImage di WHERE di.diner = :diner")
   void deleteByDiner(Diner diner);
