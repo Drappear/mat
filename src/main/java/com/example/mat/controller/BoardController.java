@@ -31,10 +31,14 @@ public class BoardController {
     @GetMapping("/list")
     public String list(@RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String userid,
             Pageable pageable, Model model) {
         log.info("[REQUEST] board list page");
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
-        var boards = boardService.getList(keyword, category, pageable);
+
+        var boards = (userid != null && !userid.isEmpty())
+                ? boardService.getListByUserid(userid, pageable)
+                : boardService.getList(keyword, category, pageable);
 
         model.addAttribute("categories", categories);
         model.addAttribute("boards", boards);
@@ -57,10 +61,15 @@ public class BoardController {
         log.info("[REQUEST] board register process");
 
         try {
+            // 현재 로그인된 사용자 ID 설정
             setMemberIdFromAuth(boardDto);
-            boardService.register(boardDto, file);
-            log.info("[SUCCESS] 게시물 등록 성공");
-            return "redirect:/board/list";
+
+            // 게시물 등록 후 생성된 게시물 ID 반환
+            Long bno = boardService.register(boardDto, file);
+            log.info("[SUCCESS] 게시물 등록 성공, bno: {}", bno);
+
+            // 작성된 게시물의 상세 페이지로 이동
+            return "redirect:/board/detail/" + bno;
         } catch (Exception e) {
             log.error("[ERROR] 게시물 등록 중 오류 발생", e);
             return "redirect:/board/register?error=true&message=" + e.getMessage();
@@ -101,18 +110,28 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String modify(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+    public String modify(@ModelAttribute BoardDto boardDto,
+            @RequestParam("imageFile") MultipartFile file,
+            @RequestParam(value = "deleteImage", required = false) String deleteImage) {
         log.info("[REQUEST] board modify process");
-        log.info("[DATA] BoardDto: {}, file: {}", boardDto, (file != null ? file.getOriginalFilename() : "No file"));
+
+        boolean deleteFlag = "true".equals(deleteImage);
+
+        // 파일과 체크박스 상태 확인
+        if (!file.isEmpty()) {
+            log.info("File uploaded: " + file.getOriginalFilename());
+            deleteFlag = true; // 파일이 업로드된 경우, 기존 이미지 삭제
+        } else {
+            log.info("No file uploaded.");
+            deleteFlag = false; // 파일이 없으면 삭제하지 않음
+        }
 
         try {
-            setMemberIdFromAuth(boardDto);
-            boardService.modify(boardDto, file);
-            log.info("[SUCCESS] 게시물 수정 성공. 게시물 번호: {}", boardDto.getBno());
+            boardService.modify(boardDto, file, deleteFlag);
             return "redirect:/board/detail/" + boardDto.getBno();
         } catch (Exception e) {
-            log.error("[ERROR] 게시물 수정 중 예외 발생: {}", e.getMessage(), e);
-            return "redirect:/board/modify/" + boardDto.getBno() + "?error=true&message=" + e.getMessage();
+            log.error("Error during board modification", e);
+            return "redirect:/board/modify/" + boardDto.getBno() + "?error=true";
         }
     }
 
