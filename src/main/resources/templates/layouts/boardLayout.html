@@ -2,10 +2,7 @@
 <html lang="zxx">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Ogani Template" />
-    <meta name="keywords" content="Ogani, unica, creative, html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>MatDongSan</title>
 
     <!-- Google Font -->
@@ -37,75 +34,88 @@
   </head>
 
   <body>
-    <!-- Sidebar Section Begin -->
-    <aside class="bsidebar">
-      <ul class="list-group">
-        <li class="list-group-item">
-          <span class="highlight-category">Category</span>
-          <a th:href="@{/board/list}" class="text-decoration-none"
-            >All Categories</a
-          >
-        </li>
-        <li th:each="category : ${categories}" class="list-group-item">
-          <a
-            th:href="@{/board/list(category=${category.boardCNo})}"
-            th:text="${category.name}"
-            class="text-decoration-none"
-          ></a>
-        </li>
-      </ul>
-    </aside>
-    <!-- Sidebar Section End -->
+    <!-- 전체 레이아웃 컨테이너 -->
+    <div class="layout-wrapper">
+      <!-- 헤더 섹션 -->
+      <header class="header">
+        <div th:replace="~{/fragments/header::header}"></div>
+      </header>
 
-    <!-- Header Section Begin -->
-    <div th:replace="~{/fragments/header::header}"></div>
-    <!-- Header Section End -->
+      <!-- 콘텐츠 컨테이너 -->
+      <div class="content-container">
+        <!-- 카테고리 창 -->
+        <aside class="category-box">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="highlight-category">Category</span>
+              <a th:href="@{/board/list}" class="text-decoration-none"
+                >All Categories</a
+              >
+            </li>
+            <li th:each="category : ${categories}" class="list-group-item">
+              <a
+                th:href="@{/board/list(category=${category.boardCNo})}"
+                th:text="${category.name}"
+                class="text-decoration-none"
+              ></a>
+            </li>
+          </ul>
+        </aside>
 
-    <!-- Content SECTION Begin -->
-    <div layout:fragment="content" class="main-content"></div>
-    <!-- Content SECTION End -->
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+          <div layout:fragment="content"></div>
+        </main>
+      </div>
+    </div>
 
-    <!-- Footer Section Begin -->
-    <!-- <div th:replace="~{/fragments/footer::footer}"></div> -->
-    <!-- Footer Section End -->
-
-    <!-- Js Plugins -->
-    <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
-    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
-    <script th:src="@{/assets/js/main.js}"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentCategory = new URLSearchParams(window.location.search).get(
-          "category"
-        );
-        const sidebarLinks = document.querySelectorAll(
-          ".sidebar .list-group-item a"
-        );
-
-        sidebarLinks.forEach((link) => {
-          if (link.href.includes(`category=${currentCategory}`)) {
-            link.classList.add("active");
-          }
-        });
-      });
-    </script>
     <style>
-      .bsidebar {
-        width: 250px;
+      /* 전체 레이아웃 */
+      .layout-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 1000px; /* 고정된 높이 */
+        width: 1280px; /* 고정된 너비 */
+        margin: 0 auto; /* 중앙 정렬 */
+        overflow: hidden; /* 넘치는 요소 숨김 */
+      }
+
+      /* 헤더 */
+      .header {
+        flex: 0 0 80px; /* 고정된 높이 */
+        background-color: #fff;
+      }
+
+      /* 콘텐츠 컨테이너 */
+      .content-container {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: flex-start; /* 상단 정렬 */
+        margin-top: 20px; /* 헤더와의 간격 */
+      }
+
+      /* 카테고리 창 */
+      .category-box {
+        flex: 0 0 200px; /* 고정된 너비 */
+        height: 600px; /* 고정된 높이 */
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 5px;
         padding: 15px;
-        position: fixed;
-        top: 100px; /* 위치를 낮추기 위해 추가 */
-        height: calc(100% - 100px); /* 상단 여백 반영 */
-        overflow: hidden; /* 내용 잘림 방지 */
-        background-size: cover; /* 백그라운드 크기 조정 */
-        background-position: center; /* 백그라운드 위치 중앙 정렬 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
+      /* 메인 콘텐츠 */
       .main-content {
-        margin-left: 270px;
+        flex: 1 0 auto;
+        width: 800px; /* 고정된 너비 */
+        height: 600px; /* 고정된 높이 */
         padding: 20px;
+        background-color: #fff;
+        margin-left: 20px; /* 카테고리와의 간격 */
       }
 
+      /* 리스트 항목 스타일 */
       .list-group-item a.active {
         font-weight: bold;
         color: #7fad39;
@@ -121,16 +131,21 @@
       }
 
       .highlight-category {
-        color: #fff; /* 텍스트를 흰색으로 */
+        color: #fff;
         font-weight: bold;
-        display: block; /* 텍스트가 새 줄에 나타나도록 설정 */
-        margin-bottom: 5px; /* 하단 여백 추가로 가시성 개선 */
-        font-size: 18px; /* 조금 더 크게 설정 */
-        background-color: #7fad39; /* 연두색 배경 */
-        padding: 5px 10px; /* 내부 여백 추가 */
-        border-radius: 5px; /* 둥근 테두리 */
-        text-align: center; /* 텍스트 중앙 정렬 */
+        display: block;
+        margin-bottom: 5px;
+        font-size: 18px;
+        background-color: #7fad39;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
       }
     </style>
+
+    <!-- Js Plugins -->
+    <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
   </body>
 </html>
