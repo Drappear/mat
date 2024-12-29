@@ -31,20 +31,21 @@
               <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal
-                      title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">레시피 등록 예시</h1>
                     <button type="button" class="btn-close"
                       data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <img src="https://placehold.co/300x900/png"
+                    <img src="/assets/img/recipeModal/MergedImages.png"
                       class="card-img-top" alt="..." />
+                    <!-- <img src="https://placehold.co/300x900/png"
+                      class="card-img-top" alt="..." /> -->
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
                       data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save
-                      changes</button>
+                    <!-- <button type="button" class="btn btn-primary">Save
+                      changes</button> -->
                   </div>
                 </div>
               </div>
@@ -211,7 +212,8 @@
                 </p>
                 <div class="rounded-md p-4 stepContainer" id="stepContainer">
                   <div class="step-wrapper flex items-center gap-4 mb-6">
-                    <div class="stepNumText text-lime-500 font-semibold text-lg">Step1</div>
+                    <div
+                      class="stepNumText text-lime-500 font-semibold text-lg">Step1</div>
                     <textarea id="recipeStepDtos[0].content"
                       name="recipeStepDtos[0].content"
                       class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
@@ -276,11 +278,13 @@
                     class="relative">
                     <div
                       class="recipeFinalImg1 w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                      <input type="file" name="recipeImageDtos[0].image" accept="image/*" style="display: none;" />
-        <input type="hidden" name="recipeImageDtos[0].uuid" />
-        <input type="hidden" name="recipeImageDtos[0].imgName" />
-        <input type="hidden" name="recipeImageDtos[0].path" />
-        <span class="material-symbols-outlined text-neutral-400">add</span>
+                      <input type="file" name="recipeImageDtos[0].image"
+                        accept="image/*" style="display: none;" />
+                      <input type="hidden" name="recipeImageDtos[0].uuid" />
+                      <input type="hidden" name="recipeImageDtos[0].imgName" />
+                      <input type="hidden" name="recipeImageDtos[0].path" />
+                      <span
+                        class="material-symbols-outlined text-neutral-400">add</span>
                     </div>
                     <!-- <button
                       class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
@@ -440,8 +444,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   </script>
 
-  <!-- TODO: 초기 Step 이미지 업로드 이벤트 바인딩 -->
-  <script>
+    <!-- TODO: 초기 Step 이미지 업로드 이벤트 바인딩 -->
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
       try {
           // 첫 번째 Step의 이미지 업로드 영역에 이벤트 바인딩
@@ -562,8 +566,8 @@ function reorderSteps() {
 
   </script>
 
-  <!-- TODO: Step 이미지 업로드 처리 -->
-  <script>
+    <!-- TODO: Step 이미지 업로드 처리 -->
+    <script>
     async function handleStepImageUpload(stepImg, index) {
       try {
           const file = await selectFile('image/*');
@@ -604,8 +608,8 @@ function reorderSteps() {
   }  
   </script>
 
-  <!-- TODO: 완성 사진 업로드 처리 -->
-  <script>
+    <!-- TODO: 완성 사진 업로드 처리 -->
+    <script>
     async function handleFinalImageUpload(imageDiv, index) {
       try {
           const file = await selectFile('image/*');
@@ -646,8 +650,8 @@ function reorderSteps() {
   }  
   </script>
 
-  <!-- //TODO: 이미지 업로드 공통 함수 추가 -->
-  <script>
+    <!-- //TODO: 이미지 업로드 공통 함수 추가 -->
+    <script>
     async function uploadImage(file) {
       const formData = new FormData();
       formData.append('uploadFiles', file);  // 'file' 대신 'uploadFiles'로 변경
