@@ -1,7 +1,7 @@
 /* 전체 페이지 배경 및 기본 색상 */
 body {
   margin-top: 20px; /* 상단 여백 추가 */
-  background: #fff; /* 페이지 배경색 설정 (연한 회색) */
+  background: #eee; /* 페이지 배경색 설정 (연한 회색) */
   color: #708090; /* 기본 텍스트 색상 (슬레이트 그레이) */
 }
 
@@ -92,16 +92,4 @@ a.text-primary:hover {
 #categorySelect option {
   padding: 5px; /* 옵션 내부 여백 */
   font-size: 12px; /* 옵션 텍스트 크기 */
-}
-
-/* 게시물 카드 배경 스타일 */
-.card {
-  background-color: #f9f9f9; /* 카드의 기본 배경색 */
-  border-radius: 8px; /* 카드 모서리를 둥글게 설정 */
-  transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
-}
-
-/* 카드 Hover 시 배경색 변경 */
-.card:hover {
-  background-color: #e6f7e9; /* 카드 Hover 시 배경색 */
 }
