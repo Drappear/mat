@@ -73,7 +73,7 @@ img {
 }
 .align-center {
   display: flex;
-  justify-content: center;
+  justify-content: left;
 }
 .custom-col {
   padding: 20px;
