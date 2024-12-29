@@ -1,5 +1,7 @@
 package com.example.mat.entity.won;
 
+import java.util.List;
+
 import com.example.mat.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,4 +32,7 @@ public class BoardComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private BoardComment parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardComment> replies; // 대댓글 리스트
 }
