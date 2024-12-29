@@ -142,6 +142,28 @@ img {
 .blog-comment ul.comments ul {
   margin-left: 85px;
 }
+.blog-comment ul.comments li .meta i {
+  display: flex;
+  gap: 10px;
+}
+.blog-comment ul.comments li .meta i a.modify-link {
+  color: #1d7117; /* Modify: 녹색 유지 */
+}
+.blog-comment ul.comments li .meta i a.modify-link:hover {
+  text-decoration: underline;
+}
+.blog-comment ul.comments li .meta i a.delete-link {
+  color: #c3303f; /* Delete: 빨강 */
+}
+.blog-comment ul.comments li .meta i a.delete-link:hover {
+  text-decoration: underline;
+}
+.blog-comment ul.comments li .meta i a.reply-link {
+  color: #ff8c00; /* Reply: 주황 */
+}
+.blog-comment ul.comments li .meta i a.reply-link:hover {
+  text-decoration: underline;
+}
 
 /* Comment Form */
 .blog-comment-form {
@@ -219,10 +241,10 @@ img {
 }
 .blog-comment ul.comments li .meta i a.reply-link {
   display: block;
-  color: #7fad39;
+  color: orange;
   border-color: #fff;
 }
 .blog-comment ul.comments li .meta i a.reply-link:hover {
-  color: #7fad39;
+  color: orange;
   border-color: #fff;
 }
