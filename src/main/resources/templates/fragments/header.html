@@ -31,10 +31,7 @@
                   <li><a href="#">English</a></li>
                 </ul>
               </div>
-              <div class="header__top__right__auth">
-                <a th:href="@{/member/login}"
-                  ><i class="fa fa-user"></i> Login</a
-                >
+              
               </div>
             </div>
           </div>
@@ -81,7 +78,28 @@
                 >
               </li>
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
+            <div class="header__top__right__auth">
+              <!-- 로그인하지 않은 사용자를 위한 Login 버튼 -->
+              <a th:href="@{/member/login}" sec:authorize="!isAuthenticated()">
+                <i class="fa fa-user"></i> Login
+              </a>
+
+              <a sec:authorize="isAuthenticated()">
+                <div>
+                  어서오세요,
+                  <a
+                    th:href="@{/member/profile}"
+                    th:text="${#authentication.principal.memberDto.nickname}"
+                  >
+                    님
+                  </a>
+                </div>
+                <!-- 로그인한 사용자를 위한 Log out 버튼 -->
+                <a th:href="@{/member/logout}"
+                  ><i class="fa fa-sign-out"></i> Log out</a
+                >
+              </a>
+            </div>
           </div>
         </div>
       </div>
