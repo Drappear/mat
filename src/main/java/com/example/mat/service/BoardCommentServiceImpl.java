@@ -5,13 +5,10 @@ import com.example.mat.entity.won.Board;
 import com.example.mat.entity.won.BoardComment;
 import com.example.mat.repository.BoardCommentRepository;
 import com.example.mat.repository.BoardRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,8 +48,8 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
                 // 저장 및 ID 반환
                 BoardComment savedComment = boardCommentRepository.save(comment);
-                log.info("[Service] 댓글 추가 완료. 저장된 댓글 ID: {}", savedComment.getBcid());
-                return savedComment.getBcid();
+                log.info("[Service] 댓글 추가 완료. 저장된 댓글 ID: {}", savedComment.getId());
+                return savedComment.getId();
         }
 
         @Override
@@ -81,29 +78,20 @@ public class BoardCommentServiceImpl implements BoardCommentService {
                 Board board = boardRepository.findById(boardId)
                                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. ID: " + boardId));
 
-                List<BoardComment> comments = boardCommentRepository
-                                .findByBoardAndParentIsNullOrderByRegDateDesc(board);
-                log.info("[Service] 부모 댓글 목록 조회 완료. 총 {}개", comments.size());
+                List<BoardComment> comments = boardCommentRepository.findByBoardOrderByRegDateDesc(board);
+                log.info("[Service] 댓글 목록 조회 완료. 총 {}개", comments.size());
 
-                // 부모 댓글만 필터링하고 대댓글 포함 DTO로 변환
                 return comments.stream()
-                                .map(this::convertToDtoWithReplies) // 대댓글 포함 DTO로 변환
+                                .map(comment -> BoardCommentDto.builder()
+                                                .id(comment.getId())
+                                                .content(comment.getContent())
+                                                .userid(comment.getUserid())
+                                                .boardId(comment.getBoard().getBno())
+                                                .parentId(comment.getParent() != null ? comment.getParent().getId()
+                                                                : null)
+                                                .regDate(comment.getRegDate())
+                                                .updateDate(comment.getUpdateDate())
+                                                .build())
                                 .collect(Collectors.toList());
-        }
-
-        private BoardCommentDto convertToDtoWithReplies(BoardComment comment) {
-                return BoardCommentDto.builder()
-                                .bcid(comment.getBcid()) // 변경된 부분
-                                .content(comment.getContent())
-                                .userid(comment.getUserid())
-                                .boardId(comment.getBoard().getBno())
-                                .parentId(comment.getParent() != null ? comment.getParent().getBcid() : null) // 변경된 부분
-                                .regDate(comment.getRegDate())
-                                .updateDate(comment.getUpdateDate())
-                                .replies(comment.getReplies() != null
-                                                ? comment.getReplies().stream().map(this::convertToDtoWithReplies)
-                                                                .collect(Collectors.toList())
-                                                : null)
-                                .build();
         }
 }

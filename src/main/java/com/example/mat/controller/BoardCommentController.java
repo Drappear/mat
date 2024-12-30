@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * 댓글 관련 요청을 처리하는 컨트롤러
- */
 @RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -23,12 +20,7 @@ public class BoardCommentController {
 
     private final BoardCommentService boardCommentService;
 
-    /**
-     * 댓글 추가 요청 처리
-     *
-     * @param boardCommentDto 댓글 데이터 DTO
-     * @return 생성된 댓글 ID
-     */
+    // 댓글 추가
     @PostMapping("/comment")
     public ResponseEntity<Long> addComment(@RequestBody @Valid BoardCommentDto boardCommentDto) {
         log.info("[REQUEST] 댓글 작성 요청: {}", boardCommentDto);
@@ -45,16 +37,11 @@ public class BoardCommentController {
         }
 
         // 댓글 추가 서비스 호출
-        Long bcid = boardCommentService.addComment(boardCommentDto);
-        return ResponseEntity.ok(bcid);
+        Long commentId = boardCommentService.addComment(boardCommentDto);
+        return ResponseEntity.ok(commentId);
     }
 
-    /**
-     * 특정 게시글의 댓글 목록 조회
-     *
-     * @param boardId 게시글 ID
-     * @return 댓글 목록 (부모 댓글과 대댓글 포함)
-     */
+    // 댓글 목록 조회
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<List<BoardCommentDto>> getComments(@PathVariable Long boardId) {
         log.info("[REQUEST] 댓글 목록 조회 요청, boardId: {}", boardId);
@@ -64,34 +51,25 @@ public class BoardCommentController {
         return ResponseEntity.ok(comments);
     }
 
-    /**
-     * 댓글 수정 요청 처리
-     *
-     * @param bcid    댓글 ID
-     * @param content 수정할 댓글 내용
-     */
-    @PutMapping("/comment/{bcid}")
+    // 댓글 수정
+    @PutMapping("/comment/{commentId}")
     public ResponseEntity<Void> updateComment(
-            @PathVariable Long bcid,
+            @PathVariable Long commentId,
             @RequestBody String content) {
-        log.info("[REQUEST] 댓글 수정 요청, bcid: {}, content: {}", bcid, content);
+        log.info("[REQUEST] 댓글 수정 요청, commentId: {}, content: {}", commentId, content);
 
         // 댓글 수정 서비스 호출
-        boardCommentService.updateComment(bcid, content);
+        boardCommentService.updateComment(commentId, content);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * 댓글 삭제 요청 처리
-     *
-     * @param bcid 댓글 ID
-     */
-    @DeleteMapping("/comment/{bcid}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long bcid) {
-        log.info("[REQUEST] 댓글 삭제 요청, bcid: {}", bcid);
+    // 댓글 삭제
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+        log.info("[REQUEST] 댓글 삭제 요청, commentId: {}", commentId);
 
         // 댓글 삭제 서비스 호출
-        boardCommentService.deleteComment(bcid);
+        boardCommentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }
 }

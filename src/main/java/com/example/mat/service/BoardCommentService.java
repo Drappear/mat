@@ -6,9 +6,9 @@ import java.util.List;
 public interface BoardCommentService {
     Long addComment(BoardCommentDto boardCommentDto);
 
-    void updateComment(Long bcid, String content);
+    void updateComment(Long id, String content);
 
-    void deleteComment(Long bcid);
+    void deleteComment(Long id);
 
     List<BoardCommentDto> getCommentsByBoard(Long boardId);
 }
