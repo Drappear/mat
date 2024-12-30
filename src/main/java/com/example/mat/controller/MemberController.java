@@ -68,8 +68,8 @@ public class MemberController {
         log.info("OriginalFilename {}", uploadFiles.getOriginalFilename());
         log.info("Size {}", uploadFiles.getSize());
         log.info("ContentType {}", uploadFiles.getContentType()); // image/png
-
         MemberImageDto memberImageDto = null;
+        log.info("### [START] 이미지 업로드 처리 시작 ###");
 
         // 이미지 파일 여부 확인
         if (!uploadFiles.getContentType().startsWith("image")) {
@@ -84,7 +84,7 @@ public class MemberController {
         // 파일저장 - uuid(중복파일 해결)
         String uuid = UUID.randomUUID().toString();
         // upload/2024/11/26/9fae42cf-0733-453f-b3b9-3bfca31a6fe2_1.jpg
-        String saveName = uploadPath + File.separator + File.separator + uuid + "_" + originName;
+        String saveName = uploadPath + File.separator + uuid + "_" + originName;
 
         Path savePath = Paths.get(saveName);
 
@@ -106,7 +106,7 @@ public class MemberController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        log.info("프로필사진 {}", memberImageDto.getImageURL());
         return new ResponseEntity<>(memberImageDto, HttpStatus.OK);
     }
 
