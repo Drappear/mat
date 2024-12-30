@@ -44,12 +44,14 @@
                     </div>
                     <div class="post-buttons">
                       <a
+                        th:if="${board.userid == #authentication.name}"
                         th:href="@{/board/modify/{bno}(bno=${board.bno})}"
                         class="btn btn-secondary modify-btn"
                       >
                         Modify
                       </a>
                       <form
+                        th:if="${board.userid == #authentication.name}"
                         th:action="@{/board/delete/{bno}(bno=${board.bno})}"
                         method="post"
                         style="display: inline"
@@ -99,7 +101,6 @@
               </div>
 
               <!-- 댓글 목록 -->
-              <!-- 댓글 목록 -->
               <article class="blog-reply-content">
                 <div class="container bootstrap snippets bootdey">
                   <div class="row">
@@ -117,13 +118,17 @@
                               data-comment-id="${comment.id}"
                             >
                               <p class="meta">
-                                <span th:text="${comment.userid}">작성자</span>
+                                <span
+                                  th:text="${#authentication.principal.memberDto.nickname}"
+                                  >작성자 닉네임</span
+                                >
                                 <span
                                   th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
                                   >작성 시간</span
                                 >
                                 <i class="pull-right">
                                   <a
+                                    th:if="${comment.userid == #authentication.name}"
                                     href="#"
                                     class="delete-link"
                                     th:data-comment-id="${comment.id}"
@@ -154,12 +159,10 @@
           .addEventListener("click", function () {
             const commentContent = document.getElementById("comment").value;
             const boardId = document.getElementById("boardId").value;
-            // const parentId = document.getElementById("parentId").value || null; // 대댓글용 parentId
 
             console.log("Submitting comment:", {
               commentContent,
               boardId,
-              parentId,
             });
 
             const csrfToken = document
@@ -178,7 +181,6 @@
               body: JSON.stringify({
                 content: commentContent,
                 boardId: boardId,
-                parentId: parentId,
               }),
             })
               .then((response) => {
