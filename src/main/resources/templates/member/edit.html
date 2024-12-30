@@ -12,12 +12,21 @@
         <form id="profileForm" method="post" enctype="multipart/form-data">
           <div class="profile-photo">
             <!-- 업로드한 이미지를 보여줄 img 태그 -->
-            <!-- <img
-              id="profilePhoto"
-                        th:src="|/profile/display?fileName=${member.memberImageDto.getImageURL()}|"
+
+            <img
+              alt=""
+              th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|"
               loading="lazy"
-              alt="Profile Photo"
-            /> -->
+              th:if="${#authentication.principal.memberDto.memberImageDto != null}"
+              id="profilePhoto"
+            />
+            <img
+              alt=""
+              th:src="@{/images/default-profile.png}"
+              loading="lazy"
+              th:if="${#authentication.principal.memberDto.memberImageDto == null}"
+              id="profilePhoto"
+            />
 
             <!-- 실제 파일 입력 요소는 숨김 처리 -->
 

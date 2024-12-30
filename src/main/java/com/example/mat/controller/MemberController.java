@@ -45,6 +45,8 @@ import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
 import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
+import com.example.mat.repository.shin.MemberImageRepository;
 import com.example.mat.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
@@ -86,6 +88,8 @@ public class MemberController {
         // upload/2024/11/26/9fae42cf-0733-453f-b3b9-3bfca31a6fe2_1.jpg
         String saveName = uploadPath + File.separator + uuid + "_" + originName;
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
         Path savePath = Paths.get(saveName);
 
         try {
@@ -95,12 +99,14 @@ public class MemberController {
             memberImageDto = new MemberImageDto();
             memberImageDto.setUuid(uuid);
             memberImageDto.setImgName(originName);
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
             memberImageDto.setMid(authMemberDto.getMemberDto().getMid());
+
+            log.info("memberImageDt {}", memberImageDto);
+
             // db 저장
             memberService.saveMemberWithImage(memberImageDto);
+
+            authMemberDto.getMemberDto().setMemberImageDto(memberImageDto);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,6 +126,9 @@ public class MemberController {
 
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName, String size) {
+
+        log.info("fileName: " + fileName);
+
         ResponseEntity<byte[]> result = null;
 
         try {
@@ -167,6 +176,7 @@ public class MemberController {
             RedirectAttributes redirectAttributes) {
         log.info("프로필 수정 요청: {}", memberDto);
         log.info("bio값: {}", memberDto.getBio());
+        log.info("memberImageDto값: {}", memberDto.getMemberImageDto());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
@@ -186,12 +196,37 @@ public class MemberController {
         // SecurityContextHolder 값 업데이트
         authMemberDto.getMemberDto().setNickname(memberDto.getNickname());
         authMemberDto.getMemberDto().setBio(memberDto.getBio());
+        // authMemberDto.getMemberDto().setMemberImageDto(memberImageDto);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 성공적으로 수정한 후 리다이렉트
         redirectAttributes.addFlashAttribute("message", "프로필이 성공적으로 수정되었습니다.");
         return "redirect:/member/profile";
     }
+
+    // @PostMapping("/edit/profile/image")
+    // public String postUpdateProfileImage(MultipartFile uploadFiles,MemberDto
+    // memberDto) {
+
+    // Authentication authentication =
+    // SecurityContextHolder.getContext().getAuthentication();
+    // AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+
+    // // 현재 사용자 ID 설정
+    // memberDto.setMid(authMemberDto.getMemberDto().getMid());
+
+    // // 프로필 업데이트
+    // memberService.updateProfileImage(memberDto);
+
+    // // SecurityContextHolder 값 업데이트
+    // authMemberDto.getMemberDto().setMemberImageDto(memberDto.getMemberImageDto());
+
+    // SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    // // 성공적으로 수정한 후 리다이렉트
+    // redirectAttributes.addFlashAttribute("message", "프로필이 성공적으로 수정되었습니다.");
+    // return "redirect:/member/profile";
+    // }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/personalInformation")
