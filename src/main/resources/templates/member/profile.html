@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{/layouts/profilelayout}">
+<html lang="en" layout:decorate="~{/layouts/layout}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/profile.css}" />
     <header>
-      <div th:replace="~{/fragments/profileheader::profileheader}"></div>
+      <div th:replace="~{/fragments/header::header}"></div>
     </header>
   </head>
   <body>
@@ -14,19 +14,17 @@
       <div class="container">
         <h1 class="title">마이 페이지</h1>
         <div class="profile-section">
-          <div class="profile-photo">
-            <img src="https://via.placeholder.com/120" alt="프로필 사진" />
+          <div id="profileForm" class="profile-photo">
             <!-- <img
-            class="object-cover w-full h-full rounded-full"
-            th:src="|/upload/display?fileName=${member.memberImageDtos[0].getThumbImageURL()}|"
-            th:if="${member.memberImageDtos.size() > 0 && member.memberImageDtos[0].path != null}"
-            alt=""
-            loading="lazy"
-          />
-          <div
-            class="absolute inset-0 rounded-full shadow-inner"
-            aria-hidden="true"
-          ></div> -->
+              th:src="|/member/display?fileName=${member.memberImageDto.getImageURL()}|"
+              th:if="${member.memberImageDto.size() > 0 && member.memberImageDto != null}"
+              alt=""
+              loading="lazy"
+            /> -->
+            <div
+              class="absolute inset-0 rounded-full shadow-inner"
+              aria-hidden="true"
+            ></div>
           </div>
           <div class="profile-info">
             <form th:action="@{/member/edit}">

@@ -111,7 +111,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     @Override
     public void personalUpdate(UpdateMemberDto updatememberDto) {
 
-        log.info("서비스단 {}", updatememberDto);
+        // log.info("서비스단 {}", updatememberDto);
         // 레포지토리 메서드를 호출하여 모든 정보를 한 번에 업데이트
         memberRepository.updatePersonalInfo(
                 updatememberDto.getEmail(),

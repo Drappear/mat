@@ -1,8 +1,10 @@
 package com.example.mat.controller;
 
 import com.example.mat.dto.won.BoardCategoryDto;
+import com.example.mat.dto.won.BoardCommentDto;
 import com.example.mat.dto.won.BoardDto;
 import com.example.mat.service.BoardCategoryService;
+import com.example.mat.service.BoardCommentService;
 import com.example.mat.service.BoardService;
 import com.example.mat.util.HtmlUtil;
 
@@ -27,6 +29,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final BoardCategoryService boardCategoryService;
+    private final BoardCommentService boardCommentService;
 
     @GetMapping("/list")
     public String list(@RequestParam(required = false) String keyword,
@@ -79,11 +82,12 @@ public class BoardController {
     @GetMapping("/detail/{bno}")
     public String detail(@PathVariable Long bno, Model model) {
         log.info("[REQUEST] board detail page, bno: {}", bno);
-
         try {
             BoardDto boardDto = boardService.getDetail(bno);
-            boardDto.setContent(HtmlUtil.convertTextToHtml(boardDto.getContent())); // 줄바꿈 -> <br>
+            List<BoardCommentDto> comments = boardCommentService.getCommentsByBoard(bno);
+            log.debug("[COMMENTS]: {}", comments); // 댓글 확인
             model.addAttribute("board", boardDto);
+            model.addAttribute("comments", comments); // 댓글 추가
             return "board/detail";
         } catch (Exception e) {
             log.error("[ERROR] 게시물 상세보기 중 오류 발생", e);
@@ -153,5 +157,10 @@ public class BoardController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserId = authentication.getName();
         boardDto.setMemberId(boardService.getMemberIdByUserId(currentUserId));
+    }
+
+    @ModelAttribute
+    public void addCategories(Model model) {
+        model.addAttribute("categories", boardCategoryService.getAllCategories());
     }
 }
