@@ -30,20 +30,21 @@ public class BoardCommentServiceImpl implements BoardCommentService {
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "게시글을 찾을 수 없습니다. ID: " + boardCommentDto.getBoardId()));
 
-                // 부모 댓글 확인 (대댓글인 경우)
-                BoardComment parentComment = null;
-                if (boardCommentDto.getParentId() != null) {
-                        parentComment = boardCommentRepository.findById(boardCommentDto.getParentId())
-                                        .orElseThrow(() -> new IllegalArgumentException(
-                                                        "부모 댓글을 찾을 수 없습니다. ID: " + boardCommentDto.getParentId()));
-                }
+                // // 부모 댓글 확인 (대댓글인 경우)
+                // BoardComment parentComment = null;
+                // if (boardCommentDto.getParentId() != null) {
+                // parentComment =
+                // boardCommentRepository.findById(boardCommentDto.getParentId())
+                // .orElseThrow(() -> new IllegalArgumentException(
+                // "부모 댓글을 찾을 수 없습니다. ID: " + boardCommentDto.getParentId()));
+                // }
 
                 // 댓글 엔티티 생성
                 BoardComment comment = BoardComment.builder()
                                 .content(boardCommentDto.getContent())
                                 .userid(boardCommentDto.getUserid())
                                 .board(board)
-                                .parent(parentComment) // 부모 댓글 설정
+                                // .parent(parentComment) // 부모 댓글 설정
                                 .build();
 
                 // 저장 및 ID 반환
@@ -87,8 +88,8 @@ public class BoardCommentServiceImpl implements BoardCommentService {
                                                 .content(comment.getContent())
                                                 .userid(comment.getUserid())
                                                 .boardId(comment.getBoard().getBno())
-                                                .parentId(comment.getParent() != null ? comment.getParent().getId()
-                                                                : null)
+                                                // .parentId(comment.getParent() != null ? comment.getParent().getId()
+                                                // : null)
                                                 .regDate(comment.getRegDate())
                                                 .updateDate(comment.getUpdateDate())
                                                 .build())

@@ -17,9 +17,9 @@ public class BoardCommentDto {
     private String content;
     private String userid;
     private Long boardId;
-    private Long parentId;
+    // private Long parentId;
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 
-    private List<BoardCommentDto> replies; // 대댓글 리스트
+    // private List<BoardCommentDto> replies; // 대댓글 리스트
 }
