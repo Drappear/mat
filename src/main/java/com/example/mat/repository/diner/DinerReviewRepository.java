@@ -2,25 +2,15 @@ package com.example.mat.repository.diner;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerReview;
 
 public interface DinerReviewRepository extends JpaRepository<DinerReview, Long> {
-    // // 페이지 나누기, 검색
-    // Page<Object[]> getTotalDinerList(String type, String keyword, Pageable
-    // pageable);
-
-    // // 특정 식당 정보 조회
-    // List<Object[]> getDinerRow(Long did);
-
-    // // diner.did 를 이용해 dinerImage제거
-    // @Modifying
-    // @Query("DELETE FROM Image di WHERE di.diner = :diner")
-    // void deleteByDiner(Diner diner);
+    // 리뷰 가져오기
+    @EntityGraph(attributePaths = "member", type = EntityGraphType.FETCH)
+    List<DinerReview> findByDiner(Diner diner);
 }

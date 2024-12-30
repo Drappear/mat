@@ -34,20 +34,6 @@ public class DinerRepositoryTest {
   private PasswordEncoder passwordEncoder;
 
   @Test
-  public void createDinerTest() {
-    Diner diner = Diner.builder()
-        .name("식당1")
-        .content("등록 테스트")
-        .address("서울 종로구")
-        .phone("012-3456-7890")
-        .regNum("1234-5678")
-        .viewCount(0L)
-        .build();
-
-    dinerRepository.save(diner);
-  }
-
-  @Test
   public void categoryInsertTest() {
     dinerCategoryRepository.save(DinerCategory.builder().name("한식").build());
     dinerCategoryRepository.save(DinerCategory.builder().name("양식").build());

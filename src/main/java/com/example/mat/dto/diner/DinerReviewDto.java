@@ -32,6 +32,7 @@ public class DinerReviewDto {
 
     // Member
     private Long mid;
+    private String nickname;
 
     // Image
     private Long inum;

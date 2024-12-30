@@ -1,5 +1,6 @@
 package com.example.mat.repository.diner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,9 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import com.example.mat.entity.Image;
 import com.example.mat.entity.QImage;
 import com.example.mat.entity.diner.Diner;
+import com.example.mat.entity.diner.DinerReview;
 import com.example.mat.entity.diner.QDiner;
+import com.example.mat.entity.diner.QDinerReview;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
@@ -21,7 +24,8 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
-public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implements DinerImageRepository {
+public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
+        implements DinerImageRepository, DinerImageReviewRepository {
     public DinerImageRepositoryImpl() {
         super(Image.class);
     }
@@ -117,5 +121,47 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport implemen
     public void deleteByDiner(Diner diner) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteByDiner'");
+    }
+
+    // 리뷰 목록
+    @Override
+    public Page<Object[]> getTotalReviewList(Pageable pageable) {
+        QImage image = QImage.image;
+        QDinerReview dinerReview = QDinerReview.dinerReview;
+
+        JPQLQuery<Image> query = from(image).leftJoin(dinerReview).on(dinerReview.eq(image.dinerReview));
+
+        JPQLQuery<Tuple> tuple = query.select(
+                dinerReview,
+                image)
+                .where(image.imgCate.eq(2))
+                .orderBy(image.inum.desc());
+
+        // rvid > 0 조건
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(dinerReview.rvid.gt(0L));
+
+        tuple.where(builder);
+
+        // sort
+        Sort sort = pageable.getSort();
+        sort.stream().forEach(order -> {
+            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
+            String prop = order.getProperty();
+
+            PathBuilder<DinerReview> orderByExpression = new PathBuilder<>(DinerReview.class, "dinerReview");
+
+            tuple.orderBy(new OrderSpecifier(direction, orderByExpression.get(prop)));
+        });
+
+        tuple.offset(pageable.getOffset());
+        tuple.limit(pageable.getPageSize());
+
+        List<Tuple> result = tuple.fetch();
+
+        long count = tuple.fetchCount();
+
+        return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
+                count);
     }
 }

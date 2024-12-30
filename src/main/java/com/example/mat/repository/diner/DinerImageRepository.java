@@ -13,6 +13,9 @@ public interface DinerImageRepository {
   // 페이지 나누기, 검색
   Page<Object[]> getTotalDinerList(String type, String keyword, Pageable pageable);
 
+  // 리뷰 목록
+  Page<Object[]> getTotalReviewList(Pageable pageable);
+
   // 특정 식당 정보 조회
   List<Object[]> getDinerRow(Long did);
 

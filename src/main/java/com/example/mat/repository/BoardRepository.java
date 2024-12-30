@@ -22,4 +22,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                         "AND (:category IS NULL OR b.boardCategory.boardCNo = :category) " +
                         "ORDER BY b.regDate DESC")
         Page<Board> findByKeywordAndCategory(String keyword, Long category, Pageable pageable);
+
+        @Query("SELECT b FROM Board b WHERE b.member.userid = :userid ORDER BY b.regDate DESC")
+        Page<Board> findByUserid(String userid, Pageable pageable);
+
 }
