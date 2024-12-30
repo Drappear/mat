@@ -41,10 +41,10 @@ public class DinerReviewServiceImpl implements DinerReviewService {
     }
 
     @Override
-    public PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto) {
+    public PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did) {
         Pageable pageable = pageRequestDto.getPageable(Sort.by("rvid").descending());
 
-        Page<Object[]> result = imageRepository.getTotalReviewList(pageable);
+        Page<Object[]> result = imageRepository.getTotalReviewList(pageable, did);
 
         Function<Object[], DinerReviewDto> function = (en -> entityToDto((DinerReview) en[0],
                 (List<Image>) Arrays.asList((Image) en[1])));

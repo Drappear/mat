@@ -1,4 +1,8 @@
-.diner-main-img-and-map {
+
+.main-wrapper{
+  width: 100%;
+}
+.diner-main-img-row {
   white-space: nowrap;
   display: flex;
   border: 1px solid;

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 
 public interface DinerImageRepository {
@@ -14,7 +15,7 @@ public interface DinerImageRepository {
   Page<Object[]> getTotalDinerList(String type, String keyword, Pageable pageable);
 
   // 리뷰 목록
-  Page<Object[]> getTotalReviewList(Pageable pageable);
+  Page<Object[]> getTotalReviewList(Pageable pageable, Long did);
 
   // 특정 식당 정보 조회
   List<Object[]> getDinerRow(Long did);
@@ -23,4 +24,6 @@ public interface DinerImageRepository {
   @Modifying
   @Query("DELETE FROM Image di WHERE di.diner = :diner")
   void deleteByDiner(Diner diner);
+
+  
 }

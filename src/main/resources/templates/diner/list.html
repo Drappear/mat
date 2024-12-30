@@ -10,15 +10,19 @@
       <div class="container">
         <div class="row">
           <div class="diners__slider owl-carousel">
-            <div class="col-lg-12">
-              <div class="diners__item set-bg" data-setbg="https://placehold.co/1080x360"></div>
-            </div>
-            <div class="col-lg-12">
-              <div class="diners__item set-bg" data-setbg="https://placehold.co/1080x360"></div>
-            </div>
-            <div class="col-lg-12">
-              <div class="diners__item set-bg" data-setbg="https://placehold.co/1080x360"></div>
-            </div>
+            <th:block th:each="diner : ${result.dtoList}">
+              <div class="col-lg-12">
+                <div class="diners__item set-bg" data-setbg="https://placehold.co/1080x640" style="cursor: pointer"
+                th:onclick="|location.href='@{/diner/read(did=${diner.did})}'|"><img
+                  th:src="|/dfup/display?fileName=${diner.dinerImageDtos[0].getImageURL()}|"
+                  th:if="${diner.dinerImageDtos.size() > 0 && diner.dinerImageDtos[0].path != null}"
+                  alt=""
+                  loading="lazy"
+                  width="1080px"
+                  height="640px"
+                  /></div>
+                </div>
+              </th:block>            
           </div>
         </div>
       </div>
@@ -31,8 +35,8 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="tag-element">
-              <a class="active" title="목록 항목 선택됨" href="#">전체</a>
-              <a th:each="category : ${categories}" th:text="${category.name}" href="#"></a>
+              <a class="active" title="목록 항목 선택됨" th:href="@{list(page=1,size=${result.size},type=null,keyword=null)}">전체</a>
+              <a th:each="category : ${categories}" th:text="${category.name}" th:href="@{list(page=1,size=${result.size},type=c,keyword=${category.name})}"></a>
             </div>
           </div>
         </div>
@@ -40,7 +44,7 @@
           <div class="col-lg-12">
             <div class="sort-element">
               <div class="float-left">
-                <ul class="sort-menu">
+                <!-- <ul class="sort-menu">
                   <li class="active">
                     <a href="#" title="목록 항목 선택됨">등록순</a>
                   </li>
@@ -50,45 +54,28 @@
                   <li>
                     <a href="#">가나다순</a>
                   </li>
-                </ul>
+                </ul> -->
               </div>
               <div class="float-right">
-                <input type="hidden" id="keyword_open_text" value="키워드검색 메뉴 열기" />
-                <input type="hidden" id="keyword_close_text" value="선택됨 키워드검색 메뉴 닫기" />
-                <input
-                  type="hidden"
-                  id="keyword_open_sel_text"
-                  value="선택됨 키워드검색 메뉴 열기"
-                />
-
-                <input type="hidden" id="list_sel_msg" value="목록 항목 선택됨 페이지 이동" />
-                <input type="hidden" id="page_msg" value="페이지 이동" />
-
-                <div class="select-btn-element">
-                  <a href="#" class="btn-keyword" title="키워드검색 메뉴 열기"
-                    ><i class="fa-solid fa-magnifying-glass"></i> 검색</a
-                  >
-                  <div class="search-layer" style="display: none">
-                    <div class="search-layer-inner">
-                      <div class="keyword-select-element">
-                        <label for="keyword_text" class="hd-element">키워드</label>
-                        <input
-                          type="text"
-                          id="keyword_text"
-                          name="srchWord"
-                          value=""
-                          placeholder="키워드"
-                        />
-                        <button type="button" onclick="javascript:btnSumit();">검색</button>
-                      </div>
-                    </div>
-                  </div>
+                <div class="search-layer-inner">
+                  <form class="keyword-search" method="get">
+                    <input type="hidden" name="page" value="1" />
+                    <input type="hidden" name="size" th:value="${requestDto.size}" />
+                    <input type="hidden" name="type" value="n" />
+                    <input
+                      type="text"
+                      id="keyword"
+                      name="keyword"
+                      th:value="${requestDto.keyword}"
+                    />
+                    <button class="btn btn-outline-dark"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mt-3">
           <th:block th:each="diner : ${result.dtoList}">
             <div class="col-lg-3 col-md-3 col-sm-6">
               <div

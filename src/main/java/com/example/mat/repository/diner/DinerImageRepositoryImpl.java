@@ -25,7 +25,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
 public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
-        implements DinerImageRepository, DinerImageReviewRepository {
+        implements DinerImageRepository{
     public DinerImageRepositoryImpl() {
         super(Image.class);
     }
@@ -89,6 +89,8 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
             BooleanBuilder conditionBuilder = new BooleanBuilder();
             if (type.contains("n")) {
                 conditionBuilder.or(diner.name.contains(keyword));
+            } else if (type.contains("c")) {
+                conditionBuilder.or(diner.dinerCategory.name.contains(keyword));
             }
 
             builder.and(conditionBuilder);
@@ -125,7 +127,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
 
     // 리뷰 목록
     @Override
-    public Page<Object[]> getTotalReviewList(Pageable pageable) {
+    public Page<Object[]> getTotalReviewList(Pageable pageable, Long did) {
         QImage image = QImage.image;
         QDinerReview dinerReview = QDinerReview.dinerReview;
 
@@ -134,7 +136,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Tuple> tuple = query.select(
                 dinerReview,
                 image)
-                .where(image.imgCate.eq(2))
+                .where(image.imgCate.eq(2).and(dinerReview.diner.did.eq(did)))
                 .orderBy(image.inum.desc());
 
         // rvid > 0 조건

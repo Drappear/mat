@@ -33,16 +33,6 @@ public class DinerRepositoryTest {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  @Test
-  public void categoryInsertTest() {
-    dinerCategoryRepository.save(DinerCategory.builder().name("한식").build());
-    dinerCategoryRepository.save(DinerCategory.builder().name("양식").build());
-    dinerCategoryRepository.save(DinerCategory.builder().name("중식").build());
-    dinerCategoryRepository.save(DinerCategory.builder().name("일식").build());
-    dinerCategoryRepository.save(DinerCategory.builder().name("카페&디저트").build());
-    dinerCategoryRepository.save(DinerCategory.builder().name("퓨전&기타").build());
-  }
-
   // test Member
   @Commit
   @Transactional
@@ -78,5 +68,19 @@ public class DinerRepositoryTest {
     memberRepository.save(admin);
 
   }
+
+  // 식당 카테고리
+  @Test
+  public void categoryInsertTest() {
+    dinerCategoryRepository.save(DinerCategory.builder().name("한식").build());
+    dinerCategoryRepository.save(DinerCategory.builder().name("양식").build());
+    dinerCategoryRepository.save(DinerCategory.builder().name("중식").build());
+    dinerCategoryRepository.save(DinerCategory.builder().name("일식").build());
+    dinerCategoryRepository.save(DinerCategory.builder().name("카페&디저트").build());
+    dinerCategoryRepository.save(DinerCategory.builder().name("퓨전&기타").build());
+  }
+
+  // 
+
 
 }

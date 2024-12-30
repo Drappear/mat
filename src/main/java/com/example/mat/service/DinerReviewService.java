@@ -20,7 +20,7 @@ public interface DinerReviewService {
     Long insertReview(DinerReviewDto dinerReviewDto);
 
     // 리뷰 목록 조회
-    PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto);
+    PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did);
 
     DinerReviewDto getDinerReview(Long rvid);
 
@@ -83,6 +83,7 @@ public interface DinerReviewService {
                         .path(dto.getPath())
                         .imgCate(dto.getImgCate())
                         .dinerReview(dinerReview)
+                        .diner(dinerReview.getDiner())
                         .build();
                 return image;
             }).collect(Collectors.toList());
