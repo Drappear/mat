@@ -18,11 +18,11 @@ public interface BoardCommentRepository extends JpaRepository<BoardComment, Long
      */
     List<BoardComment> findByBoardOrderByRegDateDesc(Board board);
 
-    /**
-     * 특정 부모 댓글의 대댓글 조회
-     * 
-     * @param parent 부모 댓글
-     * @return 대댓글 목록
-     */
-    List<BoardComment> findByParentOrderByRegDateAsc(BoardComment parent);
+    // /**
+    // * 특정 부모 댓글의 대댓글 조회
+    // *
+    // * @param parent 부모 댓글
+    // * @return 대댓글 목록
+    // */
+    // List<BoardComment> findByParentOrderByRegDateAsc(BoardComment parent);
 }

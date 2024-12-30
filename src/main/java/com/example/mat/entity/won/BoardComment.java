@@ -27,7 +27,7 @@ public class BoardComment extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private BoardComment parent;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "parent_id")
+    // private BoardComment parent;
 }
