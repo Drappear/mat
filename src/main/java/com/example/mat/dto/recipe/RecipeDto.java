@@ -41,7 +41,7 @@ public class RecipeDto {
     // TODO: mid -> Member 에서 가져오기
     private Long mid; // 클라이언트로부터 전달받을 Member ID
     private String userid; // 작성자의 사용자 ID
-    // private String nickname;
+    private String nickname;
 
     // TODO: 레시피에 소속된 이미지 가져오기
     @Builder.Default
