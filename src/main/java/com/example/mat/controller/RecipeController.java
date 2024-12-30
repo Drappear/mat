@@ -50,36 +50,35 @@ public class RecipeController {
   private final RecipeCategoryRepository recipeCategoryRepository;
 
   @GetMapping("/list")
-  public String getRecipeList(@RequestParam(required = false) String keyword,
-      @RequestParam(required = false) Long category,
+  public String getRecipeList(
+      @RequestParam(required = false) String keyword,
+      @RequestParam(required = false) Long category, // 카테고리 ID
       @RequestParam(defaultValue = "latest") String sortBy,
       @RequestParam(defaultValue = "1") int page, Model model) {
     log.info("get recipe list 페이지 요청");
-
     // 페이지 설정 (12개씩 표시)
     Pageable pageable = PageRequest.of(page - 1, 12);
 
     // 전체 레시피 수 조회
     Long totalRecipes = recipeService.getTotalRecipeCount();
 
-    // 레시피 목록 조회
+    // 레시피 목록 조회 - 카테고리 필터링 포함
     Page<RecipeDto> recipes = recipeService.getRecipeList(keyword, category, sortBy, pageable);
 
     // 카테고리 목록 조회
     List<RecipeCategory> categories = recipeCategoryRepository.findAllOrderByRCateId();
 
     // 모델에 데이터 추가
-    model.addAttribute("recipes", recipes.getContent()); // List<RecipeDto>로 전달
-
-    // model.addAttribute("recipes", recipes);
+    model.addAttribute("recipes", recipes.getContent());
     model.addAttribute("totalRecipes", totalRecipes);
     model.addAttribute("categories", categories);
+    model.addAttribute("currentCategory", category); // 현재 선택된 카테고리
     model.addAttribute("currentKeyword", keyword);
-    model.addAttribute("currentCategory", category);
     model.addAttribute("currentSort", sortBy);
     model.addAttribute("totalPages", recipes.getTotalPages());
     model.addAttribute("currentPage", page);
-    return "recipe/list"; // Thymeleaf의 list.html로 이동
+
+    return "recipe/list"; // recipe / list.html로 이동
   }
 
   @GetMapping({ "/read", "/modify" })

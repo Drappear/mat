@@ -39,10 +39,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
   @Query("SELECT DISTINCT r, ri FROM Recipe r " +
       "LEFT JOIN r.recipeImages ri " +
-      "LEFT JOIN r.member m " +
       "LEFT JOIN r.recipeCategory rc " +
-      "WHERE (:keyword IS NULL OR r.title LIKE %:keyword% OR r.content LIKE %:keyword%) " +
-      "AND (:categoryId IS NULL OR r.recipeCategory.rCateId = :categoryId) " +
+      "WHERE (:keyword IS NULL OR (r.title LIKE %:keyword% OR r.content LIKE %:keyword%)) " +
+      "AND (:categoryId IS NULL OR rc.rCateId = :categoryId) " +
       "ORDER BY " +
       "CASE WHEN :sortBy = 'latest' THEN r.regDate END DESC, " +
       "CASE WHEN :sortBy = 'popular' THEN r.viewCount END DESC")
