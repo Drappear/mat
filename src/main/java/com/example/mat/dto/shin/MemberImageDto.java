@@ -31,6 +31,7 @@ public class MemberImageDto {
     private Long mid; // 회원 번호
 
     // 원본 이미지 경로
+
     public String getImageURL() {
         String fullPath = "";
         try {
