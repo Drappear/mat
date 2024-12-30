@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "movieImage")
 @Entity
 @Table(name = "Mat_Member")
 public class Member extends BaseEntity {
@@ -55,6 +55,7 @@ public class Member extends BaseEntity {
     private String addr;
 
     private String detailAddr;
+    private String bio;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
