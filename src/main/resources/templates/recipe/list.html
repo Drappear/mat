@@ -97,16 +97,16 @@
                 <div class="flex space-x-4">
                   <button
                     type="button"
-                    class="px-4 py-1 bg-neutral-100 text-lime-950 rounded-full"
-                    th:class="${currentSort == 'latest' ? 'active' : ''}"
+                    class="sort-btn px-4 py-1 rounded-full"
+                    th:classappend="${currentSort == null or currentSort == 'latest' ? 'bg-lime-100 text-lime-500' : 'bg-neutral-100 text-neutral-500'}"
                     data-sort="latest"
                   >
                     최신순
                   </button>
                   <button
                     type="button"
-                    class="px-4 py-1 bg-lime-100 text-lime-500 rounded-full"
-                    th:class="${currentSort == 'popular' ? 'active' : ''}"
+                    class="sort-btn px-4 py-1 rounded-full"
+                    th:classappend="${currentSort == 'popular' ? 'bg-lime-100 text-lime-500' : 'bg-neutral-100 text-neutral-500'}"
                     data-sort="popular"
                   >
                     조회순
@@ -303,6 +303,30 @@
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // 정렬 버튼 클릭 이벤트
+        const sortButtons = document.querySelectorAll(".sort-btn");
+
+        sortButtons.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const sortBy = this.dataset.sort;
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("sortBy", sortBy);
+
+            // 현재 정렬 상태 유지를 위한 파라미터 유지
+            const currentCategory = currentUrl.searchParams.get("category");
+            const currentKeyword = currentUrl.searchParams.get("keyword");
+            if (currentCategory)
+              currentUrl.searchParams.set("category", currentCategory);
+            if (currentKeyword)
+              currentUrl.searchParams.set("keyword", currentKeyword);
+
+            window.location.href = currentUrl.toString();
+          });
+        });
+      });
+    </script>
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", function () {
         // 카테고리 버튼 클릭 이벤트
         document.querySelectorAll(".category-btn").forEach((btn) => {
           btn.addEventListener("click", function () {
@@ -323,6 +347,6 @@
           });
         });
       });
-    </script>
+    </script> -->
   </th:block>
 </html>
