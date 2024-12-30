@@ -1,66 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
-  <!-- Hero Section Begin -->
-  <div th:fragment="sidebar">
-    <section class="hero">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="hero__categories">
-              <div class="hero__categories__all">
-                <i class="fa fa-bars"></i>
-                <span>All departments</span>
-              </div>
-              <ul>
-                <li><a href="#">Fresh Meat</a></li>
-                <li><a href="#">Vegetables</a></li>
-                <li><a href="#">Fruit & Nut Gifts</a></li>
-                <li><a href="#">Fresh Berries</a></li>
-                <li><a href="#">Ocean Foods</a></li>
-                <li><a href="#">Butter & Eggs</a></li>
-                <li><a href="#">Fastfood</a></li>
-                <li><a href="#">Fresh Onion</a></li>
-                <li><a href="#">Papayaya & Crisps</a></li>
-                <li><a href="#">Oatmeal</a></li>
-                <li><a href="#">Fresh Bananas</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-9">
-            <div class="hero__search">
-              <div class="hero__search__form">
-                <form action="#">
-                  <div class="hero__search__categories">
-                    All Categories
-                    <span class="arrow_carrot-down"></span>
-                  </div>
-                  <input type="text" placeholder="What do yo u need?" />
-                  <button type="submit" class="site-btn">SEARCH</button>
-                </form>
-              </div>
-              <div class="hero__search__phone">
-                <div class="hero__search__phone__icon">
-                  <i class="fa fa-phone"></i>
-                </div>
-                <div class="hero__search__phone__text">
-                  <h5>+65 11.188.888</h5>
-                  <span>support 24/7 time</span>
-                </div>
-              </div>
-            </div>
-            <div class="hero__item set-bg" data-setbg="img/hero/banner.jpg">
-              <div class="hero__text">
-                <span>FRUIT FRESH</span>
-                <h2>Vegetable <br />100% Organic</h2>
-                <p>Free Pickup and Delivery Available</p>
-                <a href="#" class="primary-btn">SHOP NOW</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+<html lang="zxx">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Ogani Template" />
+    <meta name="keywords" content="Ogani, unica, creative, html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MatDongSan</title>
 
-  <!-- Hero Section End -->
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Css Styles -->
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/bootstrap.min.css}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/font-awesome.min.css}"
+      type="text/css"
+    />
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <th:block layout:fragment="css"></th:block>
+  </head>
+
+  <body>
+    <!-- Sidebar Section Begin -->
+    <aside class="sidebar">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <span class="highlight-category">category</span>
+          <a th:href="@{/board/list}" class="text-decoration-none"
+            >All Categories</a
+          >
+        </li>
+        <li th:each="category : ${categories}" class="list-group-item">
+          <a
+            th:href="@{/board/list(category=${category.boardCNo})}"
+            th:text="${category.name}"
+            class="text-decoration-none"
+          ></a>
+        </li>
+      </ul>
+    </aside>
+    <!-- Sidebar Section End -->
+
+    <!-- Header Section Begin -->
+    <div th:replace="~{/fragments/header::header}"></div>
+    <!-- Header Section End -->
+
+    <!-- Content SECTION Begin -->
+    <div layout:fragment="content" class="main-content"></div>
+    <!-- Content SECTION End -->
+
+    <!-- Footer Section Begin -->
+    <!-- <div th:replace="~{/fragments/footer::footer}"></div> -->
+    <!-- Footer Section End -->
+
+    <!-- Js Plugins -->
+    <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentCategory = new URLSearchParams(window.location.search).get(
+          "category"
+        );
+        const sidebarLinks = document.querySelectorAll(
+          ".sidebar .list-group-item a"
+        );
+
+        sidebarLinks.forEach((link) => {
+          if (link.href.includes(`category=${currentCategory}`)) {
+            link.classList.add("active");
+          }
+        });
+      });
+    </script>
+    <style>
+      .sidebar {
+        width: 250px;
+        padding: 15px;
+        position: fixed;
+        top: 100px; /* 위치를 낮추기 위해 추가 */
+        height: calc(100% - 100px); /* 상단 여백 반영 */
+        overflow: hidden; /* 내용 잘림 방지 */
+        background-size: cover; /* 백그라운드 크기 조정 */
+        background-position: center; /* 백그라운드 위치 중앙 정렬 */
+      }
+
+      .main-content {
+        margin-left: 270px;
+        padding: 20px;
+      }
+
+      .list-group-item a.active {
+        font-weight: bold;
+        color: #007bff;
+      }
+
+      .list-group-item a {
+        color: #333;
+        text-decoration: none;
+      }
+
+      .list-group-item a:hover {
+        text-decoration: underline;
+      }
+
+      .highlight-category {
+        color: #7fad39;
+        font-weight: bold;
+        display: block; /* 위아래로 분리해 보이도록 설정 */
+        margin-bottom: 5px; /* 여백 추가 */
+      }
+    </style>
+  </body>
 </html>

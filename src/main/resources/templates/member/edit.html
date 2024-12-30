@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{/layouts/profilelayout}">
+<html lang="en" layout:decorate="~{/layouts/layout}">
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/profile.css}" />
   </th:block>
 
-  <div th:replace="~{/fragments/profileheader::profileheader}"></div>
+  <div th:replace="~{/fragments/header::header}"></div>
   <div layout:fragment="content">
     <div class="container">
       <h1 class="title">마이 페이지</h1>
@@ -14,17 +14,13 @@
             <!-- 업로드한 이미지를 보여줄 img 태그 -->
             <!-- <img
               id="profilePhoto"
-              src="${#authentication.principal.memberDto.profileImageUrl != null ? #authentication.principal.memberDto.profileImageUrl : 'https://via.placeholder.com/120'}"
+                        th:src="|/profile/display?fileName=${member.memberImageDto.getImageURL()}|"
+              loading="lazy"
               alt="Profile Photo"
             /> -->
-            <!-- <img src="https://via.placeholder.com/120" alt="프로필 사진" /> -->
+
             <!-- 실제 파일 입력 요소는 숨김 처리 -->
-            <img
-              id="profilePhoto"
-              src="/member/image?fileName=${#authentication.principal.memberDto.profileImageUrl}"
-              alt="Profile Photo"
-              data-file="${#authentication.principal.memberDto.profileImageUrl}"
-            />
+
             <input
               type="file"
               name="profileImage"

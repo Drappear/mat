@@ -65,3 +65,31 @@ a.text-primary:hover {
 .op-6 {
   font-size: small; /* 작은 폰트 크기 설정 */
 }
+
+/* 카테고리 드롭다운 스타일 */
+#categorySelect {
+  width: 150px; /* 드롭다운 너비 설정 (줄임) */
+  padding: 8px; /* 내부 여백 조정 */
+  font-size: 12px; /* 텍스트 크기 줄임 */
+  border: 1px solid #ccc; /* 테두리 설정 */
+  border-radius: 5px; /* 둥근 모서리 */
+  appearance: none; /* 기본 브라우저 드롭다운 화살표 제거 */
+  background-color: #fff; /* 배경색 설정 */
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"%3E%3Cpath fill="%23333333" d="M10 12l-5-5h10l-5 5z"/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* 화살표 위치 */
+  background-size: 12px; /* 화살표 크기 축소 */
+}
+
+/* Hover와 Focus 스타일 */
+#categorySelect:hover,
+#categorySelect:focus {
+  border-color: #7fad39; /* 호버 및 포커스 시 테두리 색 변경 */
+  outline: none; /* 기본 아웃라인 제거 */
+}
+
+/* 옵션 스타일 */
+#categorySelect option {
+  padding: 5px; /* 옵션 내부 여백 */
+  font-size: 12px; /* 옵션 텍스트 크기 */
+}
