@@ -15,12 +15,18 @@
         <h1 class="title">마이 페이지</h1>
         <div class="profile-section">
           <div id="profileForm" class="profile-photo">
-            <!-- <img
-              th:src="|/member/display?fileName=${member.memberImageDto.getImageURL()}|"
-              th:if="${member.memberImageDto.size() > 0 && member.memberImageDto != null}"
+            <img
               alt=""
+              th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|"
               loading="lazy"
-            /> -->
+              th:if="${#authentication.principal.memberDto.memberImageDto != null}"
+            />
+            <img
+              alt=""
+              th:src="@{/images/default-profile.png}"
+              loading="lazy"
+              th:if="${#authentication.principal.memberDto.memberImageDto == null}"
+            />
             <div
               class="absolute inset-0 rounded-full shadow-inner"
               aria-hidden="true"

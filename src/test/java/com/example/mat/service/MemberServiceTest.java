@@ -6,12 +6,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
+import com.example.mat.entity.shin.Member;
+import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.shin.MemberImageRepository;
 
 @SpringBootTest
 public class MemberServiceTest {
 
     @Autowired
     private MemberService service;
+
+    @Autowired
+    private MemberImageRepository memberImageRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     public void testupdate() {
@@ -26,6 +35,12 @@ public class MemberServiceTest {
 
         service.personalUpdate(updatememberDto);
 
+    }
+
+    @Test
+    public void testGet() {
+        Member member = memberRepository.findById(1L).get();
+        System.out.println(memberImageRepository.findByMember(member));
     }
 
 }

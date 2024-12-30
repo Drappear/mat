@@ -21,17 +21,19 @@ document.querySelector("#profileImage").addEventListener("change", (e) => {
 
 function showUploadImages(files) {
   // 이미지 보여줄 영역 찾아오기
-  const output = document.querySelector(".profile-section .profile-photo");
+  const img = document.querySelector(".profile-photo #profilePhoto");
 
-  let tags = "";
-  tags += `<li data-name="${files.imgName}" data-uuid="${files.uuid}">`;
-  tags += `<div>`;
-  tags += `<a href=""><img src="/member/display?fileName=${files.imageURL}"></a>`;
-  tags += `<span class="text-sm d-inline-block mx-1"></span>`;
-  tags += `<a href="${files.imageURL}" data-file=""></a>`;
-  tags += `</div>`;
-  tags += `</li>`;
-  output.insertAdjacentHTML("beforeend", tags);
+  img.src = `/member/display?fileName=${files.imageURL}`;
+
+  // let tags = "";
+  // //  tags += `<li data-name="${files.imgName}" data-uuid="${files.uuid}">`;
+  // //  tags += `<div>`;
+  // tags += `<img src="/member/display?fileName=${files.imageURL}"></a>`;
+  // // tags += `<span class="text-sm d-inline-block mx-1"></span>`;
+  // // tags += `<a href="${files.imageURL}" data-file=""></a>`;
+  // // tags += `</div>`;
+  // // tags += `</li>`;
+  // output.innerHTML = tags;
 }
 
 let isNicknameChecked = false; // 닉네임 중복 확인 여부 플래그
