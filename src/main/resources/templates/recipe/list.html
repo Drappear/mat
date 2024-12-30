@@ -25,14 +25,30 @@
                   <!-- search box -->
                   <div class="hero__search">
                     <div class="hero__search__form">
-                      <form action="#">
-                        <input type="text" placeholder="What do yo u need?" />
+                      <form th:action="@{/recipe/list}" method="get">
+                        <input
+                          type="text"
+                          name="keyword"
+                          th:value="${currentKeyword}"
+                          placeholder="레시피 검색..."
+                        />
+                        <input
+                          type="hidden"
+                          name="category"
+                          th:value="${currentCategory}"
+                        />
+                        <input
+                          type="hidden"
+                          name="sortBy"
+                          th:value="${currentSort}"
+                        />
                         <button type="submit" class="site-btn">SEARCH</button>
                       </form>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- 카테고리 -->
               <nav
                 class="bg-white flex gap-4 text-lime-950 mb-6 items-center border-y border-neutral-200 py-2 row"
               >
@@ -43,24 +59,30 @@
                   <button
                     type="button"
                     class="category-btn px-4 py-1 bg-lime-100 text-lime-500 font-title rounded-full active"
+                    data-category="all"
                   >
                     전체
                   </button>
                   <!-- RecipeCategory의 name 반복 출력 -->
                   <button
                     type="button"
-                    th:each="category : ${categoryList}"
-                    class="category-btn px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
+                    th:each="category : ${categories}"
                     th:text="${category.name}"
+                    th:data-category="${category.rCateId}"
+                    th:class="${category.rCateId == currentCategory ? 'active' : ''}"
+                    class="category-btn px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
                   >
                     <!-- 카테고리 이름이 여기에 들어감 -->
                   </button>
                 </div>
               </nav>
+
+              <!-- 총 레시피 수 -->
               <div class="bg-white flex justify-between items-center mb-6">
                 <p class="text-lime-950 text-lg">
-                  총 <span class="text-lime-500">234,946</span>개의 맛있는
-                  레시피가 있습니다.&nbsp;
+                  총
+                  <span class="text-lime-500" th:text="${totalRecipes}"></span
+                  >개의 맛있는 레시피가 있습니다.&nbsp;
                   <!-- 작성 버튼 -->
                   <a
                     class="btn btn-outline-warning"
@@ -70,55 +92,81 @@
                   </a>
                 </p>
 
+                <!-- 정렬 버튼 -->
                 <div class="flex space-x-4">
                   <button
                     type="button"
                     class="px-4 py-1 bg-neutral-100 text-lime-950 rounded-full"
+                    th:class="${currentSort == 'latest' ? 'active' : ''}"
+                    data-sort="latest"
                   >
                     최신순
                   </button>
                   <button
                     type="button"
                     class="px-4 py-1 bg-lime-100 text-lime-500 rounded-full"
+                    th:class="${currentSort == 'popular' ? 'active' : ''}"
+                    data-sort="popular"
                   >
-                    추천순
+                    조회순
                   </button>
                 </div>
               </div>
               <!-- 카드그룹 -->
               <div
+                th:if="${recipes != null and !recipes.empty}"
                 class="bg-neutral-100 p-4 rounded-lg card-group"
                 name="cardGroup"
                 id="cardGroup"
               >
+                <!-- 레시피가 없는 경우 -->
+                <div
+                  th:if="${recipes == null or recipes.empty}"
+                  class="alert alert-info"
+                >
+                  등록된 레시피가 없습니다.
+                </div>
+                <!-- 레시피가 있는 경우 -->
                 <!-- 카드 영역 -->
-                <div class="row row-cols-1 row-cols-md-4 g-4">
-                  <div class="col mb-5">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
+                <div
+                  th:if="${recipes != null and !recipes.empty}"
+                  class="row row-cols-1 row-cols-md-4 g-4"
+                >
+                  <!-- 각 카드는 col-md-3으로 4개씩 배치 -->
+                  <div class="col mb-5" th:each="recipe : ${recipes}">
+                    <div class="card h-200">
+                      <!-- 카테고리 정보를 hidden input으로 저장 -->
+                      <input
+                        type="hidden"
+                        th:value="${recipe.recipeCategoryDto != null ? recipe.recipeCategoryDto.rCateId : ''}"
+                        class="recipe-category-id"
                       />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title1</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
+                      <!-- 이미지 영역 -->
+                      <img
+                        th:if="${recipe.recipeImageDtos != null and !recipe.recipeImageDtos.empty}"
+                        th:src="@{/upload/display(fileName=${recipe.recipeImageDtos[0].path})}"
+                        class="card-img-top"
+                        alt="레시피 이미지"
+                        style="height: 200px; object-fit: cover"
+                      />
+                      <!-- 카드 내용 -->
+                      <div
+                        class="card-body"
+                        style="cursor: pointer"
+                        th:onclick="|location.href='@{/recipe/read(rno=${recipe.rno})}'|"
+                      >
+                        <h5 class="card-title" th:text="${recipe.title}"></h5>
+                        <p class="card-text" th:text="${recipe.content}"></p>
                       </div>
                       <div class="card-footer">
                         <small class="text-body-secondary">
-                          <button type="button" class="btn btn-outline-info">
-                            <i class="fa-solid fa-circle-user"></i>
-                          </button>
-                          닉네임 | 조회수 240</small
-                        >
+                          <span th:text="${recipe.userid}"></span> | 조회수 :
+                          <span th:text="${recipe.viewCount}"></span>
+                        </small>
                       </div>
                     </div>
                   </div>
-                  <div class="col">
+                  <!-- <div class="col">
                     <div class="card">
                       <img
                         src="https://placehold.co/300x300/png"
@@ -141,55 +189,7 @@
                         >
                       </div>
                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title3</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          ><a href="#">
-                            <i class="fa-solid fa-circle-user"></i> </a
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card">
-                      <img
-                        src="https://placehold.co/300x300/png"
-                        class="card-img-top"
-                        alt="..."
-                      />
-                      <div class="card-body">
-                        <h5 class="card-title">Card title4</h5>
-                        <p class="card-text">
-                          This is a longer card with supporting text below as a
-                          natural lead-in to additional content. This content is
-                          a little bit longer.
-                        </p>
-                      </div>
-                      <div class="card-footer">
-                        <small class="text-body-secondary"
-                          ><a href="#">
-                            <i class="fa-solid fa-circle-user"></i> </a
-                          >닉네임 | 조회수 240</small
-                        >
-                      </div>
-                    </div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <!-- Card-Group 끝 -->
@@ -212,30 +212,116 @@
     </section>
     <!-- Categories Section End -->
   </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const buttons = document.querySelectorAll(".category-btn");
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          // 모든 버튼을 비활성화 상태로 설정
-          buttons.forEach((btn) => {
-            btn.classList.remove("bg-lime-100", "text-lime-500", "font-title");
-            btn.classList.add("bg-neutral-100", "text-neutral-500");
-          });
-
-          // 클릭한 버튼에 활성화 상태 설정
-          button.classList.add("bg-lime-100", "text-lime-500", "font-title");
-          button.classList.remove("bg-neutral-100", "text-neutral-500");
-        });
-      });
-    });
-  </script>
   <th:block layout:fragment="js">
     <!-- <script>
       const csrfValue = "[[${_csrf.token}]]";
     </script> -->
     <script th:src="@{/js/recipeMain.js}"></script>
     <!-- <script th:src="@{/js/create.js}"></script> -->
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const buttons = document.querySelectorAll(".category-btn");
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // 모든 버튼을 비활성화 상태로 설정
+            buttons.forEach((btn) => {
+              btn.classList.remove(
+                "bg-lime-100",
+                "text-lime-500",
+                "font-title"
+              );
+              btn.classList.add("bg-neutral-100", "text-neutral-500");
+            });
+
+            // 클릭한 버튼에 활성화 상태 설정
+            button.classList.add("bg-lime-100", "text-lime-500", "font-title");
+            button.classList.remove("bg-neutral-100", "text-neutral-500");
+          });
+        });
+      });
+    </script> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const categoryButtons = document.querySelectorAll(".category-btn");
+        const cardGroup = document.querySelector(".card-group");
+
+        categoryButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const selectedCategory = this.dataset.category;
+            const currentUrl = new URL(window.location.href);
+
+            // 버튼 스타일 업데이트!!!
+            categoryButtons.forEach((btn) => {
+              btn.classList.remove("active", "bg-lime-100", "text-lime-500");
+              btn.classList.add("bg-neutral-100", "text-neutral-500");
+            });
+            this.classList.add("active", "bg-lime-100", "text-lime-500");
+            this.classList.remove("bg-neutral-100", "text-neutral-500");
+
+            // 서버로 요청 보내기
+            currentUrl.searchParams.set("category", selectedCategory);
+            if (selectedCategory === "all") {
+              currentUrl.searchParams.delete("category");
+            }
+
+            // 현재 정렬 상태 유지
+            const currentSort = /*[[${currentSort}]]*/ "latest";
+            if (currentSort) {
+              currentUrl.searchParams.set("sortBy", currentSort);
+            }
+
+            // 페이지 새로고침
+            window.location.href = currentUrl.toString();
+          });
+        });
+
+        // 현재 선택된 카테고리 버튼 스타일 적용
+        const currentCategory = /*[[${currentCategory}]]*/ null;
+        if (currentCategory) {
+          const activeButton = document.querySelector(
+            `[data-category="${currentCategory}"]`
+          );
+          if (activeButton) {
+            activeButton.classList.add(
+              "active",
+              "bg-lime-100",
+              "text-lime-500"
+            );
+            activeButton.classList.remove("bg-neutral-100", "text-neutral-500");
+          }
+        } else {
+          const allButton = document.querySelector('[data-category="all"]');
+          if (allButton) {
+            allButton.classList.add("active", "bg-lime-100", "text-lime-500");
+            allButton.classList.remove("bg-neutral-100", "text-neutral-500");
+          }
+        }
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 카테고리 버튼 클릭 이벤트
+        document.querySelectorAll(".category-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const categoryId = this.dataset.category;
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("category", categoryId);
+            window.location.href = currentUrl.toString();
+          });
+        });
+
+        // 정렬 버튼 클릭 이벤트
+        document.querySelectorAll("[data-sort]").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const sortBy = this.dataset.sort;
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("sortBy", sortBy);
+            window.location.href = currentUrl.toString();
+          });
+        });
+      });
+    </script>
   </th:block>
 </html>

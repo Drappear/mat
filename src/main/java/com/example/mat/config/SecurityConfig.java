@@ -20,10 +20,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
-                .requestMatchers("/diner/list", "/member/register", "/board/register").permitAll()
+                .requestMatchers("/member/register").permitAll()
+                .requestMatchers("/board/register").permitAll()
+                .requestMatchers("/diner/**", "/upload/**").permitAll()
+                .requestMatchers("/recipe/**", "/upload/**").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
+        http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/recipe/list"));
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 

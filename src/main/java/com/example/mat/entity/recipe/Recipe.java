@@ -1,12 +1,15 @@
 package com.example.mat.entity.recipe;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +18,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.mat.dto.recipe.RecipeImageDto;
 import com.example.mat.dto.recipe.RecipeStepDto;
@@ -26,7 +31,7 @@ import com.example.mat.entity.shin.Member;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "member", "recipeStep", "recipeCategory", "recipeIngredient" })
+@ToString(exclude = { "member", "recipeSteps", "recipeCategories", "recipeIngredients", "recipeImages" })
 @Entity
 public class Recipe extends BaseEntity {
 
@@ -51,22 +56,37 @@ public class Recipe extends BaseEntity {
     private String difficulty;
 
     @Column(columnDefinition = "integer default 0", nullable = false)
-    private int viewCount; // 조회수
+    private Integer viewCount; // 조회수
 
     // TODO: mid -> Member 에서 가져오기
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member; // Member 엔티티와 연결
 
-    // 레시피 스텝
-    @ManyToOne(fetch = FetchType.LAZY)
-    private RecipeStep recipeStep;
-
-    // 레시피 카테고리
+    // TODO: 레시피 카테고리
     @ManyToOne(fetch = FetchType.LAZY)
     private RecipeCategory recipeCategory;
+    // @Builder.Default
+    // @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval =
+    // true)
+    // private List<RecipeCategory> recipeCategories = new ArrayList<>();
 
-    // 레시피 재료
-    @ManyToOne(fetch = FetchType.LAZY)
-    private RecipeIngredient recipeIngredient;
+    // TODO: 레시피 재료
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // private RecipeIngredient recipeIngredient;
+    @Builder.Default
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
+    // TODO: 레시피 스텝
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // private RecipeStep recipeStep;
+    @Builder.Default
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeStep> recipeSteps = new ArrayList<>();
+
+    // TODO: 레시피 최종 이미지
+    @Builder.Default
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeImage> recipeImages = new ArrayList<>();
 }
