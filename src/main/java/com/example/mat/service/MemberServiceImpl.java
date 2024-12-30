@@ -56,6 +56,8 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
         Member member = result.get();
 
+        MemberImage memberImage = memberImageRepository.findByMember(member);
+
         MemberDto memberDto = MemberDto.builder()
                 .mid(member.getMid())
                 .username(member.getUsername())
@@ -69,6 +71,13 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
                 .detailAddr(member.getDetailAddr())
                 .role(member.getRole())
                 .build();
+
+        if (memberImage != null) {
+            MemberImageDto memberImageDto = MemberImageDto.builder()
+                    .uuid(memberImage.getUuid())
+                    .imgName(memberImage.getImgName()).build();
+            memberDto.setMemberImageDto(memberImageDto);
+        }
 
         return new AuthMemberDto(memberDto);
     }
@@ -177,20 +186,38 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
     }
 
+    // @Transactional
+    // @Override
+    // public void updateProfile(MemberDto memberDto) {
+    // MemberImage memberImage =
+    // memberImageRepository.findByMember(Member.builder().mid(memberDto.getMid()).build());
+
+    // memberImage.setImgName(memberDto.getMemberImageDto().getImgName());
+    // memberImage.setUuid(memberDto.getMemberImageDto().getUuid());
+    // memberImageRepository.save(memberImage);
+    // }
+
     @Transactional
     @Override
     public void saveMemberWithImage(MemberImageDto memberImageDto) {
 
-        // 이미지 저장
-        if (memberImageDto.getImageURL() != null && memberImageDto.getImgName() != "") {
-            MemberImage memberImage = MemberImage.builder()
-                    .uuid(memberImageDto.getUuid())
-                    .imgName(memberImageDto.getImgName())
-                    .member(Member.builder().mid(memberImageDto.getMid()).build())
-                    .build();
+        Member member = memberRepository.findById(memberImageDto.getMid()).get();
 
-            memberImageRepository.save(memberImage);
+        MemberImage memberImage = memberImageRepository
+                .findByMember(member);
+
+        // 이미지 저장
+        if (memberImage != null) {
+            memberImage.setImgName(memberImageDto.getImgName());
+            memberImage.setUuid(memberImageDto.getUuid());
+        } else {
+            memberImage = new MemberImage();
+            memberImage.setImgName(memberImageDto.getImgName());
+            memberImage.setUuid(memberImageDto.getUuid());
+            memberImage.setMember(Member.builder().mid(memberImageDto.getMid()).build());
         }
+
+        memberImageRepository.save(memberImage);
 
     }
 

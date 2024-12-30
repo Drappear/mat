@@ -20,6 +20,8 @@ public interface MemberService {
     // void nickUpdate(MemberDto memberDto);
     void updateProfile(MemberDto memberDto);
 
+    // void updateProfileImage(MemberDto memberDto);
+
     void saveMemberWithImage(MemberImageDto memberImageDto);
 
     // 개인정보 수정

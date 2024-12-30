@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.mat.entity.constant.MemberRole;
+import com.example.mat.entity.shin.MemberImage;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
