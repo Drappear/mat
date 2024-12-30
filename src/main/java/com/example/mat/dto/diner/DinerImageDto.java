@@ -21,6 +21,8 @@ public class DinerImageDto {
     private String path;
     private int imgCate;
 
+    private Long did;
+
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 

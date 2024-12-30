@@ -171,6 +171,7 @@ reviewForm.addEventListener("submit", (e) => {
       uuid: obj.dataset.uuid,
       imgName: obj.dataset.name,
       imgCate: 2,
+      did: did,
     };
   });
 

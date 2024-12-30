@@ -22,6 +22,8 @@ import com.example.mat.entity.diner.DinerCategory;
 import com.example.mat.repository.ImageRepository;
 import com.example.mat.repository.diner.DinerCategoryRepository;
 import com.example.mat.repository.diner.DinerRepository;
+import com.example.mat.repository.diner.DinerReviewImageRepository;
+import com.example.mat.repository.diner.DinerReviewRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,8 @@ import lombok.extern.log4j.Log4j2;
 public class DinerServiceImpl implements DinerService {
 
   private final DinerRepository dinerRepository;
+  private final DinerReviewRepository dinerReviewRepository;
+  private final DinerReviewImageRepository dinerReviewImageRepository;
   private final ImageRepository imageRepository;
   private final DinerCategoryRepository dinerCategoryRepository;
 
@@ -76,7 +80,6 @@ public class DinerServiceImpl implements DinerService {
 
     dinerRepository.save(diner);
 
-    // 기존 영화 이미지 제거
     imageRepository.deleteByDiner(diner);
 
     dinerImages.forEach(dinerImage -> imageRepository.save(dinerImage));
@@ -88,8 +91,16 @@ public class DinerServiceImpl implements DinerService {
   @Override
   public void deleteDiner(Long did) {
     Diner diner = Diner.builder().did(did).build();
+    log.info("리뷰 이미지 삭제");
+    dinerReviewImageRepository.deleteByDiner(diner);
+        
+    log.info("리뷰 삭제");
+    dinerReviewRepository.deleteByDiner(diner);
+
+    log.info("식당 이미지 삭제");
     imageRepository.deleteByDiner(diner);
-    // reviewRepository.deleteByDiner(diner);
+    
+    log.info("식당 삭제");
     dinerRepository.delete(diner);
   }
 

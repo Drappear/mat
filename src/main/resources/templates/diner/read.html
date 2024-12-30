@@ -5,8 +5,9 @@
     <link rel="stylesheet" th:href="@{/css/diner/read.css}" />
   </th:block>
   <div layout:fragment="content">
+    <div class="container main-wrapper">    
     <div class="container diner-view">
-      <div class="diner-main-img-and-map">
+      <div class="diner-main-img-row">
         <div class="col-lg-9 diner-main-img">
           <div class="row">
             <div class="main-img">
@@ -15,7 +16,7 @@
                 th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
                 alt=""
                 loading="lazy"
-                width="700px"
+                width="680px"
                 height="420px"
               />
             </div>
@@ -38,7 +39,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-3 diner-map">
+        <div class="col-lg-3 diner-map clearfix">
           <div class="row p-1"><img src="https://placehold.co/320x320" alt="" /></div>
           <div class="row p-3">
             <h5 th:text="${dinerDto.address}"></h5>
@@ -183,6 +184,7 @@
       <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
     </form>
   </div>
+</div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
     <script>
