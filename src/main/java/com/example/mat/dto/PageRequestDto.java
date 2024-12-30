@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-//  http://localhost:8080/book/list?page=2&size=20&type=c&keyword=소년
+//  http://localhost:8080/recipe/list?page=2&size=20&type=c&keyword=소년
 
 @ToString
 @Builder
