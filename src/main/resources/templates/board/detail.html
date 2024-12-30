@@ -113,7 +113,7 @@
                             />
                             <div
                               class="post-comments"
-                              data-comment-id="${comment.bcid}"
+                              data-comment-id="${comment.id}"
                             >
                               <p class="meta">
                                 <span th:text="${comment.userid}">작성자</span>
@@ -121,28 +121,21 @@
                                   th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
                                   >작성 시간</span
                                 >
+                                <i class="pull-right">
+                                  <a href="#" class="modify-link"
+                                    ><small>Modify</small></a
+                                  >
+                                  |
+                                  <a href="#" class="delete-link"
+                                    ><small>Delete</small></a
+                                  >
+                                  <!-- |
+                                  <a href="#" class="reply-link"
+                                    ><small>Reply</small></a
+                                  > -->
+                                </i>
                               </p>
                               <p th:text="${comment.content}">댓글 내용</p>
-                              <div class="comment-buttons">
-                                <button
-                                  class="btn btn-secondary modify-link"
-                                  type="button"
-                                >
-                                  Modify
-                                </button>
-                                <button
-                                  class="btn btn-danger delete-link"
-                                  type="button"
-                                >
-                                  Delete
-                                </button>
-                                <button
-                                  class="btn btn-warning reply-link"
-                                  type="button"
-                                >
-                                  Reply
-                                </button>
-                              </div>
                             </div>
                             <!-- 대댓글 -->
                             <ul class="comments" th:if="${comment.replies}">
