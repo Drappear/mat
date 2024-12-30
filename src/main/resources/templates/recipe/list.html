@@ -56,24 +56,25 @@
                   >종류별</span
                 >
                 <div class="flex flex-wrap gap-4 col-9">
-                  <button
-                    type="button"
-                    class="category-btn px-4 py-1 bg-lime-100 text-lime-500 font-title rounded-full active"
-                    data-category="all"
+                  <!-- 전체 버튼 - 카테고리 파라미터 제거 -->
+                  <a
+                    th:href="@{/recipe/list(keyword=${currentKeyword},sortBy=${currentSort})}"
+                    class="category-btn px-4 py-1"
+                    th:classappend="${currentCategory == null ? 'bg-lime-100 text-lime-500' : 'bg-neutral-100 text-neutral-500'}"
                   >
                     전체
-                  </button>
+                  </a>
                   <!-- RecipeCategory의 name 반복 출력 -->
-                  <button
-                    type="button"
+                  <a
                     th:each="category : ${categories}"
+                    th:href="@{/recipe/list(category=${category.rCateId},keyword=${currentKeyword},sortBy=${currentSort})}"
                     th:text="${category.name}"
                     th:data-category="${category.rCateId}"
-                    th:class="${category.rCateId == currentCategory ? 'active' : ''}"
+                    th:classappend="${category.rCateId == currentCategory ? 'bg-lime-100 text-lime-500' : 'bg-neutral-100 text-neutral-500'}"
                     class="category-btn px-4 py-1 bg-neutral-100 text-neutral-500 rounded-full"
                   >
                     <!-- 카테고리 이름이 여기에 들어감 -->
-                  </button>
+                  </a>
                 </div>
               </nav>
 
