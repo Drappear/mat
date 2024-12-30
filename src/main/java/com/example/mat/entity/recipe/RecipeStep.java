@@ -1,6 +1,8 @@
 package com.example.mat.entity.recipe;
 
 import com.example.mat.entity.BaseEntity;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"recipe"})
+@ToString(exclude = { "recipe" })
 @Entity
 public class RecipeStep extends BaseEntity {
 
@@ -29,6 +31,10 @@ public class RecipeStep extends BaseEntity {
   @SequenceGenerator(name = "recipe_step_seq_gen", sequenceName = "recipe_step_seq", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipe_step_seq_gen")
   private Long stepNum; // 레시피 번호
+
+  //TODO: 순서를 나타내는 별도 필드 추가
+  @Column(name = "step_order")
+  private Integer stepOrder;
 
   private String content; // 레시피 카테고리 이름
 
