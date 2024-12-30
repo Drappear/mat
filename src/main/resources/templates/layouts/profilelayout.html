@@ -51,6 +51,7 @@
       type="text/css"
     />
     <link rel="stylesheet" th:href="@{/assets/css/style.css}" type="text/css" />
+    <th:block layout:fragment="css"></th:block>
   </head>
 
   <body>
@@ -133,5 +134,8 @@
     <script th:src="@{/assets/js/mixitup.min.js}"></script>
     <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
     <script th:src="@{/assets/js/main.js}"></script>
+    <!-- 페이지 별 js 영역 -->
+    <th:block layout:fragment="js"> </th:block>
+
   </body>
 </html>

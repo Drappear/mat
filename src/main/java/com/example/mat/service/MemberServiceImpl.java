@@ -1,21 +1,30 @@
 package com.example.mat.service;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.dto.shin.MemberImageDto;
 import com.example.mat.dto.shin.PasswordDto;
 import com.example.mat.dto.shin.UpdateMemberDto;
+
 import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
 import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.shin.MemberImageRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +35,11 @@ import lombok.extern.log4j.Log4j2;
 public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${com.example.mat.profile.path}")
+    private String uploadPath;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,6 +64,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .tel(member.getTel())
+                .bio(member.getBio())
                 .addr(member.getAddr())
                 .detailAddr(member.getDetailAddr())
                 .role(member.getRole())
@@ -86,11 +100,12 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
-    @Transactional
-    @Override
-    public void nickUpdate(MemberDto memberDto) {
-        memberRepository.updateNickname(memberDto.getNickname(), memberDto.getUserid());
-    }
+    // @Transactional
+    // @Override
+    // public void nickUpdate(MemberDto memberDto) {
+    // memberRepository.updateNickname(memberDto.getNickname(),
+    // memberDto.getUserid());
+    // }
 
     @Transactional
     @Override
@@ -140,4 +155,43 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
         memberRepository.deleteById(member.getMid());
     }
+
+    // @Transactional
+    // @Override
+    // public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
+    // Member member = memberRepository.findById(memberId)
+    // .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
+
+    // MemberImage memberImage = new MemberImage();
+    // memberImage.setUuid(memberImageDto.getUuid());
+    // memberImage.setImgName(memberImageDto.getImgName());
+    // memberImage.setPath(memberImageDto.getPath());
+    // memberImage.setMember(member);
+
+    // memberImageRepository.save(memberImage); // MemberImageRepository 필요
+    // }
+
+    @Transactional
+    @Override
+    public void updateProfile(MemberDto memberDto) {
+        memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
+    }
+
+    @Transactional
+    @Override
+    public void saveMemberWithImage(MemberImageDto memberImageDto) {
+
+        // 이미지 저장
+        if (memberImageDto.getImageURL() != null && memberImageDto.getImgName() != "") {
+            MemberImage memberImage = MemberImage.builder()
+                    .uuid(memberImageDto.getUuid())
+                    .imgName(memberImageDto.getImgName())
+                    .member(Member.builder().mid(memberImageDto.getMid()).build())
+                    .build();
+
+            memberImageRepository.save(memberImage);
+        }
+
+    }
+
 }
