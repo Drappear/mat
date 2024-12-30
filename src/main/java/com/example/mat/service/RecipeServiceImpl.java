@@ -1,9 +1,11 @@
 package com.example.mat.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,9 @@ import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.recipe.RecipeCategoryDto;
 import com.example.mat.dto.recipe.RecipeDto;
+import com.example.mat.dto.recipe.RecipeImageDto;
+import com.example.mat.dto.recipe.RecipeStepDto;
+
 import com.example.mat.entity.recipe.Recipe;
 import com.example.mat.entity.recipe.RecipeCategory;
 import com.example.mat.entity.recipe.RecipeImage;
@@ -34,6 +39,7 @@ import com.example.mat.repository.RecipeRepository;
 import com.example.mat.repository.RecipeStepRepository;
 
 import jakarta.transaction.Transactional;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -49,6 +55,44 @@ public class RecipeServiceImpl implements RecipeService {
   private final RecipeIngredientRepository recipeIngredientRepository;
   private final RecipeStepRepository recipeStepRepository;
   private final RecipeImageRepository recipeImageRepository;
+
+  @Override
+  @Transactional()
+  public Page<RecipeDto> getRecipeList(String keyword, Long categoryId, String sortBy, Pageable pageable) {
+    Page<Object[]> result = recipeRepository.findRecipeListWithFirstImage(keyword, categoryId, sortBy, pageable);
+
+    return result.map(objects -> {
+      Recipe recipe = (Recipe) objects[0];
+      RecipeImage firstImage = objects.length > 1 ? (RecipeImage) objects[1] : null;
+
+      return RecipeDto.builder()
+          .rno(recipe.getRno())
+          .title(recipe.getTitle())
+          .content(recipe.getContent())
+          .mid(recipe.getMember().getMid())
+          .userid(recipe.getMember().getUserid())
+          .nickname(recipe.getMember().getNickname())
+          .viewCount(recipe.getViewCount())
+          .regDate(recipe.getRegDate())
+          .recipeCategoryDto(recipe.getRecipeCategory() != null ? RecipeCategoryDto.builder()
+              .rCateId(recipe.getRecipeCategory().getRCateId())
+              .name(recipe.getRecipeCategory().getName())
+              .build() : null)
+          .recipeImageDtos(firstImage != null ? List.of(RecipeImageDto.builder()
+              .rInum(firstImage.getRInum())
+              .uuid(firstImage.getUuid())
+              .imgName(firstImage.getImgName())
+              .path(firstImage.getPath())
+              .build()) : new ArrayList<>())
+          .build();
+    });
+  }
+
+  @Override
+  @Transactional()
+  public Long getTotalRecipeCount() {
+    return recipeRepository.getTotalRecipeCount();
+  }
 
   @Override
   @Transactional()
@@ -77,52 +121,81 @@ public class RecipeServiceImpl implements RecipeService {
   @Override
   @Transactional
   public Long register(RecipeDto recipeDto) {
-    // 로그인된 사용자 정보 가져오기
-    Member member = memberRepository.findById(recipeDto.getMid())
-        .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+    try {
 
-    Map<String, Object> entityMap = dtoToEntity(recipeDto);
+      // 1. Member 설정
+      Member member = memberRepository.findById(recipeDto.getMid())
+          .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-    Recipe recipe = (Recipe) entityMap.get("recipe");
-    recipe.setMember(member); // 로그인된 사용자 매핑
+      // 2. Recipe 저장
+      Recipe recipe = Recipe.builder()
+          .title(recipeDto.getTitle())
+          .content(recipeDto.getContent())
+          .serving(recipeDto.getServing())
+          .time(recipeDto.getTime())
+          .difficulty(recipeDto.getDifficulty())
+          .viewCount(0)
+          .member(member) // Member 세팅
+          .build();
 
-    // RecipeCategory 저장 또는 검색
-    RecipeCategory recipeCategory = recipe.getRecipeCategory();
-    if (recipeCategory != null && recipeCategory.getRCateId() != null) {
-      Long categoryId = recipeCategory.getRCateId();
-      RecipeCategory existingCategory = recipeCategoryRepository.findById(categoryId)
-          .orElseGet(() -> recipeCategoryRepository.save(recipeCategory));
-      recipe.setRecipeCategory(existingCategory);
-    } else {
-      log.warn("RecipeCategory is null or RCateId is null. Skipping category save.");
+      // 3. Category 설정
+      if (recipeDto.getRecipeCategoryDto() != null) {
+        RecipeCategory category = recipeCategoryRepository.findById(recipeDto.getRecipeCategoryDto().getRCateId())
+            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리입니다."));
+        recipe.setRecipeCategory(category);
+      }
+      Recipe savedRecipe = recipeRepository.save(recipe);
+
+      // 4. RecipeIngredient 저장
+      if (recipeDto.getRecipeIngredientDtos() != null) {
+        List<RecipeIngredient> ingredients = recipeDto.getRecipeIngredientDtos().stream()
+            .map(dto -> RecipeIngredient.builder()
+                .name(dto.getName())
+                .quantity(dto.getQuantity())
+                .recipe(savedRecipe)
+                .build())
+            .collect(Collectors.toList());
+        recipeIngredientRepository.saveAll(ingredients);
+      }
+
+      // 5. RecipeStep 저장
+      if (recipeDto.getRecipeStepDtos() != null) {
+        List<RecipeStep> steps = new ArrayList<>();
+        for (int i = 0; i < recipeDto.getRecipeStepDtos().size(); i++) {
+          RecipeStepDto stepDto = recipeDto.getRecipeStepDtos().get(i);
+          RecipeStep step = RecipeStep.builder()
+              .content(stepDto.getContent())
+              .uuid(stepDto.getUuid())
+              .imgName(stepDto.getImgName())
+              .path(stepDto.getPath())
+              .stepOrder(i + 1)
+              .recipe(savedRecipe)
+              .build();
+          steps.add(step);
+        }
+        recipeStepRepository.saveAll(steps);
+      }
+
+      // 6. RecipeImage
+      // RecipeImage 저장
+      if (recipeDto.getRecipeImageDtos() != null && !recipeDto.getRecipeImageDtos().isEmpty()) {
+        List<RecipeImage> recipeImages = recipeDto.getRecipeImageDtos().stream()
+            .map(imageDto -> RecipeImage.builder()
+                .uuid(imageDto.getUuid())
+                .imgName(imageDto.getImgName())
+                .path(imageDto.getPath())
+                .recipe(savedRecipe)
+                .build())
+            .collect(Collectors.toList());
+        recipeImageRepository.saveAll(recipeImages);
+      }
+
+      return savedRecipe.getRno();
+
+    } catch (Exception e) {
+      log.error("Recipe registration failed", e);
+      throw new RuntimeException("Failed to register recipe", e);
     }
-
-    // Recipe 저장
-    recipeRepository.save(recipe);
-
-    // RecipeImage 저장
-    List<RecipeImage> recipeImages = (List<RecipeImage>) entityMap.get("recipeImages");
-    if (recipeImages != null) {
-      recipeImages.forEach(image -> image.setRecipe(recipe)); // Recipe와 연결
-      recipeImageRepository.saveAll(recipeImages);
-    }
-
-    // RecipeStep 저장
-    List<RecipeStep> recipeSteps = (List<RecipeStep>) entityMap.get("recipeSteps");
-    if (recipeSteps != null) {
-      recipeSteps.forEach(step -> step.setRecipe(recipe)); // Recipe와 연결
-      recipeStepRepository.saveAll(recipeSteps);
-    }
-
-    // RecipeIngredient 저장
-    List<RecipeIngredient> recipeIngredients = (List<RecipeIngredient>) entityMap.get("recipeIngredients");
-    if (recipeIngredients != null) {
-      recipeIngredients.forEach(ingredient -> ingredient.setRecipe(recipe)); // Recipe와 연결
-      recipeIngredientRepository.saveAll(recipeIngredients);
-    }
-
-    log.info("!!!!!!!!!Recipe registered successfully: {}", recipe.getRno());
-    return recipe.getRno();
   }
 
   @Transactional
@@ -158,29 +231,45 @@ public class RecipeServiceImpl implements RecipeService {
   // TODO: 상세조회
   @Override
   public RecipeDto get(Long rno) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'get'");
+    try {
+      Recipe recipe = recipeRepository.findById(rno)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid recipe ID: " + rno));
+
+      // 조회수 증가
+      recipe.setViewCount(recipe.getViewCount() != null ? recipe.getViewCount() + 1 : 1);
+      recipeRepository.save(recipe);
+
+      // 관련 데이터 조회
+      List<RecipeImage> images = recipe.getRecipeImages() != null ? recipe.getRecipeImages() : new ArrayList<>();
+      List<RecipeStep> steps = recipe.getRecipeSteps() != null ? recipe.getRecipeSteps() : new ArrayList<>();
+      List<RecipeIngredient> ingredients = recipe.getRecipeIngredients() != null ? recipe.getRecipeIngredients()
+          : new ArrayList<>();
+
+      return entityToDto(recipe, recipe.getRecipeCategory(), images, steps, ingredients);
+    } catch (Exception e) {
+      log.error("레시피 조회 중 오류: ", e);
+      throw new RuntimeException("레시피 조회 실패", e);
+    }
   }
 
   // TODO: 조회수 증가
   @Override
   public RecipeDto incrementViewCount(Long rno) {
-    return null;
-    // // 레시피 조회 (없으면 예외 처리)
-    // Optional<Recipe> recipeOptional = this.recipeRepository.findById(rno);
+    // 레시피 조회 (없으면 예외 처리)
+    Optional<Recipe> recipeOptional = this.recipeRepository.findById(rno);
 
-    // // 레시피가 존재하는 경우
-    // if (recipeOptional.isPresent()) {
-    // Recipe recipe = recipeOptional.get();
-    // recipe.setViewCount(recipe.getViewCount() + 1); // 조회수 증가
-    // this.recipeRepository.save(recipe); // 변경사항 저장
+    // 레시피가 존재하는 경우
+    if (recipeOptional.isPresent()) {
+      Recipe recipe = recipeOptional.get();
+      recipe.setViewCount(recipe.getViewCount() + 1); // 조회수 증가
+      this.recipeRepository.save(recipe); // 변경사항 저장
 
-    // // Recipe 객체를 RecipeDto로 변환하여 반환
-    // return this.convertToDto(recipe);
-    // } else {
-    // // 레시피가 존재하지 않으면 예외를 던짐
-    // throw new NotFoundException("Recipe not found");
-    // }
+      // Recipe 객체를 RecipeDto로 변환하여 반환
+      return this.entityToDto(recipe);
+    } else {
+      // 레시피가 존재하지 않으면 예외를 던짐
+      throw new Error("Recipe not found");
+    }
   }
 
   @Override
@@ -207,28 +296,11 @@ public class RecipeServiceImpl implements RecipeService {
         .viewCount(recipe.getViewCount()) // 증가된 조회수를 포함
         .mid(recipe.getMember() != null ? recipe.getMember().getMid() : null) // Member의 mid 가져옴
         .userid(recipe.getMember() != null ? recipe.getMember().getUserid() : null) // Member의 userid을 가져옴
-        // .nickname(recipe.getMember() != null ? recipe.getMember().getNickname() : null) // Member 의 nickname
+        // .nickname(recipe.getMember() != null ? recipe.getMember().getNickname() :
+        // null) // Member 의 nickname
         .regDate(recipe.getRegDate())
         .updateDate(recipe.getUpdateDate())
         .build();
   }
-
-  // @Override
-  // public RecipeDto get(Long rno) {
-  // List<Object[]> result = recipeImageRepository.getRecipeRow(rno);
-
-  // Recipe recipe = (Recipe) result.get(0)[0];
-  // Long reviewCnt = (Long) result.get(0)[2];
-  // Double avg = (Double) result.get(0)[3];
-
-  // // 1 : 영화이미지
-  // List<RecipeImage> recipeImages = new ArrayList<>();
-  // result.forEach(row -> {
-  // RecipeImage recipeImage = (RecipeImage) row[1];
-  // recipeImage.add(recipeImage);
-  // });
-
-  // return entityToDto(recipe, recipeImages); // reviewCnt, avg
-  // }
 
 }

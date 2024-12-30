@@ -44,14 +44,12 @@
                     </div>
                     <div class="post-buttons">
                       <a
-                        th:if="${board.userid == #authentication.name}"
                         th:href="@{/board/modify/{bno}(bno=${board.bno})}"
                         class="btn btn-secondary modify-btn"
                       >
                         Modify
                       </a>
                       <form
-                        th:if="${board.userid == #authentication.name}"
                         th:action="@{/board/delete/{bno}(bno=${board.bno})}"
                         method="post"
                         style="display: inline"
@@ -118,27 +116,52 @@
                               data-comment-id="${comment.id}"
                             >
                               <p class="meta">
-                                <span
-                                  th:text="${#authentication.principal.memberDto.nickname}"
-                                  >작성자 닉네임</span
-                                >
+                                <span th:text="${comment.userid}">작성자</span>
                                 <span
                                   th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
                                   >작성 시간</span
                                 >
                                 <i class="pull-right">
-                                  <a
-                                    th:if="${comment.userid == #authentication.name}"
-                                    href="#"
-                                    class="delete-link"
-                                    th:data-comment-id="${comment.id}"
+                                  <!-- <a href="#" class="modify-link"
+                                    ><small>Modify</small></a
                                   >
-                                    <small>Delete</small>
-                                  </a>
+                                  | -->
+                                  <a href="#" class="delete-link"
+                                    ><small>Delete</small></a
+                                  >
+                                  <!-- |
+                                  <a href="#" class="reply-link"
+                                    ><small>Reply</small></a
+                                  > -->
                                 </i>
                               </p>
                               <p th:text="${comment.content}">댓글 내용</p>
                             </div>
+                            <!-- 대댓글 -->
+                            <ul class="comments" th:if="${comment.replies}">
+                              <li
+                                th:each="reply : ${comment.replies}"
+                                class="clearfix"
+                              >
+                                <img
+                                  src="/sampleimg/hr1.jpg"
+                                  class="avatar"
+                                  alt=""
+                                />
+                                <div class="post-comments">
+                                  <p class="meta">
+                                    <span th:text="${reply.userid}"
+                                      >작성자</span
+                                    >
+                                    <span
+                                      th:text="${#temporals.format(reply.regDate, 'yyyy-MM-dd HH:mm')}"
+                                      >작성 시간</span
+                                    >
+                                  </p>
+                                  <p th:text="${reply.content}">대댓글 내용</p>
+                                </div>
+                              </li>
+                            </ul>
                           </li>
                         </ul>
                       </div>
@@ -153,16 +176,69 @@
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
       <script>
+        // 댓글의 Reply 버튼 클릭 이벤트
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("reply-link")) {
+            e.preventDefault(); // 기본 동작 막기
+            console.log("Reply link clicked.");
+
+            // 현재 클릭한 댓글의 ID 가져오기
+            const parentComment = e.target.closest(".post-comments");
+            const parentCommentId = parentComment
+              ? parentComment.getAttribute("data-comment-id")
+              : null;
+            console.log("Parent comment ID:", parentCommentId);
+
+            if (parentCommentId) {
+              // 기존 댓글 입력창 찾기
+              const commentInput = document.getElementById("comment");
+              const submitButton = document.getElementById("submitComment");
+
+              // 댓글 입력창의 스타일과 placeholder 변경
+              commentInput.placeholder = `~~${parentCommentId}~~의 대댓글을 입력하세요.`;
+              submitButton.style.backgroundColor = "orange";
+              submitButton.textContent = "대댓글 입력";
+
+              // 대댓글 입력 상태를 저장 (hidden input 활용)
+              document.getElementById("parentId").value = parentCommentId;
+            } else {
+              console.error(
+                "Parent comment not found or data-comment-id is missing."
+              );
+            }
+          }
+        });
+
+        // 댓글 입력창 초기화 (대댓글에서 댓글 입력으로 돌아갈 때)
+        document
+          .getElementById("submitComment")
+          .addEventListener("click", function () {
+            const commentInput = document.getElementById("comment");
+            const submitButton = document.getElementById("submitComment");
+
+            console.log("Submit button clicked. Resetting input form.");
+
+            // 입력창 및 버튼 초기화
+            commentInput.placeholder = "댓글 내용을 입력하세요.";
+            submitButton.style.backgroundColor = "green"; // 기본 댓글 버튼 색상
+            submitButton.textContent = "Submit";
+
+            // hidden 필드 초기화
+            document.getElementById("parentId").value = "";
+          });
+
         // 댓글 작성 AJAX
         document
           .getElementById("submitComment")
           .addEventListener("click", function () {
             const commentContent = document.getElementById("comment").value;
             const boardId = document.getElementById("boardId").value;
+            const parentId = document.getElementById("parentId").value || null; // 대댓글용 parentId
 
             console.log("Submitting comment:", {
               commentContent,
               boardId,
+              parentId,
             });
 
             const csrfToken = document
@@ -181,6 +257,7 @@
               body: JSON.stringify({
                 content: commentContent,
                 boardId: boardId,
+                parentId: parentId,
               }),
             })
               .then((response) => {
@@ -200,43 +277,6 @@
                 alert("댓글 등록에 실패했습니다.");
               });
           });
-
-        // 댓글 삭제
-        document.querySelectorAll(".delete-link").forEach((button) => {
-          button.addEventListener("click", function (event) {
-            event.preventDefault(); // 기본 동작 방지
-
-            const commentId = button.getAttribute("data-comment-id"); // 댓글 ID 가져오기
-
-            if (confirm("이 댓글을 삭제하시겠습니까?")) {
-              const csrfToken = document
-                .querySelector("meta[name='_csrf']")
-                .getAttribute("content");
-              const csrfHeader = document
-                .querySelector("meta[name='_csrf_header']")
-                .getAttribute("content");
-
-              fetch(`/board/comment/${commentId}`, {
-                method: "DELETE",
-                headers: {
-                  [csrfHeader]: csrfToken,
-                },
-              })
-                .then((response) => {
-                  if (response.ok) {
-                    alert("댓글이 삭제되었습니다.");
-                    button.closest(".post-comments").parentElement.remove(); // 댓글 UI 제거
-                  } else {
-                    alert("댓글 삭제 중 오류가 발생했습니다.");
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error during deletion:", error);
-                  alert("댓글 삭제에 실패했습니다.");
-                });
-            }
-          });
-        });
       </script>
     </div>
   </body>

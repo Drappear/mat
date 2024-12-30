@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.recipe.RecipeCategoryDto;
@@ -20,6 +23,11 @@ import com.example.mat.entity.recipe.RecipeIngredient;
 import com.example.mat.entity.recipe.RecipeStep;
 
 public interface RecipeService {
+
+  // 기존 메서드는 유지하고 새로운 메서드 추가
+  Page<RecipeDto> getRecipeList(String keyword, Long categoryId, String sortBy, Pageable pageable);
+
+  Long getTotalRecipeCount();
 
   // 목록(페이지 나누기 + 검색)
   PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto);
