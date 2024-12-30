@@ -26,11 +26,21 @@
                   <h2 th:text="${board.title}">제목</h2>
                   <div class="media">
                     <div class="avatar">
-                      <img src="/sampleimg/hr1.jpg" title="My Avatar" alt="My Avatar" />
+                      <img
+                        src="/sampleimg/hr1.jpg"
+                        title="My Avatar"
+                        alt="My Avatar"
+                      />
                     </div>
                     <div class="media-body">
-                      <label th:text="${#authentication.principal.memberDto.nickname}">Nickname</label>
-                      <span th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}">작성 시간</span>
+                      <label
+                        th:text="${#authentication.principal.memberDto.nickname}"
+                        >Nickname</label
+                      >
+                      <span
+                        th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
+                        >작성 시간</span
+                      >
                     </div>
                     <div class="post-buttons">
                       <a
@@ -44,8 +54,14 @@
                         method="post"
                         style="display: inline"
                       >
-                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                        <button type="submit" class="btn btn-danger delete-btn">Delete</button>
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          th:value="${_csrf.token}"
+                        />
+                        <button type="submit" class="btn btn-danger delete-btn">
+                          Delete
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -73,7 +89,13 @@
                 ></textarea>
                 <input type="hidden" id="boardId" th:value="${board.bno}" />
                 <input type="hidden" id="parentId" name="parentId" value="" />
-                <button type="button" class="btn btn-primary" id="submitComment">Submit</button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="submitComment"
+                >
+                  Submit
+                </button>
               </div>
 
               <!-- 댓글 목록 -->
@@ -84,27 +106,64 @@
                       <div class="blog-comment">
                         <ul class="comments">
                           <li th:each="comment : ${comments}" class="clearfix">
-                            <img src="/sampleimg/hr3.jpg" class="avatar" alt="" />
-                            <div class="post-comments" data-comment-id="${comment.id}">
+                            <img
+                              src="/sampleimg/hr3.jpg"
+                              class="avatar"
+                              alt=""
+                            />
+                            <div
+                              class="post-comments"
+                              data-comment-id="${comment.bcid}"
+                            >
                               <p class="meta">
                                 <span th:text="${comment.userid}">작성자</span>
-                                <span th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}">작성 시간</span>
-                                <i class="pull-right">
-                                  <a href="#" class="modify-link"><small>Modify</small></a> |
-                                  <a href="#" class="delete-link"><small>Delete</small></a> |
-                                  <a href="#" class="reply-link"><small>Reply</small></a>
-                                </i>
+                                <span
+                                  th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
+                                  >작성 시간</span
+                                >
                               </p>
                               <p th:text="${comment.content}">댓글 내용</p>
+                              <div class="comment-buttons">
+                                <button
+                                  class="btn btn-secondary modify-link"
+                                  type="button"
+                                >
+                                  Modify
+                                </button>
+                                <button
+                                  class="btn btn-danger delete-link"
+                                  type="button"
+                                >
+                                  Delete
+                                </button>
+                                <button
+                                  class="btn btn-warning reply-link"
+                                  type="button"
+                                >
+                                  Reply
+                                </button>
+                              </div>
                             </div>
                             <!-- 대댓글 -->
                             <ul class="comments" th:if="${comment.replies}">
-                              <li th:each="reply : ${comment.replies}" class="clearfix">
-                                <img src="/sampleimg/hr1.jpg" class="avatar" alt="" />
+                              <li
+                                th:each="reply : ${comment.replies}"
+                                class="clearfix"
+                              >
+                                <img
+                                  src="/sampleimg/hr1.jpg"
+                                  class="avatar"
+                                  alt=""
+                                />
                                 <div class="post-comments">
                                   <p class="meta">
-                                    <span th:text="${reply.userid}">작성자</span>
-                                    <span th:text="${#temporals.format(reply.regDate, 'yyyy-MM-dd HH:mm')}">작성 시간</span>
+                                    <span th:text="${reply.userid}"
+                                      >작성자</span
+                                    >
+                                    <span
+                                      th:text="${#temporals.format(reply.regDate, 'yyyy-MM-dd HH:mm')}"
+                                      >작성 시간</span
+                                    >
                                   </p>
                                   <p th:text="${reply.content}">대댓글 내용</p>
                                 </div>
@@ -132,7 +191,9 @@
 
             // 현재 클릭한 댓글의 ID 가져오기
             const parentComment = e.target.closest(".post-comments");
-            const parentCommentId = parentComment ? parentComment.getAttribute("data-comment-id") : null;
+            const parentCommentId = parentComment
+              ? parentComment.getAttribute("data-comment-id")
+              : null;
             console.log("Parent comment ID:", parentCommentId);
 
             if (parentCommentId) {
@@ -148,67 +209,81 @@
               // 대댓글 입력 상태를 저장 (hidden input 활용)
               document.getElementById("parentId").value = parentCommentId;
             } else {
-              console.error("Parent comment not found or data-comment-id is missing.");
+              console.error(
+                "Parent comment not found or data-comment-id is missing."
+              );
             }
           }
         });
 
         // 댓글 입력창 초기화 (대댓글에서 댓글 입력으로 돌아갈 때)
-        document.getElementById("submitComment").addEventListener("click", function () {
-          const commentInput = document.getElementById("comment");
-          const submitButton = document.getElementById("submitComment");
+        document
+          .getElementById("submitComment")
+          .addEventListener("click", function () {
+            const commentInput = document.getElementById("comment");
+            const submitButton = document.getElementById("submitComment");
 
-          console.log("Submit button clicked. Resetting input form.");
+            console.log("Submit button clicked. Resetting input form.");
 
-          // 입력창 및 버튼 초기화
-          commentInput.placeholder = "댓글 내용을 입력하세요.";
-          submitButton.style.backgroundColor = "green"; // 기본 댓글 버튼 색상
-          submitButton.textContent = "Submit";
+            // 입력창 및 버튼 초기화
+            commentInput.placeholder = "댓글 내용을 입력하세요.";
+            submitButton.style.backgroundColor = "green"; // 기본 댓글 버튼 색상
+            submitButton.textContent = "Submit";
 
-          // hidden 필드 초기화
-          document.getElementById("parentId").value = "";
-        });
+            // hidden 필드 초기화
+            document.getElementById("parentId").value = "";
+          });
 
         // 댓글 작성 AJAX
-        document.getElementById("submitComment").addEventListener("click", function () {
-          const commentContent = document.getElementById("comment").value;
-          const boardId = document.getElementById("boardId").value;
-          const parentId = document.getElementById("parentId").value || null; // 대댓글용 parentId
+        document
+          .getElementById("submitComment")
+          .addEventListener("click", function () {
+            const commentContent = document.getElementById("comment").value;
+            const boardId = document.getElementById("boardId").value;
+            const parentId = document.getElementById("parentId").value || null; // 대댓글용 parentId
 
-          console.log("Submitting comment:", { commentContent, boardId, parentId });
-
-          const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
-          const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
-
-          fetch("/board/comment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              [csrfHeader]: csrfToken,
-            },
-            body: JSON.stringify({
-              content: commentContent,
-              boardId: boardId,
-              parentId: parentId,
-            }),
-          })
-            .then((response) => {
-              console.log("Response status:", response.status);
-              if (response.ok) {
-                alert("댓글이 등록되었습니다.");
-                location.reload(); // 페이지 새로고침
-              } else {
-                return response.json().then((err) => {
-                  console.error("Error response from server:", err);
-                  alert("댓글 등록 중 오류가 발생했습니다.");
-                });
-              }
-            })
-            .catch((error) => {
-              console.error("Error during submission:", error);
-              alert("댓글 등록에 실패했습니다.");
+            console.log("Submitting comment:", {
+              commentContent,
+              boardId,
+              parentId,
             });
-        });
+
+            const csrfToken = document
+              .querySelector("meta[name='_csrf']")
+              .getAttribute("content");
+            const csrfHeader = document
+              .querySelector("meta[name='_csrf_header']")
+              .getAttribute("content");
+
+            fetch("/board/comment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken,
+              },
+              body: JSON.stringify({
+                content: commentContent,
+                boardId: boardId,
+                parentId: parentId,
+              }),
+            })
+              .then((response) => {
+                console.log("Response status:", response.status);
+                if (response.ok) {
+                  alert("댓글이 등록되었습니다.");
+                  location.reload(); // 페이지 새로고침
+                } else {
+                  return response.json().then((err) => {
+                    console.error("Error response from server:", err);
+                    alert("댓글 등록 중 오류가 발생했습니다.");
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error("Error during submission:", error);
+                alert("댓글 등록에 실패했습니다.");
+              });
+          });
       </script>
     </div>
   </body>

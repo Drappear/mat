@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardCommentDto {
-    private Long id;
+    private Long bcid;
     private String content;
     private String userid;
     private Long boardId;
