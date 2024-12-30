@@ -51,8 +51,8 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
                 // 저장 및 ID 반환
                 BoardComment savedComment = boardCommentRepository.save(comment);
-                log.info("[Service] 댓글 추가 완료. 저장된 댓글 ID: {}", savedComment.getId());
-                return savedComment.getId();
+                log.info("[Service] 댓글 추가 완료. 저장된 댓글 ID: {}", savedComment.getBcid());
+                return savedComment.getBcid();
         }
 
         @Override
@@ -93,11 +93,11 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
         private BoardCommentDto convertToDtoWithReplies(BoardComment comment) {
                 return BoardCommentDto.builder()
-                                .id(comment.getId())
+                                .bcid(comment.getBcid()) // 변경된 부분
                                 .content(comment.getContent())
                                 .userid(comment.getUserid())
                                 .boardId(comment.getBoard().getBno())
-                                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
+                                .parentId(comment.getParent() != null ? comment.getParent().getBcid() : null) // 변경된 부분
                                 .regDate(comment.getRegDate())
                                 .updateDate(comment.getUpdateDate())
                                 .replies(comment.getReplies() != null

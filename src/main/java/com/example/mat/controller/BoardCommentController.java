@@ -25,7 +25,7 @@ public class BoardCommentController {
 
     /**
      * 댓글 추가 요청 처리
-     * 
+     *
      * @param boardCommentDto 댓글 데이터 DTO
      * @return 생성된 댓글 ID
      */
@@ -45,13 +45,13 @@ public class BoardCommentController {
         }
 
         // 댓글 추가 서비스 호출
-        Long commentId = boardCommentService.addComment(boardCommentDto);
-        return ResponseEntity.ok(commentId);
+        Long bcid = boardCommentService.addComment(boardCommentDto);
+        return ResponseEntity.ok(bcid);
     }
 
     /**
      * 특정 게시글의 댓글 목록 조회
-     * 
+     *
      * @param boardId 게시글 ID
      * @return 댓글 목록 (부모 댓글과 대댓글 포함)
      */
@@ -66,32 +66,32 @@ public class BoardCommentController {
 
     /**
      * 댓글 수정 요청 처리
-     * 
-     * @param commentId 댓글 ID
-     * @param content   수정할 댓글 내용
+     *
+     * @param bcid    댓글 ID
+     * @param content 수정할 댓글 내용
      */
-    @PutMapping("/comment/{commentId}")
+    @PutMapping("/comment/{bcid}")
     public ResponseEntity<Void> updateComment(
-            @PathVariable Long commentId,
+            @PathVariable Long bcid,
             @RequestBody String content) {
-        log.info("[REQUEST] 댓글 수정 요청, commentId: {}, content: {}", commentId, content);
+        log.info("[REQUEST] 댓글 수정 요청, bcid: {}, content: {}", bcid, content);
 
         // 댓글 수정 서비스 호출
-        boardCommentService.updateComment(commentId, content);
+        boardCommentService.updateComment(bcid, content);
         return ResponseEntity.noContent().build();
     }
 
     /**
      * 댓글 삭제 요청 처리
-     * 
-     * @param commentId 댓글 ID
+     *
+     * @param bcid 댓글 ID
      */
-    @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
-        log.info("[REQUEST] 댓글 삭제 요청, commentId: {}", commentId);
+    @DeleteMapping("/comment/{bcid}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long bcid) {
+        log.info("[REQUEST] 댓글 삭제 요청, bcid: {}", bcid);
 
         // 댓글 삭제 서비스 호출
-        boardCommentService.deleteComment(commentId);
+        boardCommentService.deleteComment(bcid);
         return ResponseEntity.noContent().build();
     }
 }
