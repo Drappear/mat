@@ -3,6 +3,7 @@ const reviewForm = document.querySelector("#reviewForm");
 const modBtn = document.querySelector("#modBtn");
 const listBtn = document.querySelector("#listBtn");
 const reviewFileInput = document.querySelector("#reviewFile");
+const reviewList = document.querySelector(".review-two-column-list");
 
 modBtn.addEventListener("click", () => {
   af.method = "get";
@@ -94,55 +95,64 @@ $(".service-score > .star").click(function () {
   return false;
 });
 
-// 영화의 전체 리뷰 가져오기
-// const reviewLoaded = () => {
-//   fetch(`/reviews/${did}/all`)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);
-//       // 도착한 data 화면에 보여주기
+// 전체 리뷰 가져오기
+const reviewLoaded = () => {
+  fetch(`/review/${did}/all`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      console.log(data.dtoList);
 
-//       document.querySelector(".review-cnt").innerHTML = data.length;
+      // 도착한 data 화면에 보여주기
 
-//       if (data.length > 0) {
-//         reviewList.classList.remove("hidden");
-//       }
+      // document.querySelector(".review-cnt").innerHTML = data.length;
 
-//       let result = "";
+      // if (data.length > 0) {
+      //   reviewList.classList.remove("hidden");
+      // }
 
-//       data.forEach((review) => {
-//         result += `<div class="d-flex justify-content-between my-2 border-bottom py-2 review-row" data-rno="${review.reviewNo}">`;
-//         result += `  <div class="flex-grow-1 align-self-center">`;
-//         result += `    <div>`;
-//         result += `      <span class="font-semibold">${review.text}</span>`;
-//         result += `    </div>`;
-//         result += `    <div class="small text-muted">`;
-//         result += `      <span class="d-inline-block mr-3">${review.nickName}</span>`;
-//         result += `      <span class="grade">${review.grade}</span><div class="starrr"></div>`;
-//         result += `    </div>`;
-//         result += `    <div class="text-muted">`;
-//         result += `      평점 : <span class="small">${formatDate(review.regDate)}</span>`;
-//         result += `    </div>`;
-//         result += `  </div>`;
+      let result = "";
 
-//         // 리뷰 작성자 == 로그인 사용자
-//         if (review.email === loginUser) {
-//           result += `  <div class="d-flex flex-column align-self-center">`;
-//           result += `    <div class="mb-2">`;
-//           result += `      <button class="btn btn-outline-danger btn-sm">삭제</button>`;
-//           result += `    </div>`;
-//           result += `    <div class="mb-2">`;
-//           result += `      <button class="btn btn-outline-success btn-sm">수정</button>`;
-//           result += `    </div>`;
-//           result += `  </div>`;
-//         }
-//         result += `</div>`;
-//       });
+      // data.dtoList.forEach((review) => {
+      //   console.log(review);
 
-//       // 리뷰 영역에 보여주기
-//       reviewList.innerHTML = result;
-//     });
-// };
+      // result += `
+      //   <li class="review-list-item">
+      //     <div class="review-reviewer-img">
+      //       <img src="https://placehold.co/50x50" alt="" />
+      //     </div>
+      //     <table class="review-table">
+      //       <tr>
+      //         <td>작성자${review.nickname}</td>
+      //         <td th:text="${review.regDate}">작성일</td>
+      //       </tr>
+      //       <tr>
+      //         <td>총점</td>
+      //         <td th:text="${review.tasteScore}">맛</td>
+      //         <td th:text="${review.priceScore}">가격</td>
+      //         <td th:text="${review.serviceScore}">서비스</td>
+      //       </tr>
+      //     </table>
+      //     <div class="row" th:text="${review.content}">review text</div>
+      //     <div class="row">
+      //       `;
+      // review.dinerImageDtos.forEach(
+      //   `<img th:src="|/dfup/display?fileName=${reviewImageURL}|" th:if="${
+      //     path != null
+      //   }" width="80px" height="60px"/>`
+      // );
+      // `
+      //     </div>
+      //   </li>
+      //     `;
+      // });
+
+      // 리뷰 영역에 보여주기
+      // reviewList.insertAdjacentHTML("beforeend", result);
+    });
+};
+
+reviewLoaded();
 
 // 작성 클릭 시
 reviewForm.addEventListener("submit", (e) => {

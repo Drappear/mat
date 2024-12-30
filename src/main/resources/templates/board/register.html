@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" layout:decorate="~{/layouts/layout}">
+<html lang="zxx" layout:decorate="~{/layouts/boardLayout}">
   <head>
     <meta charset="UTF-8" />
     <title>New Post</title>
@@ -11,6 +11,10 @@
       <div class="write-content">
         <div class="write-article">
           <!-- 글 작성 폼 -->
+
+          <!-- 글 작성 폼 제목 -->
+          <h1 class="form-title">Register</h1>
+
           <form
             th:action="@{/board/register}"
             th:object="${boardDto}"

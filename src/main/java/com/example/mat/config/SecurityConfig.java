@@ -23,9 +23,12 @@ public class SecurityConfig {
                 .requestMatchers("/member/register").permitAll()
                 .requestMatchers("/board/register").permitAll()
                 .requestMatchers("/diner/**", "/dfup/**", "/review/**").permitAll()
+                .requestMatchers("/recipe/**", "/upload/**").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
+        // http.formLogin(login ->
+        // login.loginPage("/member/login").permitAll().defaultSuccessUrl("/recipe/list"));
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 

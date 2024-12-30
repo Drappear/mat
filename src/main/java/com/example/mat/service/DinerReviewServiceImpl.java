@@ -1,10 +1,17 @@
 package com.example.mat.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.DinerReview;
@@ -34,9 +41,15 @@ public class DinerReviewServiceImpl implements DinerReviewService {
     }
 
     @Override
-    public List<DinerReviewDto> getDinerReviews(Long did) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDinerReviews'");
+    public PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto) {
+        Pageable pageable = pageRequestDto.getPageable(Sort.by("rvid").descending());
+
+        Page<Object[]> result = imageRepository.getTotalReviewList(pageable);
+
+        Function<Object[], DinerReviewDto> function = (en -> entityToDto((DinerReview) en[0],
+                (List<Image>) Arrays.asList((Image) en[1])));
+
+        return new PageResultDto<>(result, function);
     }
 
     @Override
