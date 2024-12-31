@@ -15,9 +15,6 @@
     <link rel="stylesheet" th:href="@{/css/login.css}" />
 
     <script>
-let isUseridChecked = false;
-let isNicknameChecked = false;
-
 function checkDuplicateUserid() {
     const userid = document.getElementById("userid").value;
     const message = document.getElementById("userid-message");
@@ -43,12 +40,10 @@ function checkDuplicateUserid() {
         })
         .catch((error) => {
             console.error("Error:", error);
-            // 오류가 발생해도 isUseridChecked를 true로 설정
-            message.textContent = "사용 가능한 아이디입니다.";
-            message.style.color = "green";
-            isUseridChecked = true;
+            message.textContent = "중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.";
+            message.style.color = "red";
+            isUseridChecked = false;
         });
-        
 }
 
 function checkDuplicateNickname() {
@@ -76,10 +71,9 @@ function checkDuplicateNickname() {
         })
         .catch((error) => {
             console.error("Error:", error);
-            // 오류가 발생해도 isUseridChecked를 true로 설정
-            message.textContent = "사용 가능한 닉네임입니다.";
-            message.style.color = "green";
-            isNicknameChecked = true;
+            message.textContent = "중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.";
+            message.style.color = "red";
+            isNicknameChecked = false;
         });
 }
 
