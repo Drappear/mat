@@ -82,7 +82,7 @@ public class RecipeController {
   }
 
   @GetMapping({ "/read", "/modify" })
-  public String getRead(@RequestParam("rno") Long rno, Model model,
+  public String getRead(@RequestParam Long rno, Model model,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 상세 페이지 요청 rno: {}", rno);
 

@@ -778,64 +778,6 @@
   <!-- TODO: createForm 제출 전 유효성 검사 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // const form = document.getElementById('createForm');
-      // form.addEventListener('submit', handleFormSubmit);
-
-      // async function handleFormSubmit(e) {
-      //   e.preventDefault();
-
-      //   console.log(form);
-
-      // }
-
-
-      //   console.log(form.innerHTML);
-      // try {
-      //   if (!validateForm()) return;
-
-      //   const form = document.getElementById('createForm');
-      //   const formData = new FormData(form);
-
-      //   // 스텝 이미지 처리
-      //   const stepImages = document.querySelectorAll('.stepImg-wrapper .stepImages');
-      //   stepImages.forEach((step, index) => {
-      //     formData.append(`recipeStepDtos[${index}].uuid`, step.uuid);
-      //     formData.append(`recipeStepDtos[${index}].imgName`, step.imgName);
-      //     formData.append(`recipeStepDtos[${index}].path`, step.path);
-      //   });
-
-      //   // 완성 사진 처리
-      //   const finalImages = document.querySelectorAll('.finalImgContainer img');
-      //   finalImages.forEach((img, index) => {
-      //     const fileInput = img.closest('.relative').querySelector('input[type="file"]');
-      //     if (fileInput.files[0]) {
-      //       formData.append(`recipeImageDtos[${index}].image`, fileInput.files[0]);
-      //     }
-      //   });
-
-      //   const response = await fetch('/recipe/create', {
-      //     method: 'POST',
-      //     headers: {
-      //       'X-CSRF-TOKEN': csrfValue
-      //     },
-      //     body: formData
-      //   });
-
-      //   if (!response.ok) {
-      //     const errorText = await response.text();
-      //     throw new Error(errorText);
-      //   }
-
-      //   const rno = await response.json();
-      //   alert('레시피가 성공적으로 등록되었습니다.');
-      //   // window.location.href = `/recipe/read?rno=${rno}`;
-      //   window.location.href = `/recipe/list`;
-      // } catch (error) {
-      //   console.error('레시피 등록 오류:', error);
-      //   alert('레시피 등록에 실패했습니다. 다시 시도해주세요.');
-      // }
-      // }
-
       function validateForm() {
         if (!validateRequiredFields()) return false;
         if (!validateIngredients()) return false;
