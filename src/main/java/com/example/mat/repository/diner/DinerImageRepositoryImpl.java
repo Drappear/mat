@@ -25,7 +25,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
 public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
-        implements DinerImageRepository{
+        implements DinerImageRepository {
     public DinerImageRepositoryImpl() {
         super(Image.class);
     }
@@ -46,7 +46,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         // .where(review.diner.eq(dinerImage.diner));
 
         JPQLQuery<Tuple> tuple = query.select(diner, image)
-                .where(image.diner.did.eq(did))
+                .where(image.diner.did.eq(did).and(image.imgCate.eq(1)))
                 .orderBy(image.inum.desc());
 
         List<Tuple> result = tuple.fetch();
@@ -72,6 +72,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Long> inum = JPAExpressions.select(
                 image.inum.max()).from(
                         image)
+                .where(image.imgCate.eq(1))
                 .groupBy(image.diner);
 
         JPQLQuery<Tuple> tuple = query.select(
