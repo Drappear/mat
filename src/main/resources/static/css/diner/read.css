@@ -1,11 +1,25 @@
-
-.main-wrapper{
+@font-face {
+  font-family: "JalnanGothic";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+h3,
+h4,
+h5,
+h6,
+h7 {
+  font-family: "JalnanGothic";
+}
+.main-wrapper {
   width: 100%;
+  background-color: rgb(240, 240, 240);
+  border-radius: 1rem;
 }
 .diner-main-img-row {
   white-space: nowrap;
   display: flex;
-  border: 1px solid;
 }
 .diner-main-img {
   display: inline-block;
@@ -28,19 +42,45 @@
 .sub-img ul {
   list-style-type: none;
 }
+
+.diner-address,
+.diner-detail-address {
+  margin: 2px;
+  border-radius: 1rem;
+  background-color: white;
+}
 .diner-overview-section {
   border: 1px solid;
   padding: 5px;
   height: 250px;
   max-height: 300px;
 }
-.diner-overview-section .col-lg-3 {
-  border: 1px solid;
-}
-.diner-overview-section .col-lg-6 {
-  border: 1px solid;
+
+.diner-name,
+.diner-category,
+.diner-phone,
+.diner-work-time {
+  margin-top: 15px;
+  background-color: white;
+  border-radius: 1rem;
+  text-align: center;
+  padding: 3px;
 }
 
+.diner-description-content {
+  margin-top: 15px;
+  background-color: white;
+  border-radius: 1rem;
+}
+
+.diner-menu-section {
+}
+.diner-menu-list {
+  margin-top: 15px;
+  border-radius: 1rem;
+  background-color: white;
+  padding: 5px;
+}
 .review-input-section {
   border: 1px solid;
 }

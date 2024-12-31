@@ -90,7 +90,7 @@ public class DinerRepositoryTest {
       int num = (int) (Math.random() * 6) + 1;
       Diner diner = Diner.builder()
           .address("서울 종로구")
-          .addressDetail(111 * i + "" + 111 * i)
+          .addressDetail(111 * i + "-" + 111 * i)
           .content("안녕하세요 " + i + "번 식당 소개글입니다.")
           .menu("메뉴1 : 000000, 메뉴2 : 000000, 메뉴3 : 000000")
           .name(i + "번 식당")
