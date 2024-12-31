@@ -188,7 +188,7 @@ public class RecipeController {
       rttr.addAttribute("type", pageRequestDto.getType());
       rttr.addAttribute("keyword", pageRequestDto.getKeyword());
 
-      return "redirect:/recipe/read?rno=" + createdRecipeRno;
+      return "redirect:/recipe/list";
     } catch (Exception e) {
       log.error("레시피 등록 중 오류 발생", e);
       model.addAttribute("error", "레시피 등록 중 오류가 발생했습니다. 다시 시도해 주세요.");

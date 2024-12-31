@@ -202,11 +202,7 @@
                         <span class="material-symbols-outlined text-neutral-400">add</span>
                       </div>
                     </label>
-                    <input type="file" name="recipeStepDtos[0].stepImage" id="file" accept="image/*"
-                      style="display: none;" data-step="0" />
-                    <input type="hidden" name="recipeStepDtos[0].uuid" />
-                    <input type="hidden" name="recipeStepDtos[0].imgName" />
-                    <input type="hidden" name="recipeStepDtos[0].path" />
+                    <input type="file" id="file" accept="image/*" style="display: none;" data-step="0" />
                   </div>
                 </div>
                 <!-- step 추가 button -->
@@ -232,9 +228,7 @@
                   <div
                     class="recipeFinalImg1 w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
                     <input type="file" name="recipeImageDtos[0].image" accept="image/*" style="display: none;" />
-                    <input type="hidden" name="recipeImageDtos[0].uuid" />
-                    <input type="hidden" name="recipeImageDtos[0].imgName" />
-                    <input type="hidden" name="recipeImageDtos[0].path" />
+                    <div class="step-preview"></div>
                     <span class="material-symbols-outlined text-neutral-400">add</span>
                   </div>
                   <!-- <button
@@ -437,18 +431,21 @@
 
       function bindInitialStepImageUpload() {
         try {
+
+          // 첫번째 스텝 이벤트 동작
           const initialFileInput = document.querySelector(".step-wrapper [type='file']");
+
           if (initialFileInput) {
-            initialFileInput.addEventListener('change', (e) => handleStepImageUpload(e.target));
+            initialFileInput.addEventListener('change', (e) => handleStepImageUpload(e.target, 0));
           }
 
           // 첫 번째 Step의 이미지 추가 영역에 클릭 이벤트 추가
-          const initialImageWrapper = document.querySelector(".step-wrapper .stepImg-wrapper");
-          if (initialImageWrapper) {
-            initialImageWrapper.addEventListener('click', () => {
-              initialFileInput.click();
-            });
-          }
+          // const initialImageWrapper = document.querySelector(".step-wrapper .stepImg-wrapper");
+          // if (initialImageWrapper) {
+          //   initialImageWrapper.addEventListener('click', () => {
+          //     initialFileInput.click();
+          //   });
+          // }
         } catch (error) {
           console.error('초기 Step 이미지 업로드 이벤트 바인딩 중 오류:', error);
         }
@@ -499,7 +496,7 @@
         const fileInput = stepElement.querySelector("[type='file']");
         const deleteButton = stepElement.querySelector('.delete-step-btn');
 
-        fileInput.addEventListener('change', (e) => handleStepImageUpload(e.target));
+        fileInput.addEventListener('change', (e) => handleStepImageUpload(e.target, stepCount));
         deleteButton.addEventListener('click', () => deleteStep(stepElement));
       }
 
@@ -545,7 +542,10 @@
         }
       }
 
-      function createImagePreview(file, uploadResult) {
+
+
+      function createImagePreview(file, uploadResult, idx) {
+
         const imgPreview = document.createElement('div');
         imgPreview.className = 'image-preview';
         const imgElement = document.createElement('img');
@@ -554,23 +554,30 @@
         imgPreview.appendChild(imgElement);
 
         const hiddenInputs = [
-          { name: 'uuid', value: uploadResult.uuid },
-          { name: 'imgName', value: uploadResult.fileName },
-          { name: 'path', value: uploadResult.folderPath }
+          { name: `recipeStepDtos[${idx}].uuid`, value: uploadResult.uuid },
+          { name: `recipeStepDtos[${idx}].imgName`, value: uploadResult.fileName },
+          { name: `recipeStepDtos[${idx}].path`, value: uploadResult.folderPath }
         ];
+
+        const stepImages = document.createElement('div');
+        stepImages.className = 'stepImages';
 
         hiddenInputs.forEach(input => {
           const hiddenInput = document.createElement('input');
           hiddenInput.type = 'hidden';
           hiddenInput.name = input.name;
           hiddenInput.value = input.value;
-          imgPreview.appendChild(hiddenInput);
+          stepImages.appendChild(hiddenInput);
         });
+
+        imgPreview.appendChild(stepImages);
+
+        console.log(imgPreview);
 
         return imgPreview;
       }
 
-      async function handleStepImageUpload(fileInput) {
+      async function handleStepImageUpload(fileInput, idx) {
         try {
           const file = fileInput.files[0];
           if (!file) return;
@@ -578,7 +585,7 @@
           const path = "step";
           const uploadResult = await uploadImage(file, path);
 
-          const imgPreview = createImagePreview(file, uploadResult);
+          const imgPreview = createImagePreview(file, uploadResult, idx);
           const stepImgWrapper = fileInput.closest('.stepImg-wrapper');
           stepImgWrapper.innerHTML = '';
           stepImgWrapper.appendChild(imgPreview);
@@ -771,57 +778,63 @@
   <!-- TODO: createForm 제출 전 유효성 검사 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('createForm');
-      form.addEventListener('submit', handleFormSubmit);
+      // const form = document.getElementById('createForm');
+      // form.addEventListener('submit', handleFormSubmit);
 
-      async function handleFormSubmit(e) {
-        e.preventDefault();
-        try {
-          if (!validateForm()) return;
+      // async function handleFormSubmit(e) {
+      //   e.preventDefault();
 
-          const form = document.getElementById('createForm');
-          const formData = new FormData(form);
+      //   console.log(form);
 
-          // 스텝 이미지 처리
-          const stepImages = document.querySelectorAll('.stepImg-wrapper img');
-          stepImages.forEach((img, index) => {
-            const fileInput = img.closest('.stepImg-wrapper').querySelector('input[type="file"]');
-            if (fileInput.files[0]) {
-              formData.append(`recipeStepDtos[${index}].stepImage`, fileInput.files[0]);
-            }
-          });
+      // }
 
-          // 완성 사진 처리
-          const finalImages = document.querySelectorAll('.finalImgContainer img');
-          finalImages.forEach((img, index) => {
-            const fileInput = img.closest('.relative').querySelector('input[type="file"]');
-            if (fileInput.files[0]) {
-              formData.append(`recipeImageDtos[${index}].image`, fileInput.files[0]);
-            }
-          });
 
-          const response = await fetch('/recipe/create', {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': csrfValue
-            },
-            body: formData
-          });
+      //   console.log(form.innerHTML);
+      // try {
+      //   if (!validateForm()) return;
 
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
+      //   const form = document.getElementById('createForm');
+      //   const formData = new FormData(form);
 
-          const rno = await response.json();
-          alert('레시피가 성공적으로 등록되었습니다.');
-          // window.location.href = `/recipe/read?rno=${rno}`;
-          window.location.href = `/recipe/list`;
-        } catch (error) {
-          console.error('레시피 등록 오류:', error);
-          alert('레시피 등록에 실패했습니다. 다시 시도해주세요.');
-        }
-      }
+      //   // 스텝 이미지 처리
+      //   const stepImages = document.querySelectorAll('.stepImg-wrapper .stepImages');
+      //   stepImages.forEach((step, index) => {
+      //     formData.append(`recipeStepDtos[${index}].uuid`, step.uuid);
+      //     formData.append(`recipeStepDtos[${index}].imgName`, step.imgName);
+      //     formData.append(`recipeStepDtos[${index}].path`, step.path);
+      //   });
+
+      //   // 완성 사진 처리
+      //   const finalImages = document.querySelectorAll('.finalImgContainer img');
+      //   finalImages.forEach((img, index) => {
+      //     const fileInput = img.closest('.relative').querySelector('input[type="file"]');
+      //     if (fileInput.files[0]) {
+      //       formData.append(`recipeImageDtos[${index}].image`, fileInput.files[0]);
+      //     }
+      //   });
+
+      //   const response = await fetch('/recipe/create', {
+      //     method: 'POST',
+      //     headers: {
+      //       'X-CSRF-TOKEN': csrfValue
+      //     },
+      //     body: formData
+      //   });
+
+      //   if (!response.ok) {
+      //     const errorText = await response.text();
+      //     throw new Error(errorText);
+      //   }
+
+      //   const rno = await response.json();
+      //   alert('레시피가 성공적으로 등록되었습니다.');
+      //   // window.location.href = `/recipe/read?rno=${rno}`;
+      //   window.location.href = `/recipe/list`;
+      // } catch (error) {
+      //   console.error('레시피 등록 오류:', error);
+      //   alert('레시피 등록에 실패했습니다. 다시 시도해주세요.');
+      // }
+      // }
 
       function validateForm() {
         if (!validateRequiredFields()) return false;
