@@ -82,22 +82,24 @@ public class RecipeController {
   }
 
   @GetMapping({ "/read", "/modify" })
-  public String getRead(@RequestParam Long rno, Model model,
+  public void getRead(@RequestParam Long rno, Model model,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 상세 페이지 요청 rno: {}", rno);
 
-    try {
-      RecipeDto recipe = recipeService.get(rno);
-      if (recipe != null) {
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("requestDto", pageRequestDto);
-        return "recipe/read"; // 명시적으로 뷰 이름 반환
-      }
-      return "redirect:/recipe/list";
-    } catch (Exception e) {
-      log.error("레시피 조회 중 오류 발생", e);
-      return "redirect:/recipe/list";
-    }
+    RecipeDto recipeDto = recipeService.get(rno);
+    model.addAttribute("recipeDto", recipeDto);
+    // try {
+    //   RecipeDto recipe = recipeService.get(rno);
+    //   if (recipe != null) {
+    //     model.addAttribute("recipe", recipe);
+    //     model.addAttribute("requestDto", pageRequestDto);
+    //     return "recipe/read"; // 명시적으로 뷰 이름 반환
+    //   }
+    //   return "redirect:/recipe/list";
+    // } catch (Exception e) {
+    //   log.error("레시피 조회 중 오류 발생", e);
+    //   return "redirect:/recipe/list";
+    // }
   }
 
   @GetMapping("/create")
