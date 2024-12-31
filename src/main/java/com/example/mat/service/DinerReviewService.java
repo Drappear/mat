@@ -20,7 +20,7 @@ public interface DinerReviewService {
     Long insertReview(DinerReviewDto dinerReviewDto);
 
     // 리뷰 목록 조회
-    PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did);
+    PageResultDto<List<DinerReviewDto>, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did);
 
     DinerReviewDto getDinerReview(Long rvid);
 
