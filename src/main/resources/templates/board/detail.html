@@ -33,10 +33,7 @@
                       />
                     </div>
                     <div class="media-body">
-                      <label
-                        th:text="${#authentication.principal.memberDto.nickname}"
-                        >Nickname</label
-                      >
+                      <label th:text="${board.userid}">Nickname</label>
                       <span
                         th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
                         >작성 시간</span
