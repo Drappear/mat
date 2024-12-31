@@ -5,260 +5,194 @@
     <link rel="stylesheet" th:href="@{/css/diner/read.css}" />
   </th:block>
   <div layout:fragment="content">
-    <div class="container diner-view">
-      <div class="diner-main-img-and-map">
-        <div class="col-lg-9 diner-main-img">
-          <img
-            th:src="|/upload/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
-            th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
-            alt=""
-            loading="lazy"
-            width="1080px"
-            height="420px"
-          />
-        </div>
-        <div class="col-lg-3 diner-map">
-          <div class="row"><img src="https://placehold.co/320x320" alt="" /></div>
-          <div class="row mt-3">
-            <h5 th:text="${dinerDto.address}"></h5>
-          </div>
-          <div class="row mt-3">
-            <h5>식당 상세 주소</h5>
-            <h6 th:text="${dinerDto.addressDetail}"></h6>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row mt-3 diner-overview-section">
-        <div class="col-lg-3">
-          <div class="row"><h3 th:text="${dinerDto.name}"></h3></div>
-          <div class="row">
-            <div class="col">지역명</div>
-            <div class="col">카테고리<span th:text="${dinerDto.categoryName}"></span></div>
-          </div>
-          <div class="row" th:text="${dinerDto.phone}"></div>
-          <div class="row" th:text="${dinerDto.workTime}">영업시간</div>
-        </div>
-
-        <div class="col-lg-6"><h3 th:text="${dinerDto.content}"></h3></div>
-        <div class="col-lg-3"><h3 th:text="${dinerDto.menu}"></h3></div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row mt-3 review-image-section">
-        <div class="col">
-          <div>종합 별점</div>
-          <div>맛</div>
-          <div>가격</div>
-          <div>서비스</div>
-        </div>
-        <div class="col">
-          <button class="btn btn-info" id="modBtn">수정</button>
-          <button class="btn btn-primary" id="listBtn">목록</button>
-          <button
-            class="btn btn-success"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#reviewCollapse"
-            aria-expanded="false"
-            aria-controls="reviewCollapse"
-          >
-            리뷰쓰기
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- 리뷰 collapse 시작 -->
-    <div class="container mt-3 review-input-section">
-      <form action="" method="post" id="reviewForm">
-        <div class="collapse" id="reviewCollapse">
-          <div class="row p-3 justify-content-center">
-            <div class="score-area col-lg-3">
-              <span>맛</span>
-              <div class="star-rating taste-score">
-                <span class="star on" data-value="1"></span>
-                <span class="star" data-value="2"></span>
-                <span class="star" data-value="3"></span>
-                <span class="star" data-value="4"></span>
-                <span class="star" data-value="5"></span>
-              </div>
-              <input type="hidden" name="tasteScore" id="tasteScore" value="" />
-            </div>
-            <div class="score-area col-lg-3">
-              <span>가격</span>
-              <div class="star-rating price-score">
-                <span class="star on" data-value="1"></span>
-                <span class="star" data-value="2"></span>
-                <span class="star" data-value="3"></span>
-                <span class="star" data-value="4"></span>
-                <span class="star" data-value="5"></span>
-              </div>
-              <input type="hidden" name="priceScore" id="priceScore" value="" />
-            </div>
-            <div class="score-area col-lg-3">
-              <span>서비스</span>
-              <div class="star-rating service-score">
-                <span class="star on" data-value="1"></span>
-                <span class="star" data-value="2"></span>
-                <span class="star" data-value="3"></span>
-                <span class="star" data-value="4"></span>
-                <span class="star" data-value="5"></span>
-              </div>
-              <input type="hidden" name="serviceScore" id="serviceScore" value="" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="comment-area col-lg-12">
-              <div class="input-group">
-                <div class="input-group-text">
-                  <div>작성자</div>
-                  <div>프로필</div>
-                </div>
-                <textarea
-                  class="review-comment-input form-control"
-                  name="content"
-                  id="reviewCommentInput"
-                  rows="4"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-2">
-            <div class="input-group col-lg-10">
-              <input type="file" class="form-control" name="reviewImage" />
-            </div>
-            <div class="col-lg-2">
-              <button type="button" class="btn btn-success">리뷰 등록</button>
-            </div>
-          </div>
-          <div class="row mt-2 p-3 review-input-img-preview">
-            <ul>
-              <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+    <div class="container main-wrapper">
+      <div class="container diner-view">
+        <div class="diner-main-img-row">
+          <div class="col-lg-9 diner-main-img">
+            <div class="row">
+              <div class="main-img">
                 <img
-                  th:attr="data-file=${dinerImage.getThumbImageURL()}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#imgModal"
-                  th:src="|/upload/display?fileName=${dinerImage.getThumbImageURL()}|"
-                  th:if="${dinerImage.path != null}"
+                  th:src="|/dfup/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
+                  th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
                   alt=""
-                  class="block"
+                  loading="lazy"
+                  width="680px"
+                  height="420px"
                 />
-              </li>
-            </ul>
+              </div>
+              <div class="sub-img">
+                <ul>
+                  <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+                    <img
+                      th:attr="data-file=${dinerImage.getImageURL()}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#imgModal"
+                      th:src="|/dfup/display?fileName=${dinerImage.getImageURL()}|"
+                      th:if="${dinerImage.path != null}"
+                      alt=""
+                      class="block"
+                      width="180px"
+                      height="140px"
+                    />
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 diner-map clearfix">
+            <div class="row ml-3"><img src="https://placehold.co/320x320" alt="" /></div>
+            <div class="adress mt-3">
+              <div class="row diner-address p-3">
+                <h4 th:text="${dinerDto.address}"></h4>
+              </div>
+              <div class="row diner-detail-address p-3">
+                <h5 th:text="${dinerDto.addressDetail}"></h5>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      <div class="container">
+        <div class="row mt-3 diner-overview-section">
+          <div class="col-lg-3">
+            <div class="row diner-name"><h3 th:text="${dinerDto.name}"></h3></div>
+            <div class="row diner-category">
+              <h5 th:text="${dinerDto.categoryName}"></h5>
+            </div>
+            <div class="row diner-phone"><h6 th:text="${dinerDto.phone}"></h6></div>
+            <div class="row diner-work-time"><h6 th:text="${dinerDto.workTime}"></h6></div>
+          </div>
+          <div class="diner-content-section col-lg-6">
+            <div class="diner-description-content p-3"><h4 th:text="${dinerDto.content}"></h4></div>
+          </div>
+          <div class="diner-menu-section col-lg-3">
+            <div class="diner-menu-list"><h5 th:text="${dinerDto.menu}"></h5></div>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row mt-3 review-image-section">
+          <div class="col">
+            <div>종합 별점</div>
+            <div>맛</div>
+            <div>가격</div>
+            <div>서비스</div>
+          </div>
+          <div class="col">
+            <button class="btn btn-info" id="modBtn">수정</button>
+            <button class="btn btn-primary" id="listBtn">목록</button>
+            <button
+              class="btn btn-success"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#reviewCollapse"
+              aria-expanded="false"
+              aria-controls="reviewCollapse"
+            >
+              리뷰쓰기
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- 리뷰 collapse 시작 -->
+      <div class="container mt-3 review-input-section">
+        <form action="" method="post" id="reviewForm">
+          <div class="collapse" id="reviewCollapse">
+            <div class="row p-3 justify-content-center">
+              <div class="score-area col-lg-3">
+                <span>맛</span>
+                <div class="star-rating taste-score">
+                  <span class="star on" data-value="1"></span>
+                  <span class="star" data-value="2"></span>
+                  <span class="star" data-value="3"></span>
+                  <span class="star" data-value="4"></span>
+                  <span class="star" data-value="5"></span>
+                </div>
+                <input type="hidden" name="tasteScore" id="tasteScore" value="" />
+              </div>
+              <div class="score-area col-lg-3">
+                <span>가격</span>
+                <div class="star-rating price-score">
+                  <span class="star on" data-value="1"></span>
+                  <span class="star" data-value="2"></span>
+                  <span class="star" data-value="3"></span>
+                  <span class="star" data-value="4"></span>
+                  <span class="star" data-value="5"></span>
+                </div>
+                <input type="hidden" name="priceScore" id="priceScore" value="" />
+              </div>
+              <div class="score-area col-lg-3">
+                <span>서비스</span>
+                <div class="star-rating service-score">
+                  <span class="star on" data-value="1"></span>
+                  <span class="star" data-value="2"></span>
+                  <span class="star" data-value="3"></span>
+                  <span class="star" data-value="4"></span>
+                  <span class="star" data-value="5"></span>
+                </div>
+                <input type="hidden" name="serviceScore" id="serviceScore" value="" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="comment-area col-lg-12">
+                <div class="input-group">
+                  <textarea
+                    class="review-comment-input form-control"
+                    name="content"
+                    id="reviewCommentInput"
+                    rows="4"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="input-group col-lg-10">
+                <input
+                  type="file"
+                  name="uploadFiles"
+                  class="form-control"
+                  id="reviewFile"
+                  accept="image/png, image/jpg, image/jpeg"
+                  multiple
+                />
+              </div>
+              <div class="col-lg-2">
+                <input
+                  type="hidden"
+                  name="mid"
+                  th:value="${#authentication.principal.memberDto.mid}"
+                />
+                <button type="submit" class="btn btn-success">리뷰 등록</button>
+              </div>
+            </div>
+            <div class="row mt-2 p-3 review-input-img-preview">
+              <ul id="review-img-preview"></ul>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- 리뷰 collapse 끝 -->
+
+      <!-- 리뷰 목록 -->
+      <div class="container mt-3">
+        <div class="row review-two-column">
+          <ul class="review-two-column-list"></ul>
+        </div>
+      </div>
+      <form action="" method="post" id="actionForm">
+        <input type="hidden" name="did" th:value="${dinerDto.did}" />
+        <input type="hidden" name="page" th:value="${requestDto.page}" />
+        <input type="hidden" name="size" th:value="${requestDto.size}" />
+        <input type="hidden" name="type" th:value="${requestDto.type}" />
+        <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
       </form>
     </div>
-    <!-- 리뷰 collapse 끝 -->
-    <div class="container mt-3">
-      <div class="row review-two-column">
-        <ul class="review-two-column-list">
-          <li class="review-list-item">
-            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
-            <table class="review-table">
-              <tr>
-                <td>작성자</td>
-                <td>작성일</td>
-              </tr>
-              <tr>
-                <td>총점</td>
-                <td>맛</td>
-                <td>가격</td>
-                <td>서비스</td>
-              </tr>
-            </table>
-            <div class="row">review text</div>
-            <div class="row">
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-            </div>
-          </li>
-          <li class="review-list-item">
-            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
-            <div class="review-info">
-              <span>작성자</span>
-              <span>작성일</span>
-            </div>
-            <div class="review-score">
-              <span>총점</span>
-              <span>맛</span>
-              <span>가격</span>
-              <span>서비스</span>
-            </div>
-            <div class="row">review text</div>
-            <div class="row">
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-            </div>
-          </li>
-          <li class="review-list-item">
-            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
-            <table class="review-table">
-              <tr>
-                <td>작성자</td>
-                <td>작성일</td>
-              </tr>
-              <tr>
-                <td>총점</td>
-                <td>맛</td>
-                <td>가격</td>
-                <td>서비스</td>
-              </tr>
-            </table>
-            <div class="row">review text</div>
-            <div class="row">
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-            </div>
-          </li>
-          <li class="review-list-item">
-            <div class="review-reviewer-img"><img src="https://placehold.co/50x50" alt="" /></div>
-            <table class="review-table">
-              <tr>
-                <td>작성자</td>
-                <td>작성일</td>
-              </tr>
-              <tr>
-                <td>총점</td>
-                <td>맛</td>
-                <td>가격</td>
-                <td>서비스</td>
-              </tr>
-            </table>
-            <div class="row">review text</div>
-            <div class="row">
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-              <img src="https://placehold.co/70x70" alt="" />
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <form action="" method="post" id="actionForm">
-      <input type="hidden" name="did" th:value="${dinerDto.did}" />
-      <input type="hidden" name="page" th:value="${requestDto.page}" />
-      <input type="hidden" name="size" th:value="${requestDto.size}" />
-      <input type="hidden" name="type" th:value="${requestDto.type}" />
-      <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
-    </form>
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
     <script>
       const csrfValue = "[[${_csrf.token}]]";
+      const did = "[[${dinerDto.did}]]";
     </script>
     <script th:src="@{/js/diner/read.js}"></script>
     <script
