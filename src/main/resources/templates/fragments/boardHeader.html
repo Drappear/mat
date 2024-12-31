@@ -50,7 +50,7 @@
         <div class="col-lg-6">
           <nav class="header__menu">
             <ul>
-              <li class="active"><a th:href="@{/diner/list}">Home</a></li>
+              <li><a href="./index.html">Home</a></li>
               <li><a href="./shop-grid.html">Shop</a></li>
               <li>
                 <a href="#">Pages</a>
@@ -61,8 +61,9 @@
                   <li><a href="./blog-details.html">Blog Details</a></li>
                 </ul>
               </li>
+              <!--게시판 페이지 -->
               <li>
-                <a th:href="@{/board/list}">Forum</a>
+                <a class="active" th:href="@{/board/list}">Forum</a>
                 <ul class="header__menu__dropdown">
                   <li>
                     <a th:href="@{/board/list?category=1}">Free Category</a>
