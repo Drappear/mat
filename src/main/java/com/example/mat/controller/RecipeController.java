@@ -82,7 +82,7 @@ public class RecipeController {
     return "recipe/list"; // recipe / list.html로 이동
   }
 
-  @GetMapping({ "/read", "/modify" })
+  @GetMapping("/read")
   public void getRead(@RequestParam Long rno, Model model,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 상세 페이지 요청 rno: {}", rno);
@@ -101,6 +101,16 @@ public class RecipeController {
     //   log.error("레시피 조회 중 오류 발생", e);
     //   return "redirect:/recipe/list";
     // }
+  }
+
+  @PreAuthorize("isAuthenticated()")
+  @GetMapping("/modify")
+  public void getModify(@RequestParam Long rno, Model model,
+  @ModelAttribute("requestDto") PageRequestDto pageRequestDto) { 
+    log.info("recipe 수정 페이지 요청 rno: {}", rno);
+
+    RecipeDto recipeDto = recipeService.get(rno);
+    model.addAttribute("recipeDto", recipeDto);
   }
 
   @PreAuthorize("isAuthenticated()")
@@ -200,9 +210,5 @@ public class RecipeController {
     }
   }
 
-  @GetMapping("/modify")
-  public void getModify() { 
-    log.info("recipe 수성 폼 요청");
-  }
 
 }

@@ -66,6 +66,7 @@
                   소개</label>
                 <textarea id="content" name="content" th:text="${recipeDto.content}" placeholder="요리에 대한 간단한 설명을 적어주세요."
                   class="form-control col-span-2 border-neutral-300 border rounded-md px-3 py-2" rows="4"></textarea>
+                <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
               </div>
             </div>
           </div>
@@ -778,12 +779,20 @@
   <!-- TODO: createForm 제출 전 유효성 검사 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('createForm');
+      form.addEventListener('submit', function (event) {
+        if (!validateForm()) {
+          event.preventDefault();
+        }
+      });
+
       function validateForm() {
-        if (!validateRequiredFields()) return false;
-        if (!validateIngredients()) return false;
-        if (!validateSteps()) return false;
-        if (!validateImages()) return false;
-        return true;
+        let isValid = true;
+        isValid = validateRequiredFields() && isValid;
+        isValid = validateIngredients() && isValid;
+        isValid = validateSteps() && isValid;
+        isValid = validateImages() && isValid;
+        return isValid;
       }
 
       function validateRequiredFields() {
@@ -807,6 +816,7 @@
         return true;
       }
 
+
       function validateIngredients() {
         const ingredients = document.querySelectorAll('.ingredient-input');
         if (ingredients.length < 2) {
@@ -815,13 +825,18 @@
         }
 
         let validIngredients = 0;
-        ingredients.forEach(ingredient => {
-          const nameInput = ingredient.querySelector('input[name$=".name"]');
-          const quantityInput = ingredient.querySelector('input[name$=".quantity"]');
+        for (let i = 0; i < ingredients.length; i++) {
+          const nameInput = ingredients[i].querySelector('input[name$=".name"]');
+          const quantityInput = ingredients[i].querySelector('input[name$=".quantity"]');
           if (nameInput.value.trim() && quantityInput.value.trim()) {
             validIngredients++;
+          } else if (nameInput.value.trim() || quantityInput.value.trim()) {
+            alert(`재료 ${i + 1}의 이름과 양을 모두 입력해주세요.`);
+            if (!nameInput.value.trim()) nameInput.focus();
+            else quantityInput.focus();
+            return false;
           }
-        });
+        }
 
         if (validIngredients < 2) {
           alert('최소 2개의 재료에 대해 이름과 양을 모두 입력해주세요.');
@@ -838,12 +853,16 @@
         }
 
         let validSteps = 0;
-        steps.forEach(step => {
-          const content = step.querySelector('textarea').value.trim();
+        for (let i = 0; i < steps.length; i++) {
+          const content = steps[i].querySelector('textarea').value.trim();
           if (content) {
             validSteps++;
+          } else {
+            alert(`Step ${i + 1}의 내용을 입력해주세요.`);
+            steps[i].querySelector('textarea').focus();
+            return false;
           }
-        });
+        }
 
         if (validSteps < 3) {
           alert('요리 순서는 최소 3개 이상의 내용이 있어야 합니다.');
@@ -856,10 +875,12 @@
         const finalImages = document.querySelectorAll('.finalImgContainer img');
         if (finalImages.length === 0) {
           alert('최소 1장의 요리 완성 사진이 필요합니다.');
+          document.getElementById('addFinalImgButton').focus();
           return false;
         }
         return true;
       }
+
     });
 
   </script>
