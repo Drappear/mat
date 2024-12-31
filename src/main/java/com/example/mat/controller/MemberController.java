@@ -277,8 +277,7 @@ public class MemberController {
     @PostMapping("/edit/password")
     public String postUpdatePassword(PasswordDto passwordDto, HttpSession session, RedirectAttributes rttr) {
         log.info("비밀번호 수정");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+
         // 서비스 호출
         try {
             memberService.passwordUpdate(passwordDto);
@@ -322,7 +321,7 @@ public class MemberController {
 
         memberService.register(memberDto);
 
-        return "redirect:/member/login";
+        return "/member/login";
     }
 
     // 이메일 중복 검사
@@ -334,6 +333,13 @@ public class MemberController {
     @GetMapping("/check-duplicate-userid")
     public ResponseEntity<Boolean> checkDuplicateUserid(@RequestParam String userid) {
         boolean isDuplicate = memberService.checkDuplicateUserid(userid);
+        return ResponseEntity.ok(isDuplicate);
+    }
+
+    @GetMapping("/check-duplicate-nickname")
+    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
+
+        boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
         return ResponseEntity.ok(isDuplicate);
     }
 
@@ -368,13 +374,6 @@ public class MemberController {
         }
         session.invalidate();
         return "redirect:/diner/list";
-    }
-
-    @GetMapping("/check-duplicate-nickname")
-    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
-
-        boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
-        return ResponseEntity.ok(isDuplicate);
     }
 
     // @PreAuthorize("isAuthenticated()")
