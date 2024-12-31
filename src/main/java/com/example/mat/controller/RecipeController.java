@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -82,24 +83,27 @@ public class RecipeController {
   }
 
   @GetMapping({ "/read", "/modify" })
-  public String getRead(@RequestParam("rno") Long rno, Model model,
+  public void getRead(@RequestParam Long rno, Model model,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 상세 페이지 요청 rno: {}", rno);
 
-    try {
-      RecipeDto recipe = recipeService.get(rno);
-      if (recipe != null) {
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("requestDto", pageRequestDto);
-        return "recipe/read"; // 명시적으로 뷰 이름 반환
-      }
-      return "redirect:/recipe/list";
-    } catch (Exception e) {
-      log.error("레시피 조회 중 오류 발생", e);
-      return "redirect:/recipe/list";
-    }
+    RecipeDto recipeDto = recipeService.get(rno);
+    model.addAttribute("recipeDto", recipeDto);
+    // try {
+    //   RecipeDto recipe = recipeService.get(rno);
+    //   if (recipe != null) {
+    //     model.addAttribute("recipe", recipe);
+    //     model.addAttribute("requestDto", pageRequestDto);
+    //     return "recipe/read"; // 명시적으로 뷰 이름 반환
+    //   }
+    //   return "redirect:/recipe/list";
+    // } catch (Exception e) {
+    //   log.error("레시피 조회 중 오류 발생", e);
+    //   return "redirect:/recipe/list";
+    // }
   }
 
+  @PreAuthorize("isAuthenticated()")
   @GetMapping("/create")
   public String getCreate(Model model, RecipeDto recipeDto,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
@@ -118,7 +122,7 @@ public class RecipeController {
     return "recipe/create";
   }
 
-  // @PreAuthorize("hasRole('MEMBER')")
+  @PreAuthorize("isAuthenticated()")
   @PostMapping("/create")
   public String postCreate(@Valid @ModelAttribute("requestDto") RecipeDto recipeDto, BindingResult result, Model model,
       @RequestParam("category") Long categoryId,
@@ -188,7 +192,7 @@ public class RecipeController {
       rttr.addAttribute("type", pageRequestDto.getType());
       rttr.addAttribute("keyword", pageRequestDto.getKeyword());
 
-      return "redirect:/recipe/read?rno=" + createdRecipeRno;
+      return "redirect:/recipe/list";
     } catch (Exception e) {
       log.error("레시피 등록 중 오류 발생", e);
       model.addAttribute("error", "레시피 등록 중 오류가 발생했습니다. 다시 시도해 주세요.");
@@ -197,8 +201,7 @@ public class RecipeController {
   }
 
   @GetMapping("/modify")
-  public void getModify() { // MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto
-                            // pageRequestDto
+  public void getModify() { 
     log.info("recipe 수성 폼 요청");
   }
 

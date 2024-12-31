@@ -1,7 +1,23 @@
+@font-face {
+  font-family: 'JalnanGothic';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .register-items {
   justify-content: center;
   align-items: center;
 }
 .buttons {
   white-space: nowrap;
+}
+
+h4, label{
+  font-family: 'JalnanGothic';
+}
+
+label{
+  padding: 0;
+  margin: 0;
 }
