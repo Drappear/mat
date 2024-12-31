@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -102,6 +103,7 @@ public class RecipeController {
     // }
   }
 
+  @PreAuthorize("isAuthenticated()")
   @GetMapping("/create")
   public String getCreate(Model model, RecipeDto recipeDto,
       @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
@@ -120,7 +122,7 @@ public class RecipeController {
     return "recipe/create";
   }
 
-  // @PreAuthorize("hasRole('MEMBER')")
+  @PreAuthorize("isAuthenticated()")
   @PostMapping("/create")
   public String postCreate(@Valid @ModelAttribute("requestDto") RecipeDto recipeDto, BindingResult result, Model model,
       @RequestParam("category") Long categoryId,
@@ -199,8 +201,7 @@ public class RecipeController {
   }
 
   @GetMapping("/modify")
-  public void getModify() { // MovieDto movieDto, @ModelAttribute("requestDto") PageRequestDto
-                            // pageRequestDto
+  public void getModify() { 
     log.info("recipe 수성 폼 요청");
   }
 
