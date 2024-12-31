@@ -1,5 +1,6 @@
 package com.example.mat.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +42,34 @@ public class DinerReviewServiceImpl implements DinerReviewService {
     }
 
     @Override
-    public PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did) {
+    public PageResultDto<List<DinerReviewDto>, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did) {
         Pageable pageable = pageRequestDto.getPageable(Sort.by("rvid").descending());
 
         Page<Object[]> result = imageRepository.getTotalReviewList(pageable, did);
 
-        Function<Object[], DinerReviewDto> function = (en -> entityToDto((DinerReview) en[0],
-                (List<Image>) Arrays.asList((Image) en[1])));
+        List<Object[]> contents = result.getContent();
+        List<Image> reviewImages = new ArrayList<>();
+        Function<Object[], DinerReviewDto> function = null;
 
-        return new PageResultDto<>(result, function);
+        List<DinerReviewDto> dinerReviewDtos = new ArrayList<>();
+
+        for (Object[] objects : contents) {
+            System.out.println("service 확인");
+            System.out.println(Arrays.toString(objects));
+
+            DinerReview dinerReview = (DinerReview) objects[0];
+            Image image = (Image) objects[1];
+
+            DinerReviewDto dinerReviewDto = entityToDto(dinerReview, Arrays.asList(image));
+            dinerReviewDtos.add(dinerReviewDto);
+        }
+
+        System.out.println("dinerReviewDtos  " + dinerReviewDtos);
+        // function = (en -> entityToDto(dinerReview, reviewImages));
+
+        // return new PageResultDto<>(result, function);
+        return null;
+
     }
 
     @Override
