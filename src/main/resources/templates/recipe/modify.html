@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{/layouts/layout}">
 <th:block layout:fragment="css">
+  <!-- modal css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" th:href="@{/css/recipe_modify.css}" />
 </th:block>
 
@@ -10,40 +13,48 @@
       <div class="w-[1200px] bg-white shadow-lg rounded-lg p-8">
         <div class="flex justify-between items-center mb-6 bg-neutral-100 p-4 rounded-md">
           <h2 class="text-lg font-title">레시피 수정</h2>
-          <!-- 모달창 활성화 버튼 -->
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#recipeModal">
-            레시피 등록안내
+          <!-- 모달을 실행할 버튼 -->
+          <!-- Modal Button -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            레시피 수정 예시
           </button>
-          <!-- 모달 -->
-          <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="modalLabel">
-                    레시피 등록 확인
-                  </h5>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">레시피 수정 예시</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">레시피를 등록하시겠습니까?</div>
+                <div class="modal-body">
+                  <img src="/assets/img/recipeModal/MergedImages.png" class="card-img-top" alt="..." />
+                  <!-- <img src="https://placehold.co/300x900/png"
+                      class="card-img-top" alt="..." /> -->
+                </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    취소
-                  </button>
-                  <button type="button" class="btn btn-primary">등록</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <!-- <button type="button" class="btn btn-primary">Save
+                      changes</button> -->
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <form>
+
+        <form th:action="@{/modify}" method="post" id="createForm" th:object="${recipeDto}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <!-- 레시피 제목 및 요약 -->
           <div class="form-section">
             <div class="space-y-4">
               <div class="p-4 bg-neutral-50 rounded-lg">
                 <div class="grid grid-cols-3 gap-4 items-center">
-                  <label for="recipeTitle" class="text-neutral-950 form-label">레시피 제목</label>
-                  <input type="text" id="recipeTitle" placeholder="예) 소고기 만두국 끓이기"
+                  <label for="title" class="text-neutral-950 form-label">레시피
+                    제목</label>
+                  <input type="text" id="title" name="title" placeholder="예) 소고기 만두국 끓이기" th:value="${recipeDto.title}"
                     class="col-span-2 border-neutral-300 border rounded-md px-3 py-2 form-control" />
+                  <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
                 </div>
               </div>
             </div>
@@ -51,8 +62,9 @@
           <div class="form-section">
             <div class="p-4 bg-neutral-50 rounded-lg">
               <div class="grid grid-cols-3 gap-4 items-center">
-                <label for="recipeDescription" class="text-neutral-950 form-label">요리소개</label>
-                <textarea id="recipeDescription" placeholder="요리에 대한 간단한 설명을 적어주세요."
+                <label for="content" class="text-neutral-950 form-label">요리
+                  소개</label>
+                <textarea id="content" name="content" th:text="${recipeDto.content}" placeholder="요리에 대한 간단한 설명을 적어주세요."
                   class="form-control col-span-2 border-neutral-300 border rounded-md px-3 py-2" rows="4"></textarea>
               </div>
             </div>
@@ -63,11 +75,12 @@
             <div class="p-4 bg-neutral-50 rounded-lg">
               <div class="grid grid-cols-3 gap-4 items-center">
                 <label for="category" class="form-label text-neutral-950">카테고리</label>
-                <select id="category" class="form-select col-span-2 border-neutral-300 border rounded-md px-3 py-2">
-                  <option value="">선택</option>
-                  <option value="한식">한식</option>
-                  <option value="양식">양식</option>
-                  <option value="중식">중식</option>
+                <select id="category" name="category"
+                  class="form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2">
+                  <option value>선택</option>
+                  <option th:each="category : ${categories}" th:value="${category.rCateId}" th:text="${category.name}">
+                    <!-- th:selected="${recipeDto.rCateId} == ${category.rCateId}" -->
+                  </option>
                 </select>
               </div>
             </div>
@@ -76,28 +89,43 @@
           <!-- 요리정보 -->
           <div class="form-section">
             <div class="p-4 bg-neutral-50 rounded-lg">
-              <div class="flex gap-4 items-center">
-                <label for="cookingInfo" class="form-label text-neutral-950">요리정보</label>
-                <div class="row">
-                  <div class="col-md-3">
-                    <select id="servings" class="form-select border-neutral-300 border rounded-md px-3 py-2">
-                      <option value="">인원 선택</option>
+              <div class="grid grid-cols-3 gap-4 items-center">
+                <!--flex gap-5 items-center -->
+                <label for="cookingInfo" class="form-label text-neutral-950">요리 정보</label>
+                <div class="col-span-2 flex justify-end gap-4">
+                  <div>
+                    <!-- <label for="servings" class="form-label text-neutral-950">인원</label> -->
+                    <select id="serving" name="serving"
+                      class="select-info form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+                      <option value>인원 선택</option>
                       <option value="1">1인분</option>
                       <option value="2">2인분</option>
+                      <option value="3">3인분</option>
+                      <option value="4">4인분</option>
+                      <option value="5">5인분</option>
                     </select>
                   </div>
-                  <div class="col-md-3">
-                    <select id="time" class="form-select border-neutral-300 border rounded-md px-3 py-2">
-                      <option value="">시간 선택</option>
+                  <div>
+                    <select id="time" name="time"
+                      class="select-info form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+                      <option value>시간 선택</option>
                       <option value="10">10분 이내</option>
                       <option value="30">30분 이내</option>
+                      <option value="60">60분 이내</option>
+                      <option value="90">90분 이내</option>
+                      <option value="120">2시간 이내</option>
+                      <option value="180">2시간 이상</option>
                     </select>
                   </div>
-                  <div class="col-md-3">
-                    <select id="difficulty" class="form-select border-neutral-300 border rounded-md px-3 py-2">
-                      <option value="">난이도 선택</option>
-                      <option value="쉬움">쉬움</option>
-                      <option value="보통">보통</option>
+                  <div>
+                    <select id="difficulty" name="difficulty"
+                      class="select-info form-select-sm col-span-2 border-neutral-300 border rounded-md px-3 py-2 w-[180px]">
+                      <option value>난이도 선택</option>
+                      <option value="1">쉬움</option>
+                      <option value="2">보통</option>
+                      <option value="3">어려움</option>
+                      <option value="4">매우어려움</option>
+                      <option value="5">신의경지</option>
                     </select>
                   </div>
                 </div>
@@ -112,32 +140,31 @@
           <div class="form-section">
             <div class="p-4 bg-neutral-50 rounded-lg">
               <h3 class="text-neutral-950 font-title mb-2">재료 정보</h3>
-
-              <div id="ingredientsContainer">
-                <div class="space-y-2">
-                  <div class="ingredient-input">
-                    <div class="grid grid-cols-4 gap-4 items-center">
-                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="재료명" />
-                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="용량 (예: 10g)" />
-                    </div>
-                  </div>
-                  <div class="ingredient-input">
-                    <div class="grid grid-cols-4 gap-4 items-center">
-                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="재료명" />
-                      <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2"
-                        placeholder="용량 (예: 10g)" />
+              <div id="ingredientsWrapper">
+                <div id="ingredientsContainer">
+                  <div class="space-y-2">
+                    <div class="ingredient-input">
+                      <div class="grid grid-cols-4 gap-4 items-center">
+                        <input id="recipeIngredientDtos[0].name" name="recipeIngredientDtos[0].name" type="text"
+                          class="form-control border-neutral-300 border rounded-md px-3 py-2" placeholder="재료명" />
+                        <input id="recipeIngredientDtos[0].quantity" name="recipeIngredientDtos[0].quantity" type="text"
+                          class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                          placeholder="용량 (예: 10g)" />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <button type="button" id="addIngredientBtn"
-                class="btn btn-primary mt-2 bg-green-500 text-white px-4 py-2 rounded-md">
-                추가
-              </button>
-              <p class="text-sm text-neutral-500 mt-4">
+
+              <!-- 재료 정보 추가 버튼 -->
+              <div class="flex justify-center">
+                <button type="button" id="addIngredientBtn" name="addIngredientBtn"
+                  class="bg-lime-500 text-white w-[120px] py-2 rounded-md flex items-center justify-center text-sm gap-2">
+                  <span class="material-symbols-outlined">add</span>
+                  재료 추가
+                </button>
+              </div>
+              <p class="text-sm text-neutral-500 mt-4 text-center">
                 최소 재료 2개는 넣어야 합니다. 추가 버튼 클릭 시 새로운 행이
                 추가됩니다. (최대 50줄)
               </p>
@@ -161,40 +188,27 @@
                 꿀을 조금 넣어주세요 ▶ 꿀이 없는 경우, 설탕 1스푼으로 대체
                 가능합니다.
               </p>
-              <div class="rounded-md p-4">
-                <div class="flex items-center gap-4 mb-6">
-                  <div class="text-lime-500 font-semibold text-lg">Step1</div>
-                  <textarea
+              <div class="rounded-md p-4 stepContainer" id="stepContainer">
+                <div class="step-wrapper flex items-center gap-4 mb-6">
+                  <div class="stepNumText text-lime-500 font-semibold text-lg">Step1</div>
+                  <textarea id="recipeStepDtos[0].content" name="recipeStepDtos[0].content"
                     class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
                     placeholder="{`step1`}"></textarea>
-                  <div
-                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                  <input type="hidden" id="recipeStepDtos[0].stepNum" name="recipeStepDtos[0].stepNum" value="1" />
+                  <!-- 이미지 추가 영역 -->
+                  <div class="stepImg-wrapper">
+                    <label for="file">
+                      <div
+                        class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md cursor-pointer">
+                        <span class="material-symbols-outlined text-neutral-400">add</span>
+                      </div>
+                    </label>
+                    <input type="file" id="file" accept="image/*" style="display: none;" data-step="0" />
                   </div>
                 </div>
-                <div class="flex items-center gap-4 mb-6">
-                  <div class="text-lime-500 font-semibold text-lg">Step2</div>
-                  <textarea
-                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
-                    placeholder="{`step2`}"></textarea>
-                  <div
-                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                    <span class="material-symbols-outlined text-neutral-400">add</span>
-                  </div>
-                </div>
-                <div class="flex items-center gap-4 mb-6">
-                  <div class="text-lime-500 font-semibold text-lg">Step3</div>
-                  <textarea
-                    class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none"
-                    placeholder="{`step3`}"></textarea>
-                  <div
-                    class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                    <span class="material-symbols-outlined text-neutral-400">add</span>
-                  </div>
-                </div>
-                <!-- button -->
+                <!-- step 추가 button -->
                 <div class="flex justify-center">
-                  <button
+                  <button id="addStepButton" name="addStepButton"
                     class="bg-lime-500 text-white w-[120px] py-2 rounded-md flex items-center justify-center text-sm gap-2">
                     <span class="material-symbols-outlined">add</span>
                     Step 추가
@@ -202,52 +216,57 @@
                 </div>
               </div>
             </div>
-            
-            <!-- {/* Divider */} -->
-            <div class="border-t border-neutral-300 my-4"></div>
+          </div>
+          <!-- {/* Divider */} -->
+          <div class="border-t border-neutral-300 my-4"></div>
 
-            <!-- 요리 완성 사진 -->
+          <!-- 요리 완성 사진 -->
+          <div class="form-section">
             <div class="flex items-center gap-4 mb-6 mt-6">
               <h3 class="text-neutral-950 font-title mb-2">요리 완성 사진</h3>
-              <div class="flex items-center gap-2">
-                <div class="relative">
-                  <img src="https://placehold.co/140/png" alt="uploaded"
-                    class="w-[140px] h-[140px] object-cover rounded-md" />
-                  <button
-                    class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
-                    ✕
-                  </button>
+              <div class="finalImgContainer flex items-center gap-2">
+                <div id="recipeFinalImg1" name="recipeFinalImg1" class="relative">
+                  <div
+                    class="recipeFinalImg1 w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                    <input type="file" name="recipeImageDtos[0].image" accept="image/*" style="display: none;" />
+                    <div class="step-preview"></div>
+                    <span class="material-symbols-outlined text-neutral-400">add</span>
+                  </div>
+                  <!-- <button
+                      class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
+                      ✕
+                    </button> -->
                 </div>
-                <div class="relative">
-                  <img src="https://placehold.co/140/png" alt="uploaded"
-                    class="w-[140px] h-[140px] object-cover rounded-md" />
-                  <button
-                    class="absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
-                    ✕
-                  </button>
-                </div>
-                <div
-                  class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                  <span class="material-symbols-outlined text-neutral-400">add</span>
-                </div>
-                <div
-                  class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                  <span class="material-symbols-outlined text-neutral-400">add</span>
-                </div>
+
+              </div>
+              <!-- 요리 완성 사진 추가 button -->
+              <div class="flex justify-center">
+                <button id="addFinalImgButton" name="addFinalImgButton"
+                  class="bg-lime-500 text-white w-[120px] py-2 rounded-md flex items-center justify-center text-sm gap-2">
+                  <span class="material-symbols-outlined">add</span>
+                  사진 추가
+                </button>
               </div>
             </div>
             <p class="text-sm text-neutral-500 mt-4 mb-4 flex items-center justify-center">
-              최소 사진 1장은 넣어야 합니다. 첫번째로 등록한 사진이 대표사진이 됩니다. (최대 등록 사진 4장)
+              최소 사진 1장은 넣어야 합니다. 첫번째로 등록한 사진이 대표사진이 됩니다. (최대 수정 사진 4장)
             </p>
+            <p class="text-sm text-neutral-500 mt-4 mb-4 flex items-center justify-center">
+              첫번째로 등록한 사진은 삭제할 수 없습니다. 대신, 다시 영역을 눌러 다른 사진으로 교체 가능합니다.
+            </p>
+
             <!-- button -->
             <div class="flex justify-center items-center gap-4">
-              <button class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm">
-                저장
+              <button sec:authorize="hasRole('MEMBER')" type="button"
+                class="bg-lime-500 text-white rounded-md py-2 px-6 text-sm">
+                수정 저장
               </button>
-              <button class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm">
+              <a th:href="@{list(page=${requestDto.page},size=${requestDto.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
+                class="border border-lime-500 text-lime-500 rounded-md py-2 px-6 text-sm">
                 취소
-              </button>
-              <button class="bg-red-500 text-white rounded-md py-2 px-6 text-sm">
+              </a>
+              <button sec:authorize="hasRole('MEMBER')" type="button"
+                class="bg-red-500 text-white rounded-md py-2 px-6 text-sm">
                 삭제
               </button>
             </div>
@@ -259,140 +278,622 @@
 </div>
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const addIngredientBtn = document.getElementById("addIngredientBtn");
-    const ingredientsContainer = document.getElementById(
-      "ingredientsContainer"
-    );
 
-    addIngredientBtn.addEventListener("click", () => {
-      const ingredientInput = document.createElement("div");
-      ingredientInput.class = "ingredient-input";
+<th:block layout:fragment="js">
+  <script>
+    // 레시피명
+    const title = '[[${recipeDto.title}]]';
+    const csrfValue = '[[${_csrf.token}]]';    
+  </script>
 
-      ingredientInput.innerHTML = `
-        <div class="grid grid-cols-4 gap-4 items-center">
-          <input type="text" placeholder="재료 제목" class="border-neutral-300 border rounded-md px-3 py-2" />
-          <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2" placeholder="재료명" />
-          <input type="text" class="form-control border-neutral-300 border rounded-md px-3 py-2" placeholder="용량 (예: 10g)" />
-        </div>
-      `;
+  <!-- TODO: 재료정보 row 추가 버튼 -->
+  <script>
+    function addIngredient() {
+      const index = document.querySelectorAll('.ingredient-input').length;
+      const html = `
+            <div class="ingredient-input">
+                <input name="recipeIngredientDtos[${index}].name" />
+                <input name="recipeIngredientDtos[${index}].quantity" />
+            </div>`;
+    }
+    //<!-- 재료 추가 버튼 -->
+    document.addEventListener('DOMContentLoaded', function () {
+      const addIngredientBtn = document.getElementById("addIngredientBtn");
+      if (addIngredientBtn) {
+        addIngredientBtn.addEventListener("click", function () {
+          try {
+            const ingredientsContainer = document.getElementById("ingredientsContainer");
+            const currentInputs = ingredientsContainer.getElementsByClassName("ingredient-input");
+            const newIndex = currentInputs.length;
 
-      // 재료 입력 추가 (최대 50개)
-      if (ingredientsContainer.children.length < 50) {
-        ingredientsContainer.appendChild(ingredientInput);
-      } else {
-        alert("재료는 최대 50개까지 추가할 수 있습니다.");
+            if (newIndex >= 50) {
+              alert("최대 50개의 재료만 추가할 수 있습니다.");
+              return;
+            }
+
+            const newIngredientDiv = document.createElement("div");
+            newIngredientDiv.className = "ingredient-input";
+            newIngredientDiv.innerHTML = `
+                  <div class="grid grid-cols-4 gap-4 items-center">
+                      <input id="recipeIngredientDtos[${newIndex}].name" 
+                            name="recipeIngredientDtos[${newIndex}].name" 
+                            type="text"
+                            class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                            placeholder="재료명" />
+                      <input id="recipeIngredientDtos[${newIndex}].quantity" 
+                            name="recipeIngredientDtos[${newIndex}].quantity" 
+                            type="text"
+                            class="form-control border-neutral-300 border rounded-md px-3 py-2"
+                            placeholder="용량 (예: 10g)" />
+                      <button type="button" class="btn btn-danger delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md">X</button>
+                  </div>
+              `;
+
+            ingredientsContainer.appendChild(newIngredientDiv);
+
+            const deleteButton = newIngredientDiv.querySelector(".delete-row-btn");
+            deleteButton.addEventListener("click", () => handleDeleteRow(newIngredientDiv));
+          } catch (error) {
+            console.error("재료 추가 중 오류:", error);
+          }
+        });
       }
     });
 
-    // 모달 버튼 클릭 시 모달 열기
-    const recipeModal = document.querySelector("#recipeModal");
+    // 재료 줄 삭제 
+    function handleDeleteRow(rowElement) {
+      const inputs = rowElement.querySelectorAll("input");
+      const hasInputValue = Array.from(inputs).some(input => input.value.trim() !== "");
 
-    if (recipeModal) {
-      const modalBtn = document.querySelector('[data-bs-toggle="modal"]');
-      modalBtn.addEventListener("click", function () {
-        recipeModal.show();
+      if (hasInputValue) {
+        const confirmDelete = confirm("정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.");
+        if (!confirmDelete) return;
+      }
+
+      // 삭제된 행 제거
+      rowElement.remove();
+
+      // 재료 정보 재정렬
+      reorderIngredients();
+    }
+
+    // 재료 순서 재정렬
+    function reorderIngredients() {
+      const ingredientsContainer = document.getElementById("ingredientsContainer");
+      const rows = ingredientsContainer.querySelectorAll(".ingredient-input");
+
+      rows.forEach((rowElement, index) => {
+        // 인덱스는 0부터 시작하므로 실제 표시될 번호를 위해 +1
+        const newIndex = index;
+
+        // 재료명 Input ID 및 Name 변경
+        const ingreNameInput = rowElement.querySelector('input[id^="recipeIngredientDtos"]');
+        ingreNameInput.id = `recipeIngredientDtos[${newIndex}].name`;
+        ingreNameInput.name = `recipeIngredientDtos[${newIndex}].name`;
+
+        // 용량 Input ID 및 Name 변경
+        const ingreAmountInput = rowElement.querySelector('input[name$="quantity"]');
+        ingreAmountInput.id = `recipeIngredientDtos[${newIndex}].quantity`;
+        ingreAmountInput.name = `recipeIngredientDtos[${newIndex}].quantity`;
       });
     }
-  });
-</script>
-<script>
-  let stepCount = 1;
-  let imageList = [];
 
-  function addStep() {
-    if (stepCount >= 20) return alert("Maximum of 20 steps allowed");
-
-    stepCount++;
-    const stepsContainer = document.getElementById("steps");
-    const newStep = document.createElement("div");
-    newStep.class = "step";
-    newStep.id = `step${stepCount}`;
-    newStep.innerHTML = `
-              <label>Step ${stepCount}</label>
-              <input type="text" placeholder="Describe step ${stepCount}" required />
-              <button class="add-btn" onclick="addStep()">+</button>
-          `;
-    stepsContainer.appendChild(newStep);
-  }
-
-  function uploadImages(event) {
-    const files = event.target.files;
-
-    if (files.length + imageList.length > 4) {
-      alert("You can upload a maximum of 4 images.");
-      return;
-    }
-
-    for (let file of files) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imageList.push(e.target.result);
-        renderImages();
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  function renderImages() {
-    const preview = document.getElementById("image-preview");
-    const carousel = document.getElementById("carousel");
-
-    preview.innerHTML = "";
-    carousel.innerHTML = "";
-
-    imageList.forEach((src, index) => {
-      const img = document.createElement("img");
-      img.src = src;
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.class = "delete-btn";
-      deleteBtn.innerText = "x";
-      deleteBtn.onclick = () => deleteImage(index);
-
-      const container = document.createElement("div");
-      container.appendChild(img);
-      container.appendChild(deleteBtn);
-
-      preview.appendChild(container);
-
-      const carouselImg = document.createElement("img");
-      carouselImg.src = src;
-      carousel.appendChild(carouselImg);
+    // 기존 입력 필드에 재료 줄 삭제 버튼 추가 (재료 정보 2줄 제외)
+    document.querySelectorAll("#ingredientsContainer .ingredient-input").forEach((rowElement, index) => {
+      if (index >= 2) {
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete-row-btn bg-red-500 text-white px-3 py-2 rounded-md";
+        deleteButton.textContent = "X";
+        deleteButton.addEventListener("click", () => handleDeleteRow(rowElement));
+        rowElement.querySelector(".grid").appendChild(deleteButton);
+      }
     });
-  }
+  </script>
 
-  function deleteImage(index) {
-    imageList.splice(index, 1);
-    renderImages();
-  }
-
-  function submitForm() {
-    const steps = document.querySelectorAll("#steps .step input");
-    const alertBox = document.getElementById("alert");
-
-    if (steps.length < 3 || imageList.length < 1) {
-      alertBox.style.display = "block";
-      alertBox.innerText = "At least 3 steps and 1 image are required.";
-      return;
-    }
-
-    alertBox.style.display = "none";
-    alert("Recipe submitted successfully!");
-    // Redirect or reset logic here
-  }
-
-  function cancelForm() {
-    if (confirm("Are you sure you want to cancel?")) {
-      location.reload();
-    }
-  }
-</script>
-
-<!-- TODO::::: modify.js -->
+  <!-- TODO: 사진 업로드 공통 함수 uploadImage -->
   <script>
-      // 포스터 추가 시 삭제 기능
+    async function uploadImage(file, path) {
+      console.log("업로드 ", file);
+      const formData = new FormData();
+      formData.append('uploadFiles', file);
+
+      try {
+        const response = await fetch(`/recipe/upload/${path}`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': csrfValue
+          },
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Upload error response:', errorText);
+          throw new Error('Upload failed');
+        }
+
+        const result = await response.json();
+        console.log(result);
+        return result;
+      } catch (error) {
+        console.error('Image upload failed:', error);
+        throw error;
+      }
+    }
+  </script>
+
+  <!-- TODO: Step 요리 순서 영역 js -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const stepContainer = document.querySelector('.stepContainer');
+      const addStepButton = document.getElementById('addStepButton');
+      const maxSteps = 25;
+
+      // 초기 Step 이미지 업로드 이벤트 바인딩
+      bindInitialStepImageUpload();
+
+      // Step 추가 버튼 클릭 이벤트
+      addStepButton.addEventListener('click', addNewStep);
+
+      function bindInitialStepImageUpload() {
+        try {
+
+          // 첫번째 스텝 이벤트 동작
+          const initialFileInput = document.querySelector(".step-wrapper [type='file']");
+
+          if (initialFileInput) {
+            initialFileInput.addEventListener('change', (e) => handleStepImageUpload(e.target, 0));
+          }
+
+          // 첫 번째 Step의 이미지 추가 영역에 클릭 이벤트 추가
+          // const initialImageWrapper = document.querySelector(".step-wrapper .stepImg-wrapper");
+          // if (initialImageWrapper) {
+          //   initialImageWrapper.addEventListener('click', () => {
+          //     initialFileInput.click();
+          //   });
+          // }
+        } catch (error) {
+          console.error('초기 Step 이미지 업로드 이벤트 바인딩 중 오류:', error);
+        }
+      }
+
+      function addNewStep(event) {
+        event.preventDefault();
+        try {
+          const stepCount = stepContainer.querySelectorAll('.step-wrapper').length;
+          if (stepCount >= maxSteps) {
+            alert(`최대 ${maxSteps}개의 Step만 추가할 수 있습니다.`);
+            return;
+          }
+
+          const newStep = createStepElement(stepCount);
+          const addButtonContainer = addStepButton.parentNode;
+          stepContainer.insertBefore(newStep, addButtonContainer);
+
+          bindStepEvents(newStep, stepCount);
+          reorderSteps();
+        } catch (error) {
+          console.error('새 Step 추가 중 오류:', error);
+          alert('Step 추가에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+
+      function createStepElement(stepCount) {
+        const newStep = document.createElement('div');
+        newStep.className = 'step-wrapper flex items-center gap-4 mb-6';
+        newStep.innerHTML = `
+            <div class="stepNumText text-lime-500 font-semibold text-lg">Step${stepCount + 1}</div>
+            <textarea id="recipeStepDtos[${stepCount}].content" name="recipeStepDtos[${stepCount}].content" class="flex-1 h-[160px] border border-neutral-300 rounded-md p-2 text-sm overflow-auto resize-none" placeholder="Step ${stepCount + 1}"></textarea>
+            <input type="hidden" id="recipeStepDtos[${stepCount}].stepNum" name="recipeStepDtos[${stepCount}].stepNum" value="${stepCount + 1}" />
+            <div class="stepImg-wrapper">
+                <label for="file${stepCount}">
+                    <div class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md cursor-pointer">
+                        <span class="material-symbols-outlined text-neutral-400">add</span>
+                    </div>
+                </label>
+                <input type="file" name="recipeStepDtos[${stepCount}].stepImage" id="file${stepCount}" accept="image/*" style="display: none;" data-step="${stepCount}"/>
+            </div>
+            <button type="button" class="delete-step-btn btn btn-danger bg-red-500 text-white px-3 py-2 rounded-md">X</button>
+        `;
+        return newStep;
+      }
+
+      function bindStepEvents(stepElement, stepCount) {
+        const fileInput = stepElement.querySelector("[type='file']");
+        const deleteButton = stepElement.querySelector('.delete-step-btn');
+
+        fileInput.addEventListener('change', (e) => handleStepImageUpload(e.target, stepCount));
+        deleteButton.addEventListener('click', () => deleteStep(stepElement));
+      }
+
+      function deleteStep(stepElement) {
+        try {
+          const textArea = stepElement.querySelector('textarea');
+          const hasInputValue = textArea && textArea.value.trim() !== '';
+          if (hasInputValue) {
+            const confirmDelete = confirm('정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.');
+            if (!confirmDelete) return;
+          }
+          stepElement.remove();
+          reorderSteps();
+        } catch (error) {
+          console.error('Step 삭제 중 오류:', error);
+          alert('Step 삭제에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+
+      function reorderSteps() {
+        try {
+          const stepElements = stepContainer.querySelectorAll('.step-wrapper');
+          stepElements.forEach((stepElement, index) => {
+            const newStepNumber = index + 1;
+            stepElement.querySelector('.stepNumText').textContent = `Step${newStepNumber}`;
+
+            const textArea = stepElement.querySelector('textarea');
+            textArea.id = `recipeStepDtos[${index}].content`;
+            textArea.name = `recipeStepDtos[${index}].content`;
+            textArea.placeholder = `Step ${newStepNumber}`;
+
+            const hiddenInput = stepElement.querySelector('input[type="hidden"]');
+            hiddenInput.name = `recipeStepDtos[${index}].stepNum`;
+            hiddenInput.value = newStepNumber;
+
+            const fileInput = stepElement.querySelector('input[type="file"]');
+            fileInput.name = `recipeStepDtos[${index}].stepImage`;
+            fileInput.id = `file${index}`;
+            fileInput.dataset.step = index;
+          });
+        } catch (error) {
+          console.error('Step 재정렬 중 오류:', error);
+        }
+      }
+
+
+
+      function createImagePreview(file, uploadResult, idx) {
+
+        const imgPreview = document.createElement('div');
+        imgPreview.className = 'image-preview';
+        const imgElement = document.createElement('img');
+        imgElement.src = URL.createObjectURL(file);
+        imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
+        imgPreview.appendChild(imgElement);
+
+        const hiddenInputs = [
+          { name: `recipeStepDtos[${idx}].uuid`, value: uploadResult.uuid },
+          { name: `recipeStepDtos[${idx}].imgName`, value: uploadResult.fileName },
+          { name: `recipeStepDtos[${idx}].path`, value: uploadResult.folderPath }
+        ];
+
+        const stepImages = document.createElement('div');
+        stepImages.className = 'stepImages';
+
+        hiddenInputs.forEach(input => {
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = input.name;
+          hiddenInput.value = input.value;
+          stepImages.appendChild(hiddenInput);
+        });
+
+        imgPreview.appendChild(stepImages);
+
+        console.log(imgPreview);
+
+        return imgPreview;
+      }
+
+      async function handleStepImageUpload(fileInput, idx) {
+        try {
+          const file = fileInput.files[0];
+          if (!file) return;
+
+          const path = "step";
+          const uploadResult = await uploadImage(file, path);
+
+          const imgPreview = createImagePreview(file, uploadResult, idx);
+          const stepImgWrapper = fileInput.closest('.stepImg-wrapper');
+          stepImgWrapper.innerHTML = '';
+          stepImgWrapper.appendChild(imgPreview);
+        } catch (error) {
+          console.error('Step 이미지 업로드 중 오류:', error);
+          alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+
+
+    });
+  </script>
+
+  <!-- TODO: 요리 완성 사진 js -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const maxImages = 4;
+      const addButton = document.getElementById("addFinalImgButton");
+      const container = document.querySelector(".finalImgContainer");
+
+      initializeFinalImages();
+      addButton.addEventListener("click", addFinalImage);
+
+      function displayFinalImagePreview(imageDiv, file, uploadResult, index) {
+        const imgElement = document.createElement('img');
+        imgElement.src = URL.createObjectURL(file);
+        imgElement.className = 'w-[140px] h-[140px] object-cover rounded-md';
+
+        const hiddenInputs = [
+          { name: `recipeImageDtos[${index}].uuid`, value: uploadResult.uuid },
+          { name: `recipeImageDtos[${index}].imgName`, value: uploadResult.fileName },
+          { name: `recipeImageDtos[${index}].path`, value: uploadResult.folderPath }
+        ];
+
+        imageDiv.innerHTML = '';
+        imageDiv.appendChild(imgElement);
+
+        hiddenInputs.forEach(input => {
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = input.name;
+          hiddenInput.value = input.value;
+          imageDiv.appendChild(hiddenInput);
+        });
+      }
+
+      function selectFile(accept) {
+        return new Promise((resolve) => {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = accept;
+          input.style.display = 'none';
+          input.onchange = () => {
+            const file = input.files[0];
+            document.body.removeChild(input);
+            resolve(file);
+          };
+          document.body.appendChild(input);
+          input.click();
+        });
+      }
+
+      async function handleFinalImageUpload(imageDiv, index) {
+        try {
+          const file = await selectFile('image/*');
+          if (!file) return;
+
+          const path = "image";
+          const uploadResult = await uploadImage(file, path);
+
+          displayFinalImagePreview(imageDiv, file, uploadResult, index);
+        } catch (error) {
+          console.error('완성 사진 업로드 중 오류:', error);
+          alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+
+      function initializeFinalImages() {
+        try {
+          const initialImageDiv = document.querySelector("#recipeFinalImg1 > .recipeFinalImg1");
+          if (initialImageDiv) {
+            initialImageDiv.addEventListener("click", () => handleFinalImageUpload(initialImageDiv, 0));
+          }
+        } catch (error) {
+          console.error("초기 완성 사진 이벤트 바인딩 중 오류:", error);
+        }
+      }
+
+      function addFinalImage(event) {
+        event.preventDefault();
+        try {
+          const currentImages = container.querySelectorAll(".relative").length;
+          if (currentImages >= maxImages) {
+            alert(`사진은 최대 ${maxImages}개까지 추가할 수 있습니다.`);
+            return;
+          }
+
+          const newImageDiv = createFinalImageElement(currentImages);
+          container.appendChild(newImageDiv);
+          bindFinalImageEvents(newImageDiv, currentImages);
+        } catch (error) {
+          console.error("완성 사진 추가 중 오류 발생:", error);
+          alert("사진 추가에 실패했습니다. 다시 시도해주세요.");
+        }
+      }
+
+      function createFinalImageElement(index) {
+        const newDiv = document.createElement("div");
+        newDiv.classList.add("relative");
+        const newImageId = `recipeFinalImg${index + 1}`;
+        newDiv.innerHTML = `
+            <div id="${newImageId}" name="${newImageId}" class="w-[140px] h-[140px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                <span class="material-symbols-outlined text-neutral-400">add</span>
+            </div>
+            <button type="button" class="delete-final-img-btn absolute top-0 right-0 bg-black text-white w-[24px] h-[24px] flex items-center justify-center rounded-full text-xs">
+                ✕
+            </button>
+        `;
+        return newDiv;
+      }
+
+      function bindFinalImageEvents(imageDiv, index) {
+        const uploadArea = imageDiv.querySelector(`#recipeFinalImg${index + 1}`);
+        const deleteButton = imageDiv.querySelector(".delete-final-img-btn");
+
+        uploadArea.addEventListener("click", () => handleFinalImageUpload(uploadArea, index));
+        deleteButton.addEventListener("click", () => handleDeleteFinalImage(imageDiv));
+      }
+
+      async function handleDeleteFinalImage(imageDiv) {
+        try {
+          const confirmDelete = confirm('이미지를 삭제하시겠습니까?');
+          if (!confirmDelete) return;
+
+          const uuid = imageDiv.querySelector('input[name$="uuid"]')?.value;
+          if (uuid) {
+            await deleteImage(uuid);
+          }
+
+          imageDiv.remove();
+          updateFinalImageIds();
+        } catch (error) {
+          console.error('완성 사진 삭제 중 오류:', error);
+          alert('이미지 삭제에 실패했습니다. 다시 시도해주세요.');
+        }
+      }
+
+      async function deleteImage(uuid) {
+        try {
+          const response = await fetch('/upload/remove', {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': csrfValue,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ uuid })
+          });
+
+          if (!response.ok) {
+            throw new Error('이미지 삭제 실패');
+          }
+        } catch (error) {
+          console.error('이미지 삭제 요청 중 오류:', error);
+          throw error;
+        }
+      }
+
+      function updateFinalImageIds() {
+        try {
+          const images = container.querySelectorAll(".relative");
+          images.forEach((image, index) => {
+            const newId = `recipeFinalImg${index + 1}`;
+            const imageDiv = image.querySelector("div");
+            imageDiv.id = newId;
+            imageDiv.name = newId;
+
+            const hiddenInputs = image.querySelectorAll('input[type="hidden"]');
+            hiddenInputs.forEach(input => {
+              input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
+            });
+          });
+        } catch (error) {
+          console.error("완성 사진 ID 재정렬 중 오류 발생:", error);
+        }
+      }
+    });
+
+  </script>
+
+  <!-- TODO: createForm 제출 전 유효성 검사 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('createForm');
+      form.addEventListener('submit', function (event) {
+        if (!validateForm()) {
+          event.preventDefault();
+        }
+      });
+
+      function validateForm() {
+        let isValid = true;
+        isValid = validateRequiredFields() && isValid;
+        isValid = validateIngredients() && isValid;
+        isValid = validateSteps() && isValid;
+        isValid = validateImages() && isValid;
+        return isValid;
+      }
+
+      function validateRequiredFields() {
+        const requiredFields = {
+          'title': '레시피 제목',
+          'content': '요리 소개',
+          'category': '카테고리',
+          'serving': '인원',
+          'time': '시간',
+          'difficulty': '난이도'
+        };
+
+        for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+          const field = document.getElementById(fieldId);
+          if (!field || !field.value.trim()) {
+            alert(`${fieldName}을(를) 입력해주세요.`);
+            field?.focus();
+            return false;
+          }
+        }
+        return true;
+      }
+
+
+      function validateIngredients() {
+        const ingredients = document.querySelectorAll('.ingredient-input');
+        if (ingredients.length < 2) {
+          alert('최소 2개의 재료가 필요합니다.');
+          return false;
+        }
+
+        let validIngredients = 0;
+        for (let i = 0; i < ingredients.length; i++) {
+          const nameInput = ingredients[i].querySelector('input[name$=".name"]');
+          const quantityInput = ingredients[i].querySelector('input[name$=".quantity"]');
+          if (nameInput.value.trim() && quantityInput.value.trim()) {
+            validIngredients++;
+          } else if (nameInput.value.trim() || quantityInput.value.trim()) {
+            alert(`재료 ${i + 1}의 이름과 양을 모두 입력해주세요.`);
+            if (!nameInput.value.trim()) nameInput.focus();
+            else quantityInput.focus();
+            return false;
+          }
+        }
+
+        if (validIngredients < 2) {
+          alert('최소 2개의 재료에 대해 이름과 양을 모두 입력해주세요.');
+          return false;
+        }
+        return true;
+      }
+
+      function validateSteps() {
+        const steps = document.querySelectorAll('.step-wrapper');
+        if (steps.length < 3) {
+          alert('요리 순서는 최소 3개 이상 작성해야 합니다.');
+          return false;
+        }
+
+        let validSteps = 0;
+        for (let i = 0; i < steps.length; i++) {
+          const content = steps[i].querySelector('textarea').value.trim();
+          if (content) {
+            validSteps++;
+          } else {
+            alert(`Step ${i + 1}의 내용을 입력해주세요.`);
+            steps[i].querySelector('textarea').focus();
+            return false;
+          }
+        }
+
+        if (validSteps < 3) {
+          alert('요리 순서는 최소 3개 이상의 내용이 있어야 합니다.');
+          return false;
+        }
+        return true;
+      }
+
+      function validateImages() {
+        const finalImages = document.querySelectorAll('.finalImgContainer img');
+        if (finalImages.length === 0) {
+          alert('최소 1장의 요리 완성 사진이 필요합니다.');
+          document.getElementById('addFinalImgButton').focus();
+          return false;
+        }
+        return true;
+      }
+
+    });
+
+  </script>
+
+  <!-- TODO::::: modify.js -->
+  <script>
+    // 포스터 추가 시 삭제 기능
     document.querySelector(".uploadResult").addEventListener("click", (e) => {
       if (e.target.tagName !== "I") return;
 
@@ -428,4 +929,6 @@
       form.submit();
     });
   </script>
+</th:block>
+
 </html>
