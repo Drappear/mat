@@ -71,6 +71,16 @@ body {
   font-size: 14px;
   cursor: pointer;
 }
+.danger-button {
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
 
 .save-button:hover {
   background-color: #7ac142;

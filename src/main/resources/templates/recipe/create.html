@@ -222,17 +222,16 @@
                       name="recipeStepDtos[0].stepNum" value="1" />
                     <!-- 이미지 추가 영역 -->
                     <div class="stepImg-wrapper">
-                      <div
-                        class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
-                        <span
-                          <input type="file" name="recipeStepDtos[0].stepImage"
-                          accept="image/*" style="display: none;" />
-                        <input type="hidden" name="recipeStepDtos[0].uuid" />
-                        <input type="hidden" name="recipeStepDtos[0].imgName" />
-                        <input type="hidden" name="recipeStepDtos[0].path" />
-                        <span
-                          class="material-symbols-outlined text-neutral-400">add</span>
-                      </div>
+                      <label for="file">
+                        <div
+                          class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md">
+                        </div>
+                      </label>                      
+                      <input type="file" name="recipeStepDtos[0].stepImage" id="file" accept="image/*" style="display: none;" data-step="0"/>
+                      <input type="hidden" name="recipeStepDtos[0].uuid" />
+                      <input type="hidden" name="recipeStepDtos[0].imgName" />
+                      <input type="hidden" name="recipeStepDtos[0].path" />
+                      <span class="material-symbols-outlined text-neutral-400">add</span>
                     </div>
                   </div>
                   <!-- <div class="flex items-center gap-4 mb-6">
@@ -449,21 +448,58 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('DOMContentLoaded', function() {
       try {
           // 첫 번째 Step의 이미지 업로드 영역에 이벤트 바인딩
-          const initialStepImg = document.querySelector('.stepImg-wrapper div');
-          if (initialStepImg) {
-              initialStepImg.style.cursor = 'pointer';
-              initialStepImg.addEventListener('click', () => handleStepImageUpload(initialStepImg, 0));
-          }
+          // const initialStepImg = document.querySelector('.stepImg-wrapper div');
+          // if (initialStepImg) {
+
+          //     console.log("initialStepImg ",initialStepImg)
+          //     initialStepImg.style.cursor = 'pointer';
+          //   }
+
+          // step 화면에 있는 경우
+          // const stepContainer = document.querySelector('.step-wrapper');
+
+          // stepContainer.addEventListener("click",(e)=>{
+          //   console.log("부모")
+          //   console.log(e.target)
+
+          //   if(e.target == file){
+
+          //   }
+          // })
+
+          // stepContainer.addEventListener("change",(e)=>{
+          //   console.log("부모 change")
+          //   console.log(e.target)
+          // })
+
+
+          const file = document.querySelector("[type='file']");
+          file.addEventListener('change', (e) => {
+            const step = e.target.dataset.step;
+            console.log("file ",e.target.files[0]);
+            handleStepImageUpload(e.target.files[0], step);
+          });   
+
+          // const stepCount = imgWrapper.dataset.step;
+          // imgWrapper.addEventListener('change', () => handleStepImageUpload(imgWrapper, stepCount));
+
+
+          // 새로 작성된 경우
+          // document.querySelector(".step-wrapper").addEventListener('change', (e) => {
+          //   const step = e.target.dataset.step;
+          //   console.log("file ",e.target.files[0]);
+          //   handleStepImageUpload(e.target.files[0], step);
+          // });
   
           // 기존 Step들에 이벤트 바인딩
-          document.querySelectorAll('.step-wrapper').forEach((stepElement, index) => {
-              const imgWrapper = stepElement.querySelector('.stepImg-wrapper div');
-              if (imgWrapper) {
-                  imgWrapper.style.cursor = 'pointer';
-                  imgWrapper.addEventListener('click', () => handleStepImageUpload(imgWrapper, index));
-              }
-              bindDeleteStepEvent(stepElement);
-          });
+          // document.querySelectorAll('.step-wrapper').forEach((stepElement, index) => {
+          //     const imgWrapper = stepElement.querySelector('.stepImg-wrapper div');
+          //     if (imgWrapper) {
+          //         imgWrapper.style.cursor = 'pointer';
+          //         imgWrapper.addEventListener('click', () => handleStepImageUpload(imgWrapper, index));
+          //     }
+          //     bindDeleteStepEvent(stepElement);
+          // });
       } catch (error) {
           console.error('초기 이벤트 바인딩 중 오류:', error);
       }
@@ -494,9 +530,12 @@ document.getElementById('addStepButton').addEventListener('click', function(even
                 placeholder="Step ${stepCount + 1}"></textarea>
       <input type="hidden" name="recipeStepDtos[${stepCount}].stepNum" value="${stepCount + 1}" />
       <div class="stepImg-wrapper">
+        <label for="file${stepCount}">
           <div class="w-[160px] h-[160px] border border-neutral-300 bg-neutral-100 flex items-center justify-center rounded-md cursor-pointer">
               <span class="material-symbols-outlined text-neutral-400">add</span>
           </div>
+        </label> 
+        <input type="file" name="recipeStepDtos[${stepCount}].stepImage" id="file${stepCount}" accept="image/*" style="display: none;" data-step="${stepCount}"/>
       </div>
       <button type="button" class="delete-step-btn btn btn-danger bg-red-500 text-white px-3 py-2 rounded-md">X</button>
   `;
@@ -506,8 +545,7 @@ document.getElementById('addStepButton').addEventListener('click', function(even
   stepContainer.insertBefore(newStep, addButtonContainer);
 
   // 이미지 업로드 이벤트 바인딩
-  const imgWrapper = newStep.querySelector('.stepImg-wrapper div');
-  imgWrapper.addEventListener('click', () => handleStepImageUpload(imgWrapper, stepCount));
+  newStep.querySelector("[type='file']").addEventListener("change",(e) => handleStepImageUpload(e.target.files[0], stepCount)) 
 
   // 삭제 버튼 이벤트 바인딩
   bindDeleteStepEvent(newStep);
@@ -519,21 +557,24 @@ document.getElementById('addStepButton').addEventListener('click', function(even
 // Step 삭제 버튼 이벤트 바인딩 함수
 function bindDeleteStepEvent(stepElement) {
   const deleteButton = stepElement.querySelector('.delete-step-btn');
-  deleteButton.addEventListener('click', function () {
-      const textArea = stepElement.querySelector('textarea');
-      const hasInputValue = textArea && textArea.value.trim() !== '';
 
-      if (hasInputValue) {
-          const confirmDelete = confirm('정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.');
-          if (!confirmDelete) return;
-      }
-
-      // Step 삭제
-      stepElement.remove();
-
-      // Step 재정렬
-      reorderSteps();
-  });
+  if(deleteButton){
+    deleteButton.addEventListener('click', function () {
+        const textArea = stepElement.querySelector('textarea');
+        const hasInputValue = textArea && textArea.value.trim() !== '';
+  
+        if (hasInputValue) {
+            const confirmDelete = confirm('정말 삭제하시겠습니까? 수정중에 삭제한 줄은 되돌릴 수 없습니다.');
+            if (!confirmDelete) return;
+        }
+  
+        // Step 삭제
+        stepElement.remove();
+  
+        // Step 재정렬
+        reorderSteps();
+    });
+  }
 }
 
 // Step 재정렬 함수
@@ -559,8 +600,9 @@ function reorderSteps() {
       hiddenInput.value = newStepNumber;
 
       // Image wrapper 이벤트 리스너 업데이트
-      const imgWrapper = stepElement.querySelector('.stepImg-wrapper div');
-      imgWrapper.onclick = () => handleStepImageUpload(imgWrapper, index);
+      //const imgWrapper = stepElement.querySelector('.stepImg-wrapper div');
+     // imgWrapper.onclick = () => handleStepImageUpload(imgWrapper, index);
+      //imgWrapper.onchange = () => handleStepImageUpload(imgWrapper, index);
   });
 }
 
@@ -570,17 +612,24 @@ function reorderSteps() {
     <script>
     async function handleStepImageUpload(stepImg, index) {
       try {
-          const file = await selectFile('image/*');
-          if (!file) return;
+          // const file = await selectFile('image/*');
+          // if (!file) return;
+
+          // file 찾아오기
+          //const firstFile = document.querySelector("[name='recipeStepDtos[0].stepImage']");
+
+          console.log(stepImg);
   
-          const uploadResult = await uploadImage(file);
+
+          const path = "step"
+          const uploadResult = await uploadImage(stepImg,path);
           
           // 미리보기 이미지 생성
           const imgPreview = document.createElement('div');
           imgPreview.className = 'image-preview';
           
           const imgElement = document.createElement('img');
-          imgElement.src = URL.createObjectURL(file);
+          //imgElement.src = URL.createObjectURL(file);
           imgElement.className = 'w-[160px] h-[160px] object-cover rounded-md';
           
           // hidden input 추가
@@ -590,17 +639,17 @@ function reorderSteps() {
               { name: `recipeStepDtos[${index}].path`, value: uploadResult.folderPath }
           ];
   
-          imgPreview.appendChild(imgElement);
-          hiddenInputs.forEach(input => {
-              const hiddenInput = document.createElement('input');
-              hiddenInput.type = 'hidden';
-              hiddenInput.name = input.name;
-              hiddenInput.value = input.value;
-              imgPreview.appendChild(hiddenInput);
-          });
+          // imgPreview.appendChild(imgElement);
+          // hiddenInputs.forEach(input => {
+          //     const hiddenInput = document.createElement('input');
+          //     hiddenInput.type = 'hidden';
+          //     hiddenInput.name = input.name;
+          //     hiddenInput.value = input.value;
+          //     imgPreview.appendChild(hiddenInput);
+          // });
   
-          stepImg.innerHTML = '';
-          stepImg.appendChild(imgPreview);
+          // stepImg.innerHTML = '';
+          // stepImg.appendChild(imgPreview);
       } catch (error) {
           console.error('Step 이미지 업로드 중 오류:', error);
           alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
@@ -610,54 +659,60 @@ function reorderSteps() {
 
     <!-- TODO: 완성 사진 업로드 처리 -->
     <script>
-    async function handleFinalImageUpload(imageDiv, index) {
-      try {
-          const file = await selectFile('image/*');
-          if (!file) return;
+  //   async function handleFinalImageUpload(imageDiv, index) {
+  //     try {
+  //         const file = await selectFile('image/*');
+  //         if (!file) return;
   
-          const uploadResult = await uploadImage(file);
+  //         const path = "image"
+
+  //         console.log("완성사진 ",file)
+
+  //         const uploadResult = await uploadImage(file,path);
           
-          // 미리보기 이미지 생성
-          const imgPreview = document.createElement('div');
-          imgPreview.className = 'image-preview';
+  //         // 미리보기 이미지 생성
+  //         const imgPreview = document.createElement('div');
+  //         imgPreview.className = 'image-preview';
           
-          const imgElement = document.createElement('img');
-          imgElement.src = URL.createObjectURL(file);
-          imgElement.className = 'w-[140px] h-[140px] object-cover rounded-md';
+  //         const imgElement = document.createElement('img');
+  //         imgElement.src = URL.createObjectURL(file);
+  //         imgElement.className = 'w-[140px] h-[140px] object-cover rounded-md';
           
-          // hidden input 추가
-          const hiddenInputs = [
-              { name: `recipeImageDtos[${index}].uuid`, value: uploadResult.uuid },
-              { name: `recipeImageDtos[${index}].imgName`, value: uploadResult.fileName },
-              { name: `recipeImageDtos[${index}].path`, value: uploadResult.folderPath }
-          ];
+  //         // hidden input 추가
+  //         const hiddenInputs = [
+  //             { name: `recipeImageDtos[${index}].uuid`, value: uploadResult.uuid },
+  //             { name: `recipeImageDtos[${index}].imgName`, value: uploadResult.fileName },
+  //             { name: `recipeImageDtos[${index}].path`, value: uploadResult.folderPath }
+  //         ];
   
-          imgPreview.appendChild(imgElement);
-          hiddenInputs.forEach(input => {
-              const hiddenInput = document.createElement('input');
-              hiddenInput.type = 'hidden';
-              hiddenInput.name = input.name;
-              hiddenInput.value = input.value;
-              imgPreview.appendChild(hiddenInput);
-          });
+  //         imgPreview.appendChild(imgElement);
+  //         hiddenInputs.forEach(input => {
+  //             const hiddenInput = document.createElement('input');
+  //             hiddenInput.type = 'hidden';
+  //             hiddenInput.name = input.name;
+  //             hiddenInput.value = input.value;
+  //             imgPreview.appendChild(hiddenInput);
+  //         });
   
-          imageDiv.innerHTML = '';
-          imageDiv.appendChild(imgPreview);
-      } catch (error) {
-          console.error('이미지 업로드 중 오류:', error);
-          alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
-      }
-  }  
+  //         imageDiv.innerHTML = '';
+  //         imageDiv.appendChild(imgPreview);
+  //     } catch (error) {
+  //         console.error('이미지 업로드 중 오류:', error);
+  //         alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+  //     }
+  // }  
   </script>
 
     <!-- //TODO: 이미지 업로드 공통 함수 추가 -->
     <script>
-    async function uploadImage(file) {
+    async function uploadImage(file,path) {
+      console.log("업로드 ",file)
+
       const formData = new FormData();
       formData.append('uploadFiles', file);  // 'file' 대신 'uploadFiles'로 변경
   
       try {
-          const response = await fetch('/recipe/upload', {  // 엔드포인트 경로 수정
+          const response = await fetch(`/recipe/upload/${path}`, {  // 엔드포인트 경로 수정
               method: 'POST',
               headers: {
                   'X-CSRF-TOKEN': csrfValue
@@ -672,8 +727,10 @@ function reorderSteps() {
           }
   
           const result = await response.json();
+
+          console.log(result);
           // 배열의 첫 번째 항목 반환 (단일 파일 업로드의 경우)
-          return result[0];
+          return result;
       } catch (error) {
           console.error('Image upload failed:', error);
           // 에러 발생 시에도 임시 응답 생성하여 UI가 깨지지 않도록 처리
@@ -693,10 +750,11 @@ function reorderSteps() {
             const file = await selectFile('image/*');
             if (!file) return;
     
-            const formData = new FormData();
-            formData.append('file', file);
+            // const formData = new FormData();
+            // formData.append('file', file);
     
-            const uploadResult = await uploadImage(formData);
+            path="image"
+            const uploadResult = await uploadImage(file,path);
             
             // 이미지 미리보기 표시
             const imgElement = document.createElement('img');
@@ -733,6 +791,8 @@ function reorderSteps() {
           input.type = 'file';
           input.accept = accept;
           input.style.display = 'none';
+
+          console.log("input tag ",input);
           
           input.onchange = () => {
               const file = input.files[0];
