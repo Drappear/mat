@@ -5,17 +5,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.mat.dto.PageRequestDto;
+import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.dto.diner.DinerReviewDto;
+import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
-import com.example.mat.entity.diner.DinerImage;
 import com.example.mat.entity.diner.DinerReview;
 import com.example.mat.entity.shin.Member;
 
 public interface DinerReviewService {
+    // 리뷰 등록
     Long insertReview(DinerReviewDto dinerReviewDto);
 
-    List<DinerReviewDto> getDinerReviews(Long did);
+    // 리뷰 목록 조회
+    PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did);
 
     DinerReviewDto getDinerReview(Long rvid);
 
@@ -23,7 +28,7 @@ public interface DinerReviewService {
 
     void deleteDinerReview(Long rvid);
 
-    default DinerReviewDto entityToDto(DinerReview dinerReview, List<DinerImage> dinerImages) {
+    default DinerReviewDto entityToDto(DinerReview dinerReview, List<Image> images) {
         DinerReviewDto dinerReviewDto = DinerReviewDto.builder()
                 .rvid(dinerReview.getRvid())
                 .content(dinerReview.getContent())
@@ -32,16 +37,18 @@ public interface DinerReviewService {
                 .serviceScore(dinerReview.getServiceScore())
                 .did(dinerReview.getDiner().getDid())
                 .mid(dinerReview.getMember().getMid())
+                .nickname(dinerReview.getMember().getNickname())
                 .regDate(dinerReview.getRegDate())
                 .updateDate(dinerReview.getUpdateDate())
                 .build();
 
-        List<DinerImageDto> dinerImageDtos = dinerImages.stream().map(dinerImage -> {
+        List<DinerImageDto> dinerImageDtos = images.stream().map(image -> {
             return DinerImageDto.builder()
-                    .inum(dinerImage.getInum())
-                    .uuid(dinerImage.getUuid())
-                    .imgName(dinerImage.getImgName())
-                    .path(dinerImage.getPath())
+                    .inum(image.getInum())
+                    .uuid(image.getUuid())
+                    .imgName(image.getImgName())
+                    .imgCate(image.getImgCate())
+                    .path(image.getPath())
                     .build();
         }).collect(Collectors.toList());
 
@@ -62,7 +69,6 @@ public interface DinerReviewService {
                 .serviceScore(dinerReviewDto.getServiceScore())
                 .diner(Diner.builder().did(dinerReviewDto.getDid()).build())
                 .member(Member.builder().mid(dinerReviewDto.getMid()).build())
-                .dinerImage(null)
                 .build();
 
         resultMap.put("dinerReview", dinerReview);
@@ -70,17 +76,19 @@ public interface DinerReviewService {
         List<DinerImageDto> dinerImageDtos = dinerReviewDto.getDinerImageDtos();
 
         if (dinerImageDtos != null && dinerImageDtos.size() > 0) {
-            List<DinerImage> dinerImages = dinerImageDtos.stream().map(dto -> {
-                DinerImage dinerImage = DinerImage.builder()
+            List<Image> images = dinerImageDtos.stream().map(dto -> {
+                Image image = Image.builder()
                         .uuid(dto.getUuid())
                         .imgName(dto.getImgName())
                         .path(dto.getPath())
+                        .imgCate(dto.getImgCate())
                         .dinerReview(dinerReview)
+                        .diner(dinerReview.getDiner())
                         .build();
-                return dinerImage;
+                return image;
             }).collect(Collectors.toList());
 
-            resultMap.put("dinerImages", dinerImages);
+            resultMap.put("dinerReviewImages", images);
         }
         return resultMap;
     }
