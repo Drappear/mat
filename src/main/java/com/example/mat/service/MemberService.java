@@ -92,7 +92,7 @@ public interface MemberService {
 
         resultMap.put("member", member);
 
-        MemberImageDto memberImageDto = memberDto.getMemberImageDto();
+        // MemberImageDto memberImageDto = memberDto.getMemberImageDto();
 
         // if (memberImageDto != null) {
         // MemberImage memberImage = MemberImage.builder()

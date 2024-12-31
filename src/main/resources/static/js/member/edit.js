@@ -46,9 +46,6 @@ function checkDuplicateNickname() {
     .trim();
   const message = document.getElementById("nickname-message");
 
-  // 중복 확인 플래그 초기화
-  isNicknameChecked = true;
-
   switch (true) {
     // 닉네임이 비어있으면
     case nickname === "":
@@ -103,6 +100,9 @@ function validateForm() {
 
   // 닉네임이 현재와 동일하면 중복 확인을 건너뜀
   if (nickname !== currentNickname && !isNicknameChecked && nickname === "") {
+    alert("닉네임 중복 확인을 해주세요.");
+    return false; // 폼 제출 막기
+  } else if (nickname !== currentNickname && !isNicknameChecked) {
     alert("닉네임 중복 확인을 해주세요.");
     return false; // 폼 제출 막기
   }
