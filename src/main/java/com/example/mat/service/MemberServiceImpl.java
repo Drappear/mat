@@ -160,8 +160,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
             throw new Exception("현재 비밀번호를 확인");
         }
 
-        // reviewRepository.deleteByMember(member);
-
+        memberImageRepository.deleteByMember(member);
         memberRepository.deleteById(member.getMid());
     }
 
