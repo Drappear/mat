@@ -16,35 +16,37 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
-                .requestMatchers("/member/register").permitAll()
-                .requestMatchers("/board/register").permitAll()
-                .requestMatchers("/diner/**", "/dfup/**", "/review/**").permitAll()
-                .requestMatchers("/recipe/**", "/upload/**").permitAll()
-                .anyRequest().authenticated());
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/upload/**").permitAll()
+                                .requestMatchers("/member/check-duplicate-userid", "/member/check-duplicate-nickname")
+                                .permitAll()
+                                .requestMatchers("/member/register").permitAll()
+                                .requestMatchers("/board/register").permitAll()
+                                .requestMatchers("/diner/**", "/dfup/**", "/review/**").permitAll()
+                                .requestMatchers("/recipe/**", "/upload/**").permitAll()
+                                .anyRequest().authenticated());
 
-        http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
-        // http.formLogin(login ->
-        // login.loginPage("/member/login").permitAll().defaultSuccessUrl("/recipe/list"));
+                // http.formLogin(login ->
+                // login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
+                http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/recipe/list"));
 
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+                http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
-        http.logout(logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                .logoutSuccessUrl("/"));
+                http.logout(logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                                .logoutSuccessUrl("/"));
 
-        // CSRF 설정: 게시물 등록 경로에서 비활성화
-        http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/board/register", "/board/modify"));
+                // CSRF 설정: 게시물 등록 경로에서 비활성화
+                http.csrf(csrf -> csrf
+                                .ignoringRequestMatchers("/board/register", "/board/modify"));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+        @Bean
+        PasswordEncoder passwordEncoder() {
+                return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        }
 }

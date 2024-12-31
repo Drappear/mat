@@ -3,6 +3,159 @@
   <!-- Header Section Begin -->
   <header class="header" th:fragment="header">
     <link rel="stylesheet" th:href="@{/css/headerLogo.css}" />
+    <style>
+      /* 헤더 카트 영역 스타일링 */
+      .header__cart {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      /* 메인 프로필 컨테이너 */
+      .header__top__right__auth {
+        position: relative;
+        margin-left: 25px;
+      }
+
+      /* 비로그인 상태 로그인 버튼 */
+      .header__top__right__auth > a:not(:has(div)) {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: linear-gradient(to right, #7fad39, #95c24d);
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(127, 173, 57, 0.2);
+      }
+
+      .header__top__right__auth > a:not(:has(div)):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(127, 173, 57, 0.3);
+      }
+
+      /* 로그인 상태 프로필 박스 */
+      .header__top__right__auth > a:has(div) {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        min-width: 280px;
+        background: white;
+        border-radius: 12px;
+        text-decoration: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .header__top__right__auth > a:has(div):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      /* 프로필 상단 텍스트 */
+      .header__top__right__auth > a > div {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      /* 프로필 사진 및 정보 영역 */
+      .profile-photo {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        margin-bottom: 12px;
+      }
+
+      /* 프로필 이름 링크 */
+      .profile-photo a {
+        color: #333;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        margin-left: 12px;
+        transition: color 0.3s ease;
+      }
+
+      .profile-photo a:hover {
+        color: #7fad39;
+      }
+
+      /* 로그아웃 버튼 */
+      .header__top__right__auth > a[href*="logout"] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+        padding: 10px;
+        color: #666;
+        font-size: 14px;
+        background: #f8f8f8;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .header__top__right__auth > a[href*="logout"]:hover {
+        background: #f0f0f0;
+        color: #333;
+        transform: translateY(-1px);
+      }
+
+      .header__top__right__auth > a[href*="logout"] i {
+        font-size: 16px;
+        transition: transform 0.3s ease;
+      }
+
+      .header__top__right__auth > a[href*="logout"]:hover i {
+        transform: translateX(3px);
+      }
+
+      /* 반응형 스타일링 */
+      @media (max-width: 768px) {
+        .header__top__right__auth {
+          margin: 15px 0;
+        }
+
+        .header__top__right__auth > a:has(div) {
+          width: 100%;
+          align-items: center;
+          text-align: center;
+        }
+
+        .profile-photo {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+
+        .profile-photo a {
+          margin-left: 0;
+        }
+      }
+
+      /* 애니메이션 효과 */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header__top__right__auth > a {
+        animation: slideIn 0.3s ease;
+      }
+    </style>
     <!-- <div class="header__top">
       <div class="container">
         <div class="row">
@@ -99,14 +252,48 @@
 
               <a sec:authorize="isAuthenticated()">
                 <div>
-                  어서오세요,
-                  <a
-                    th:href="@{/member/profile}"
-                    th:text="${#authentication.principal.memberDto.nickname}"
+                  <div
+                    id="profileForm"
+                    class="profile-photo"
+                    style="display: flex; align-items: center; gap: 5px"
                   >
-                    님
-                  </a>
+                    <img
+                      alt=""
+                      th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|"
+                      loading="lazy"
+                      th:if="${#authentication.principal.memberDto.memberImageDto != null}"
+                      style="
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <img
+                      alt=""
+                      th:src="@{/images/default-profile.png}"
+                      loading="lazy"
+                      th:if="${#authentication.principal.memberDto.memberImageDto == null}"
+                      style="
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <div
+                      class="absolute inset-0 rounded-full shadow-inner"
+                      aria-hidden="true"
+                    ></div>
+                    <a
+                      th:href="@{/member/profile}"
+                      th:text="${#authentication.principal.memberDto.nickname + ' 님'}"
+                      style="margin-left: 5px"
+                    >
+                    </a>
+                  </div>
                 </div>
+
                 <!-- 로그인한 사용자를 위한 Log out 버튼 -->
                 <a th:href="@{/member/logout}"
                   ><i class="fa fa-sign-out"></i> Log out</a
