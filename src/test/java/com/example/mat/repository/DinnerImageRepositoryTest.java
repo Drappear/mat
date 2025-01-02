@@ -1,5 +1,6 @@
 package com.example.mat.repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,11 @@ import org.springframework.data.domain.PageRequest;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.dto.diner.DinerReviewDto;
+import com.example.mat.dto.diner.DinnerReviewTotalDto;
+import com.example.mat.entity.Image;
+import com.example.mat.entity.diner.DinerReview;
 import com.example.mat.service.DinerReviewService;
 
 import jakarta.transaction.Transactional;
@@ -32,12 +37,6 @@ public class DinnerImageRepositoryTest {
 
         Page<Object[]> result = imageRepository.getTotalReviewList(pageRequest, 10L);
 
-        List<Object[]> contents = result.getContent();
-
-        for (Object[] objects : contents) {
-            System.out.println(Arrays.toString(objects));
-        }
-
     }
 
     @Transactional
@@ -45,9 +44,10 @@ public class DinnerImageRepositoryTest {
     public void servicelist() {
 
         PageRequestDto pageRequestDto = PageRequestDto.builder().size(10).page(1).build();
-        PageResultDto<List<DinerReviewDto>, Object[]> result = dinerReviewService.getDinerReviews(pageRequestDto, 10L);
+        // PageResultDto<List<DinerReviewDto>, Object[]> result =
+        // dinerReviewService.getDinerReviews(pageRequestDto, 10L);
 
-        result.getDtoList().forEach(dto -> System.out.println(dto));
+        // result.getDtoList().forEach(dto -> System.out.println(dto));
 
     }
 

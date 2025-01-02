@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.DinerReview;
@@ -42,7 +43,7 @@ public class DinerReviewServiceImpl implements DinerReviewService {
     }
 
     @Override
-    public PageResultDto<List<DinerReviewDto>, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did) {
+    public PageResultDto<DinerReviewDto, Object[]> getDinerReviews(PageRequestDto pageRequestDto, Long did) {
         Pageable pageable = pageRequestDto.getPageable(Sort.by("rvid").descending());
 
         Page<Object[]> result = imageRepository.getTotalReviewList(pageable, did);
@@ -53,22 +54,27 @@ public class DinerReviewServiceImpl implements DinerReviewService {
 
         List<DinerReviewDto> dinerReviewDtos = new ArrayList<>();
 
-        for (Object[] objects : contents) {
-            System.out.println("service 확인");
-            System.out.println(Arrays.toString(objects));
+        contents.forEach(en -> {
+            DinerReview dinerReview = (DinerReview) en[0];
 
-            DinerReview dinerReview = (DinerReview) objects[0];
-            Image image = (Image) objects[1];
+            DinerReviewDto dinnerReviewDto = DinerReviewDto.builder().rvid(dinerReview.getRvid()).build();
 
-            DinerReviewDto dinerReviewDto = entityToDto(dinerReview, Arrays.asList(image));
-            dinerReviewDtos.add(dinerReviewDto);
-        }
+            if (!dinerReviewDtos.contains(dinnerReviewDto)) {
+                dinerReviewDtos.add(dinnerReviewDto);
+            }
+        });
 
-        System.out.println("dinerReviewDtos  " + dinerReviewDtos);
-        // function = (en -> entityToDto(dinerReview, reviewImages));
+        contents.forEach(en -> {
+            Image dinerImage = (Image) en[1];
 
-        // return new PageResultDto<>(result, function);
-        return null;
+            dinerReviewDtos.forEach(dto -> {
+                if (dto.getRvid() == dinerImage.getDinerReview().getRvid()) {
+                    dto.getDinerImageDtos().add(DinerImageDto.builder().inum(dinerImage.getInum()).build());
+                }
+            });
+        });
+
+        return new PageResultDto<>(result, dinerReviewDtos);
 
     }
 

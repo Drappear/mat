@@ -36,4 +36,18 @@ public class DinerReviewDto {
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DinerReviewDto) {
+
+            DinerReviewDto dto = (DinerReviewDto) obj;
+
+            if (this.rvid == dto.getRvid()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

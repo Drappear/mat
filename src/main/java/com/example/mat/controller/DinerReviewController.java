@@ -35,13 +35,14 @@ public class DinerReviewController {
     }
 
     @GetMapping("/{did}/all")
-    public PageResultDto<List<DinerReviewDto>, Object[]> getReviewList(@PathVariable Long did,
+    public PageResultDto<DinerReviewDto, Object[]> getReviewList(@PathVariable Long did,
             @ModelAttribute("reviewRequestDto") PageRequestDto pageRequestDto, Model model) {
         log.info("리뷰 리스트 요청 {}", did);
 
-        PageResultDto<List<DinerReviewDto>, Object[]> review = dinerReviewService.getDinerReviews(pageRequestDto, did);
+        PageResultDto<DinerReviewDto, Object[]> review = dinerReviewService.getDinerReviews(pageRequestDto, did);
         log.info("리뷰 리스트 {}", review);
-        model.addAttribute("review", review);
+
+        // model.addAttribute("review", review);
 
         return review;
     }
