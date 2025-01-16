@@ -74,38 +74,46 @@ public class MarketController {
     }
 
 
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/cart")
         public @ResponseBody ResponseEntity<String> cart(CartItemDto cartItemDto) {
             log.info("카트 추가 정보 {}",cartItemDto);          
         
-      // 수정 필요
-       MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
-       Long cartItemId;
-
+            MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
+            Long cartItemId;
+       
        try {
-        cartItemId = cartService.addCart(cartItemDto,memberDto);
+        cartItemId = cartService.addCart(cartItemDto, memberDto);
        } catch (Exception e) {
         return new ResponseEntity<String>("카트 추가 실패", HttpStatus.BAD_REQUEST);
+
        }
        return new ResponseEntity<String>(String.valueOf(cartItemId), HttpStatus.OK);
         
 }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/cart")
+    @GetMapping("/cart")
     public void orderHist(Model model){
-        log.info("카트 목록");        
-
+        log.info("카트 목록{}", model);        
 
         Long mid = getAuthentication().getMemberDto().getMid();
+        log.info("회원 ID", mid);
+        
         List<CartDetailDto> cartDetailList = cartService.getCartList(mid);
+        System.out.println("controller cart");
+        // System.out.println(cartDetailDtoList);
+        for (CartDetailDto dto : cartDetailList) {
+            System.out.println(dto.getItemName());
+            System.out.println(dto.getPrice());
+            System.out.println(dto.getQuantity());
+            System.out.println(dto.getTotalPrice());
+        }
+
+
         model.addAttribute("cartItems", cartDetailList);     
+        
     }
-
-
-
        
 
     @GetMapping("/order")

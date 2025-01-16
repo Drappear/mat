@@ -3,6 +3,8 @@ package com.example.mat.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.isNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
@@ -11,10 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
+import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Product;
 import com.example.mat.entity.shin.Member;
+import com.example.mat.repository.CartItemRepository;
 import com.example.mat.repository.CartItemRepositoryTest;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.repository.ProductRepository;
@@ -35,7 +40,7 @@ public class CartServiceTest {
     MemberRepository memberRepository;
 
     @Autowired
-    CartItemRepositoryTest cartItemRepository;
+    CartItemRepository cartItemRepository;
 
 
     // 카트 담기 테스트
@@ -51,7 +56,7 @@ public class CartServiceTest {
         cartItemDto.setPid(product.getPid());
 
         // 생성된 카트 상품 아이디를 cartitemid 변수에 저장장
-        Long cartitemid = cartService.addCart(cartItemDto, member.getEmail());
+        Long cartitemid = cartService.addCart(cartItemDto, member.getMid());
         // 카트 상품 아이디를 이용해 생성된 카트 상품 정보 조회회
         CartItem cartItem = cartItemRepository.
                 .orElseThrow(EntityNotFoundException::new);
@@ -79,6 +84,15 @@ public class CartServiceTest {
             memberRepository.save(member);
 
         });
+    }
+
+    @Test
+    public void getcartList(){
+
+        List<CartDetailDto> cartList = cartService.getCartList(51L);
+        cartList.forEach(item -> System.out.println(item));
+
+
     }
 
     

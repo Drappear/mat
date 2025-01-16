@@ -77,9 +77,7 @@ public class CartServiceImpl implements CartService {
 
         List<CartDetailDto> cartDetailDtoList;
 
-        //로그인 정보로 member 찾기기
-        //Member member = memberRepository.findByEmail(email).get();        
-
+        //로그인 정보로 member 찾기기    
         Member member = memberRepository.findById(mid).get();       
         Cart cart = cartRepository.findByMember(member);
 
@@ -87,13 +85,21 @@ public class CartServiceImpl implements CartService {
             return new ArrayList<>();
         }
 
-        List<CartItem> cartItems  = cartItemRepository.findByCartItem(cart);
+        List<CartItem> cartItems = cartItemRepository.findByCartItem(cart);
 
         // entity => dto
-        //cartDetailDtoList = entityToDto()
+        // cartDetailDtoList = entityToDto()
+        cartDetailDtoList = entityToDto(cartItems);
+
+        System.out.println("service");
+        // System.out.println(cartDetailDtoList);
+        for (CartDetailDto dto : cartDetailDtoList) {
+            System.out.println(dto.getItemName());
+            System.out.println(dto.getTotalPrice());
+        }
 
         //return cartDetailDtoList; 
-        return null;
+        return cartDetailDtoList;
     }
 
 
@@ -108,6 +114,15 @@ public class CartServiceImpl implements CartService {
         
         throw new UnsupportedOperationException("Unimplemented method 'deleteCartItem'");
     }
+
+
+    @Override
+    public void getTotalPrice(CartDetailDto cartDetailDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTotalPrice'");
+    }
+
+
 
 
 

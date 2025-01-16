@@ -89,7 +89,7 @@
       <nav class="humberger__menu__nav mobile-menu">
         <ul>
           <li class="active"><a href="./index.html">Home</a></li>
-          <li><a href="./shop-grid.html">Shop</a></li>
+          <li><a th:href="@{/market/list}">Shop</a></li>
           <li>
             <a href="#">Pages</a>
             <ul class="header__menu__dropdown">
@@ -170,7 +170,7 @@
             <nav class="header__menu">
               <ul>
                 <li><a href="./index.html">Home</a></li>
-                <li class="active"><a href="./shop-grid.html">Shop</a></li>
+                <li class="active"><a th:href="@{/market/list}">Shop</a></li>
                 <li>
                   <a href="#">Pages</a>
                   <ul class="header__menu__dropdown">
@@ -299,22 +299,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <input type="hidden" id="productid" />
-                  <tr>
+                  <tr th:each="item : ${cartItems}">
                     <td class="shoping__cart__item">
                       <input type="checkbox" name="chk1" />
                       <img class="product__details__pic__item--large" />
-                      <h5></h5>
+                      <h5 th:text="${item.itemName}"></h5>
                     </td>
-                    <td class="shoping__cart__price">$55.00</td>
+                    <td
+                      class="shoping__cart__price"
+                      th:text="${item?.price}"
+                    ></td>
                     <td class="shoping__cart__quantity">
                       <div class="quantity">
                         <div class="pro-qty">
-                          <input type="text" />
+                          <input th:value="${item?.quantity}" />
                         </div>
                       </div>
                     </td>
-                    <td class="shoping__cart__total">$110.00</td>
+                    <td class="shoping__cart__total">
+                      [[${item?.price*item?.quantity}]]
+                    </td>
                     <td class="shoping__cart__item__close">
                       <span class="icon_close"></span>
                     </td>
@@ -343,7 +347,6 @@
             <div class="shoping__checkout">
               <h5>Cart Total</h5>
               <ul>
-                <li>Subtotal <span>$454.98</span></li>
                 <li>Total <span>$454.98</span></li>
               </ul>
               <a th:href="@{/market/order}" class="primary-btn">ORDER</a>
