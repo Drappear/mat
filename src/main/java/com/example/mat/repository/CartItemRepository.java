@@ -13,12 +13,9 @@ import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Product;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long>{
-
-    //카드 아이디와 상품 아이디로 상품이 장바구니에 들어있는지 조회
-   //CartItem findByCart_cartidAndProduct_pid(Long cartid, Long pid);
    
 
-   // 장바구니 목록록
+   // 장바구니 목록
    @Query("select ci from CartItem ci where ci.cart = :cart")
    List<CartItem> findByCartItem(Cart cart);
 

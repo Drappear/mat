@@ -20,19 +20,15 @@ public class CartDetailDto {
     private String itemName;
 
     // 가격
-    private String price;
+    private int price;
 
+    // 수량
     private int quantity;
 
     // 합산가격
-    private int totalPrice;    
-
-    
-    
-   
-
-    
-
+    public Integer getTotalPrice() {
+        return (price != 0 && quantity != 0) ? price * quantity : 0;
+    }
 
     
 }

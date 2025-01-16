@@ -43,7 +43,7 @@ public class CartItem extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
-    // // 상품 수량 증가
+    // 상품 수량 증가
     public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
