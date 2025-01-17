@@ -19,7 +19,7 @@ public class ProductDto {
 
     private String name;
 
-    private String price;
+    private int price;
 
     private int quantity;
 
