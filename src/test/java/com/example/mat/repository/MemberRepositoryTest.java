@@ -41,11 +41,4 @@ public class MemberRepositoryTest {
         });
     }
 
-    @Test
-    @Transactional
-    public void testUpdate2() {
-
-        memberRepository.updateNickname("Paka", "son1111");
-
-    }
 }

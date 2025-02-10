@@ -1,36 +1,17 @@
-// 기존 이미지 삭제 처리
-function deleteCurrentImage() {
-  // 이미지 미리보기 제거
-  const imagePreview = document.getElementById("currentImagePreview");
-  const deleteButton = document.getElementById("deleteImageButton");
+document.addEventListener("DOMContentLoaded", function () {
+  const imageInput = document.querySelector("#image");
+  const deleteImageCheckbox = document.querySelector("#deleteImage");
 
-  if (imagePreview) {
-    imagePreview.remove(); // 이미지 미리보기 제거
+  // 이미지 선택 시 hidden 필드 값 업데이트
+  if (imageInput && deleteImageCheckbox) {
+    imageInput.addEventListener("input", function () {
+      if (imageInput.files && imageInput.files.length > 0) {
+        console.log("File selected:", imageInput.files[0].name);
+        deleteImageCheckbox.value = "true"; // 파일이 선택되었을 경우 값 설정
+      } else {
+        console.log("No file selected.");
+        deleteImageCheckbox.value = "false"; // 파일 선택 취소 시 값 재설정
+      }
+    });
   }
-  if (deleteButton) {
-    deleteButton.remove(); // X 버튼 제거
-  }
-
-  // 삭제 플래그 설정
-  const deleteImageFlag = document.getElementById("deleteImageFlag");
-  if (deleteImageFlag) {
-    deleteImageFlag.value = "true"; // 삭제 플래그 활성화
-  }
-
-  // 새로운 이미지 업로드를 활성화
-  const imageInput = document.getElementById("image");
-  if (imageInput) {
-    imageInput.disabled = false; // 업로드 활성화
-  }
-}
-
-// 페이지 로드 시 초기 상태 설정
-window.onload = function () {
-  const deleteImageFlag = document.getElementById("deleteImageFlag");
-  const imageInput = document.getElementById("image");
-
-  // 기존 이미지가 있을 경우, 새로운 이미지 업로드 비활성화
-  if (deleteImageFlag && deleteImageFlag.value === "false" && imageInput) {
-    imageInput.disabled = true; // 기존 이미지가 있으면 업로드 비활성화
-  }
-};
+});

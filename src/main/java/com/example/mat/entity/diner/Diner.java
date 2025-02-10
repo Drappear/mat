@@ -41,6 +41,6 @@ public class Diner extends BaseEntity {
     private Long viewCount;
     private String regNum;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private DinerCategory dinerCategory;
 }
