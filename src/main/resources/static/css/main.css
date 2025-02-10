@@ -1,0 +1,28 @@
+section {
+  border: 1px solid black;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: gray;
+}
+
+.mart-content {
+  position: fixed;
+  right: 5rem;
+  margin-left: auto;
+  top: 12rem;
+  width: 12rem;
+}
+
+.mart-content .card {
+  margin-bottom: 5px;
+}
