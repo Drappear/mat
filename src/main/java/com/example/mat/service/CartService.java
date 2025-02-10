@@ -2,6 +2,7 @@ package com.example.mat.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -14,20 +15,19 @@ import groovyjarjarantlr4.v4.parse.ANTLRParser.delegateGrammar_return;
 
 public interface CartService {
 
-    // 장바구니 상품 추가
+    // 카트 상품 추가
     public Long addCart(CartItemDto cartItemDto, MemberDto memberDto);
 
     // mid 이용하여 카트 리스트 조회
-    //public List<CartDetailDto> getCartList = new ArrayList<>();
     public List<CartDetailDto> getCartList(Long mid);
-
-    // 장바구니 수량 업데이트
-    public void updateCartItemQuantity(Long cartitemid, int quantity);
-
-    // 장바구니 아이템 제거
+    
+    // 카트 아이템 제거
     public void deleteCartItem(Long cartitemid);
 
-    public void getTotalPrice(CartDetailDto cartDetailDto);
+    // 카트 수량 업데이트
+    public Map<String, Integer>  updateCartItemQuantity(Long cartitemid, int quantity);
+
+    public int getTotalPrice(Long cartId);
 
 
     // dto=> entity
@@ -45,6 +45,7 @@ public interface CartService {
         .itemName(cartItem.getProduct().getName())
         .price(cartItem.getProduct().getPrice())
         .quantity(cartItem.getQuantity())
+        .productQuantity(cartItem.getProduct().getQuantity())
         .build()).collect(Collectors.toList());
     }
 

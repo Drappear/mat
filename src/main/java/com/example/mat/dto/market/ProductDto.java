@@ -27,6 +27,8 @@ public class ProductDto {
 
     private String catename;
 
+    private ProductCategoryDto category;
+
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 

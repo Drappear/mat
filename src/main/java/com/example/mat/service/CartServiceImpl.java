@@ -1,7 +1,9 @@
 package com.example.mat.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -39,7 +41,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Long addCart(CartItemDto cartItemDto, MemberDto memberDto) {
 
-        //Cart 생성   
+        // 카트 생성   
         Member member = memberRepository.findById(memberDto.getMid()).get();   
         Cart cart = cartRepository.findByMember(member);
 
@@ -50,17 +52,36 @@ public class CartServiceImpl implements CartService {
         }
 
         Product product = productRepository.findById(cartItemDto.getPid())
-                            .orElseThrow(EntityNotFoundException::new);   
+                            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다.")); 
+                            
+        // 상품의 수량 확인
+        int productQuantity = product.getQuantity();
+        System.out.println(product.getPid());
+        System.out.println(product.getQuantity());
 
         CartItem savedCartItem = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
 
+        int requestedQuantity = cartItemDto.getQuantity();
+
         if(savedCartItem != null){
-            // 이미 상품이 있다면 개수를 +
+            // 카트에 이미 상품이 있다면 기존 수량과 request 수량을 +
+            int totalQuantity  = savedCartItem.getQuantity() + requestedQuantity;
+            if(totalQuantity > productQuantity) {
+                throw new IllegalStateException("구매 가능한 수량을 초과하였습니다");
+            }
+
+            // 수량 업데이트
             savedCartItem.addQuantity(cartItemDto.getQuantity());
             cartItemRepository.save(savedCartItem);
             return savedCartItem.getCartItemId();
+
         } else {
-            //CartItem cartItem =  CartItem.createCartItem(cart, product, cartItemDto.getQuantity());
+            
+            if(requestedQuantity > productQuantity){
+                throw new IllegalStateException("구매 가능한 수량을 초과하였습니다");
+            }
+
+            // 새로운 CartItem 생성
             CartItem cartItem =  CartItem.builder()
             .quantity(cartItemDto.getQuantity())
             .product(product)
@@ -104,23 +125,60 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void updateCartItemQuantity(Long cartitemid, int quantity) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'updateCartItemQuantity'");
-    }
-
-    @Override
     public void deleteCartItem(Long cartitemid) {
+
+    cartItemRepository.deleteById(cartitemid);
         
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCartItem'");
     }
+
+    @Override
+    public Map<String, Integer> updateCartItemQuantity(Long cartItemId, int quantity) {
+    // 카트 아이템 조회
+    // CartItem cartItem = cartItemRepository.findById(cartItemId)
+    //     .orElseThrow(() -> new EntityNotFoundException("카트 아이템을 찾을 수 없습니다"));
+
+    // // 상품 최대 수량 확인
+    // Product product = cartItem.getProduct();
+    // int maxQuantity = product.getQuantity();
+    // if (quantity > maxQuantity) {
+    //     throw new IllegalStateException("구매 가능한 수량을 초과하였습니다");
+    // }
+
+    // // 수량 업데이트
+    // cartItem.setQuantity(quantity);
+    // cartItemRepository.save(cartItem);
+
+    // // 개별 상품 총합 계산
+    // int updatedItemTotal = cartItem.getQuantity() * product.getPrice();
+
+    // // 카트 총합 계산
+    // Cart cart = cartItem.getCart();
+    // int updatedCartTotal = cartItemRepository.findByCartItem(cart).stream()
+    //     .mapToInt(item -> item.getQuantity() * item.getProduct().getPrice())
+    //     .sum();
+
+    // // 결과 반환
+    // Map<String, Integer> response = new HashMap<>();
+    // response.put("updatedItemTotal", updatedItemTotal);
+    // response.put("updatedCartTotal", updatedCartTotal);
+
+    return null;
+}
+
+
 
 
     @Override
-    public void getTotalPrice(CartDetailDto cartDetailDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTotalPrice'");
+    public int getTotalPrice(Long cartId) {
+         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
+
+            // 총합 계산
+            return cartItems.stream()
+            .mapToInt(item -> item.getQuantity() * item.getProduct().getPrice())
+            .sum();
     }
+
+
 
 
 
