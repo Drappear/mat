@@ -2,6 +2,7 @@ package com.example.mat.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,11 +58,24 @@ public class MarketController {
    
 
     @GetMapping("/list")
-    public void getList(PageRequestDto requestDto, Model model) {
-        log.info("식자재 전체 목록 요청");
+    public void getList(@RequestParam(required = false) Long cateid, PageRequestDto requestDto, Model model) {
+        log.info("식자재 전체 목록 요청 카테고리 ID : {}, 페이지 번호 : {}", cateid, requestDto.getPage());
+        
+        PageResultDto<ProductDto, Product> result;
 
-        PageResultDto<ProductDto, Product> result = productService.getList(requestDto);
+        if (cateid!=null) {
+            // 카테고리 ID 있는 경우
+            result = productService.getProductsByCategory(cateid, requestDto);
+            model.addAttribute("cateid", cateid);
+        } else {
+            // 전체 목록 조회(카테고리 ID 없는 경우)
+            result = productService.getList(requestDto);
+        }
+
         model.addAttribute("result", result);
+
+        // PageResultDto<ProductDto, Product> result = productService.getList(requestDto);
+        // model.addAttribute("result", result);
 
     }
 
@@ -76,20 +90,13 @@ public class MarketController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/cart")
-        public @ResponseBody ResponseEntity<String> cart(CartItemDto cartItemDto) {
+        public String cart(@ModelAttribute CartItemDto cartItemDto) {
             log.info("카트 추가 정보 {}",cartItemDto);          
         
             MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
-            Long cartItemId;
-       
-       try {
-        cartItemId = cartService.addCart(cartItemDto, memberDto);
-       } catch (Exception e) {
-        return new ResponseEntity<String>("카트 추가 실패", HttpStatus.BAD_REQUEST);
+            cartService.addCart(cartItemDto, memberDto);
+            return "redirect:cart";
 
-       }
-       return new ResponseEntity<String>(String.valueOf(cartItemId), HttpStatus.OK);
-        
 }
 
     @PreAuthorize("isAuthenticated()")
@@ -110,11 +117,34 @@ public class MarketController {
             System.out.println(dto.getTotalPrice());
         }
 
-
+    
         model.addAttribute("cartItems", cartDetailList);     
         
     }
-       
+
+
+    @PostMapping("/remove")
+    public String cartItemRemove(@RequestParam("cartitemid") Long cartitemid) {
+       log.info("카트 아이템 삭제 {}", cartitemid);
+
+       cartService.deleteCartItem(cartitemid);
+      
+       return "redirect:/market/cart";
+    }
+
+    // @PreAuthorize("isAuthenticated()")
+    // @PostMapping("/cart/update")
+    // public String updateCartItemQuantity(@RequestParam Long cartItemId, @RequestParam int quantity, RedirectAttributes redirectAttributes) {
+    //     try {
+    //         cartService.updateCartItemQuantity(cartItemId, quantity);
+    //         return "redirect:/market/cart";
+    //     } catch (Exception e) {
+    //         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    //         return "redirect:/market/cart";
+    //     }
+    // }
+    
+    
 
     @GetMapping("/order")
     public void getOrder() {

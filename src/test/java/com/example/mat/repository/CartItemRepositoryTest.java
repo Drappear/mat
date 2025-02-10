@@ -54,5 +54,13 @@ public class CartItemRepositoryTest {
       
         
     }
+
+
+    @Test
+    public void testDelete(){
+
+        cartItemRepository.deleteById(43L);
+        
+    }
     
 }

@@ -25,9 +25,20 @@ public class CartDetailDto {
     // 수량
     private int quantity;
 
+    private Long cartId; 
+
+    private int productQuantity;
+
+    private int totalPrice;
+
     // 합산가격
     public Integer getTotalPrice() {
         return (price != 0 && quantity != 0) ? price * quantity : 0;
+    }
+
+    // 카트 페이지 합산가격
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     
