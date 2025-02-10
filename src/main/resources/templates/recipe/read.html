@@ -58,11 +58,12 @@
           <div
             class="flex items-center justify-between border-b border-neutral-300 pb-2 mb-4"
           >
-            <button
+            <a
+            th:href="@{modify(rno=${recipeDto.rno},page=${requestDto.page},size=${requestDto.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
               class="px-4 py-2 bg-lime-600 text-primary-50 rounded-md hover:bg-lime-700"
             >
               수정버튼
-            </button>
+            </a>
           </div>
           <table class="w-full mb-6 border border-neutral-300">
             <thead>
@@ -165,10 +166,17 @@
     </div>
   </div>
   <th:block layout:fragment="js">
-    <!-- <script>
+    <script>
       const csrfValue = "[[${_csrf.token}]]";
-    </script> -->
-    <script th:src="@{/js/recipe_main.js}"></script>
+
+      // login info
+      const loginUser = '[[${#authentication.name}]]';
+
+      // 레시피명 
+      const title = '[[${recipeDto.title}]]';
+      const rno = '[[${recipeDto.rno}]]';
+    </script>
+    <!-- <script th:src="@{/js/recipe_main.js}"></script> -->
     <!-- <script th:src="@{/js/create.js}"></script> -->
   </th:block>
 </html>

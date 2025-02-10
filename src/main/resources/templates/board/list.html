@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx" layout:decorate="~{/layouts/layout}">
+<html lang="zxx" layout:decorate="~{/layouts/board/listLayout}">
   <head>
     <meta charset="UTF-8" />
     <title>Board List</title>
@@ -15,10 +15,10 @@
     <!-- Content SECTION Begin -->
     <div layout:fragment="content">
       <div class="container">
-        <div class="row justify-content-center">
+        <div class="row justify-content-start">
           <!-- Main content section -->
           <div class="col-lg-9 mb-3">
-            <h1 class="text-center">Forum</h1>
+            <h1 class="text-title text-center">Forum</h1>
 
             <!-- 글 작성 버튼 추가 -->
             <div class="text-center mb-4">
@@ -44,6 +44,7 @@
                     id="categorySelect"
                     name="category"
                     class="form-select"
+                    th:value="${param.category}"
                   >
                     <option
                       value=""
@@ -55,7 +56,6 @@
                       th:each="category : ${categories}"
                       th:value="${category.boardCNo}"
                       th:text="${category.name}"
-                      th:selected="${param.category == category.boardCNo}"
                     ></option>
                   </select>
                 </div>
@@ -103,11 +103,13 @@
                       <span class="op-6">작성 시간 : </span>
                       <span th:text="${post.formattedRegDate}">작성 시간</span>
                       <span class="op-6">작성자 : </span>
-                      <span
-                        th:text="${#authentication.principal.memberDto.nickname}"
-                        >Nickname</span
+                      <a
+                        th:href="@{/board/list(userid=${post.userid})}"
+                        th:text="${post.userid}"
+                        >작성자</a
                       >
                     </p>
+
                     <p class="text-sm op-5" th:text="${post.contentPreview}">
                       Sample content...
                     </p>

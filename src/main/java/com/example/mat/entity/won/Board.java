@@ -4,6 +4,9 @@ package com.example.mat.entity.won;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
+
 import com.example.mat.entity.BaseEntity;
 import com.example.mat.entity.shin.Member;
 
@@ -14,7 +17,7 @@ import com.example.mat.entity.shin.Member;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "image", "boardCategory" })
+@ToString(exclude = { "comments", "image", "boardCategory" })
 public class Board extends BaseEntity {
 
     @Id
@@ -35,18 +38,16 @@ public class Board extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member; // Member 엔티티와 연결
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private BoardCategory boardCategory;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_id", nullable = true) // 이미지가 선택사항이므로 nullable = true
-    private BoardImage image;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<BoardComment> comments;
 
-    // 기존 member와의 관계를 유지하면서, userid를 간접적으로 접근 가능
-    public String getUserid() {
-        return member != null ? member.getUserid() : null;
-    }
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id", nullable = true)
+    private BoardImage image;
 }

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>MatDongSan</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Css Styles -->
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/bootstrap.min.css}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/css/font-awesome.min.css}"
+      type="text/css"
+    />
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <th:block layout:fragment="css"></th:block>
+  </head>
+
+  <body>
+    <!-- 전체 레이아웃 컨테이너 -->
+    <div class="layout-wrapper">
+      <!-- 헤더 섹션 -->
+      <header class="header">
+        <div th:replace="~{/fragments/boardHeader::header}"></div>
+      </header>
+
+      <!-- 콘텐츠 컨테이너 -->
+      <div class="content-container">
+        <!-- 카테고리 창 -->
+        <aside class="category-box">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="highlight-category">Category</span>
+              <a th:href="@{/board/list}" class="text-decoration-none"
+                >All Categories</a
+              >
+            </li>
+            <li th:each="category : ${categories}" class="list-group-item">
+              <a
+                th:href="@{/board/list(category=${category.boardCNo})}"
+                th:text="${category.name}"
+                class="text-decoration-none"
+              ></a>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+          <div layout:fragment="content"></div>
+        </main>
+      </div>
+    </div>
+
+    <style>
+      /* 전체 레이아웃 */
+      .layout-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* 화면 크기 전체에 맞게 */
+        width: 1280px; /* 고정된 너비 */
+        margin: 0 auto; /* 중앙 정렬 */
+      }
+
+      /* 헤더 */
+      .header {
+        flex: 0 0 80px; /* 고정된 높이 */
+      }
+
+      /* 콘텐츠 컨테이너 */
+      .content-container {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: flex-start; /* 상단 정렬 */
+        margin-top: 0px; /* 헤더와의 간격 */
+        overflow-y: auto; /* 세로 스크롤 활성화 */
+      }
+
+      /* 카테고리 창 */
+      .category-box {
+        flex: 0 0 275px; /* 고정된 너비 */
+        min-height: 275px; /* 최소 높이 설정 */
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 55px;
+        margin-right: 0px;
+      }
+
+      /* 메인 콘텐츠 */
+      .main-content {
+        flex: 1 0 auto;
+        width: 800px; /* 고정된 너비 */
+        padding: 20px;
+        margin-left: 20px; /* 카테고리와의 간격 */
+        overflow-y: auto; /* 세로 스크롤 활성화 */
+      }
+
+      /* 리스트 항목 스타일 */
+      .list-group-item a.active {
+        font-weight: bold;
+        color: #7fad39;
+      }
+
+      .list-group-item a {
+        color: #333;
+        text-decoration: none;
+      }
+
+      .list-group-item a:hover {
+        text-decoration: underline;
+      }
+
+      .highlight-category {
+        color: #fff;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 15px;
+        font-size: 18px;
+        background-color: #7fad39;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
+    </style>
+
+    <!-- Js Plugins -->
+    <script th:src="@{/assets/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+  </body>
+</html>

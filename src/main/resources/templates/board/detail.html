@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zxx" layout:decorate="~{/layouts/layout}">
+<html lang="zxx" layout:decorate="~{/layouts/board/detailLayout}">
   <head>
     <meta charset="UTF-8" />
     <title>Board Content</title>
-
-    <!-- CSS 파일 경로 지정 -->
     <link rel="stylesheet" th:href="@{/css/board/detail.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   </head>
   <body>
     <div layout:fragment="content">
@@ -13,22 +13,16 @@
         <div class="container">
           <div class="row align-center">
             <div class="custom-col m-15px-tb">
-              <!-- post content -->
               <article class="blog-article">
                 <div class="blog-article-header">
                   <h4>
-                    <h4>
-                      <a
-                        th:href="@{/board/list(category=${board.categoryId})}"
-                        th:text="${board.categoryId == 1 ? 'Free' 
-                                       : (board.categoryId == 2 ? 'Q&A' 
-                                       : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
-                      >
-                        Category
-                      </a>
-                    </h4>
+                    <a
+                      th:href="@{/board/list(category=${board.categoryId})}"
+                      th:text="${board.categoryId == 1 ? 'Free' : (board.categoryId == 2 ? 'Q&A' : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
+                    >
+                      Category
+                    </a>
                   </h4>
-
                   <h2 th:text="${board.title}">제목</h2>
                   <div class="media">
                     <div class="avatar">
@@ -47,17 +41,17 @@
                         th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
                         >작성 시간</span
                       >
-                      <!-- <label th:text="${board.viewCount}"></label> -->
                     </div>
-                    <!-- TODO!!!(작성자만 볼 수 있게 기능 추가!!!) 작성자만 볼 수 있는 수정 및 삭제 버튼, 오른쪽 정렬 -->
                     <div class="post-buttons">
                       <a
+                        th:if="${board.userid == #authentication.name}"
                         th:href="@{/board/modify/{bno}(bno=${board.bno})}"
                         class="btn btn-secondary modify-btn"
                       >
                         Modify
                       </a>
                       <form
+                        th:if="${board.userid == #authentication.name}"
                         th:action="@{/board/delete/{bno}(bno=${board.bno})}"
                         method="post"
                         style="display: inline"
@@ -71,9 +65,6 @@
                           Delete
                         </button>
                       </form>
-                      <!-- <a th:href="@{/board/list}" class="btn list-btn">
-                        List
-                      </a> -->
                     </div>
                   </div>
                 </div>
@@ -89,110 +80,62 @@
                 </div>
               </article>
 
-              <!-- 댓글 작성 폼 (글 내용과 댓글 목록 사이) -->
+              <!-- 댓글 작성 폼 -->
               <div class="blog-comment-form">
-                <form action="#" method="POST">
-                  <div class="form-group">
-                    <textarea
-                      id="comment"
-                      name="comment"
-                      rows="4"
-                      class="form-control"
-                      placeholder="주제와 무관한 댓글, 타인의 권리를 침해하거나 명예를 훼손하는 게시물은 별도의 통보 없이 제재를 받을 수 있습니다."
-                    ></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-primary submit-btn">
-                    New Comment
-                  </button>
-                </form>
+                <textarea
+                  id="comment"
+                  name="content"
+                  rows="4"
+                  class="form-control"
+                  placeholder="타인의 권리를 침해하거나 명예를 훼손하는 댓글 작성 시 별도의 통보 없이 제재를 받을 수 있습니다."
+                ></textarea>
+                <input type="hidden" id="boardId" th:value="${board.bno}" />
+                <input type="hidden" id="parentId" name="parentId" value="" />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="submitComment"
+                >
+                  Submit
+                </button>
               </div>
 
-              <!-- reply content (댓글 목록 및 대댓글 포함) -->
+              <!-- 댓글 목록 -->
               <article class="blog-reply-content">
                 <div class="container bootstrap snippets bootdey">
                   <div class="row">
                     <div class="col-md-12">
                       <div class="blog-comment">
                         <ul class="comments">
-                          <!-- 첫 번째 댓글 -->
-                          <li class="clearfix">
+                          <li th:each="comment : ${comments}" class="clearfix">
                             <img
                               src="/sampleimg/hr3.jpg"
                               class="avatar"
                               alt=""
                             />
-                            <div class="post-comments">
+                            <div
+                              class="post-comments"
+                              data-comment-id="${comment.id}"
+                            >
                               <p class="meta">
-                                Dec 18, 2014 <a href="#">JohnDoe</a> says :
+                                <span th:text="${comment.userid}">작성자</span>
+                                <span
+                                  th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
+                                  >작성 시간</span
+                                >
                                 <i class="pull-right">
-                                  <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                  <a href="#" class="modify-link"
-                                    ><small>Modify</small></a
+                                  <a
+                                    th:if="${comment.userid == #authentication.name}"
+                                    href="#"
+                                    class="delete-link"
+                                    th:data-comment-id="${comment.id}"
                                   >
-                                  |
-                                  <a href="#" class="delete-link"
-                                    ><small>Delete</small></a
-                                  >
-                                  |
-                                  <a href="#"><small>Reply</small></a>
+                                    <small>Delete</small>
+                                  </a>
                                 </i>
                               </p>
-                              <p>안녕하세요.</p>
+                              <p th:text="${comment.content}">댓글 내용</p>
                             </div>
-                          </li>
-
-                          <!-- 두 번째 댓글 -->
-                          <li class="clearfix">
-                            <img
-                              src="/sampleimg/hr1.jpg"
-                              class="avatar"
-                              alt=""
-                            />
-                            <div class="post-comments">
-                              <p class="meta">
-                                Dec 19, 2014 <a href="#">JaneDoe</a> says :
-                                <i class="pull-right">
-                                  <!-- 댓글 수정, 삭제, 및 reply 링크 -->
-                                  <a href="#" class="modify-link"
-                                    ><small>Modify</small></a
-                                  >
-                                  |
-                                  <a href="#" class="delete-link"
-                                    ><small>Delete</small></a
-                                  >
-                                  |
-                                  <a href="#"><small>Reply</small></a>
-                                </i>
-                              </p>
-                              <p>반가워요. 잘있어요. 다시만나요.</p>
-                            </div>
-
-                            <!-- 대댓글 -->
-                            <ul class="comments">
-                              <li class="clearfix">
-                                <img
-                                  src="/sampleimg/hr3.jpg"
-                                  class="avatar"
-                                  alt=""
-                                />
-                                <div class="post-comments">
-                                  <p class="meta">
-                                    Dec 20, 2014 <a href="#">JohnDoe</a> says :
-                                    <i class="pull-right">
-                                      <!-- 대댓글 수정, 삭제 링크 -->
-                                      <a href="#" class="modify-link"
-                                        ><small>Modify</small></a
-                                      >
-                                      |
-                                      <a href="#" class="delete-link"
-                                        ><small>Delete</small></a
-                                      >
-                                    </i>
-                                  </p>
-                                  <p>가나다라마바사아자차카타파하!!!</p>
-                                </div>
-                              </li>
-                            </ul>
                           </li>
                         </ul>
                       </div>
@@ -206,6 +149,92 @@
       </div>
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        // 댓글 작성 AJAX
+        document
+          .getElementById("submitComment")
+          .addEventListener("click", function () {
+            const commentContent = document.getElementById("comment").value;
+            const boardId = document.getElementById("boardId").value;
+
+            console.log("Submitting comment:", {
+              commentContent,
+              boardId,
+            });
+
+            const csrfToken = document
+              .querySelector("meta[name='_csrf']")
+              .getAttribute("content");
+            const csrfHeader = document
+              .querySelector("meta[name='_csrf_header']")
+              .getAttribute("content");
+
+            fetch("/board/comment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken,
+              },
+              body: JSON.stringify({
+                content: commentContent,
+                boardId: boardId,
+              }),
+            })
+              .then((response) => {
+                console.log("Response status:", response.status);
+                if (response.ok) {
+                  alert("댓글이 등록되었습니다.");
+                  location.reload(); // 페이지 새로고침
+                } else {
+                  return response.json().then((err) => {
+                    console.error("Error response from server:", err);
+                    alert("댓글 등록 중 오류가 발생했습니다.");
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error("Error during submission:", error);
+                alert("댓글 등록에 실패했습니다.");
+              });
+          });
+
+        // 댓글 삭제
+        document.querySelectorAll(".delete-link").forEach((button) => {
+          button.addEventListener("click", function (event) {
+            event.preventDefault(); // 기본 동작 방지
+
+            const commentId = button.getAttribute("data-comment-id"); // 댓글 ID 가져오기
+
+            if (confirm("이 댓글을 삭제하시겠습니까?")) {
+              const csrfToken = document
+                .querySelector("meta[name='_csrf']")
+                .getAttribute("content");
+              const csrfHeader = document
+                .querySelector("meta[name='_csrf_header']")
+                .getAttribute("content");
+
+              fetch(`/board/comment/${commentId}`, {
+                method: "DELETE",
+                headers: {
+                  [csrfHeader]: csrfToken,
+                },
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    alert("댓글이 삭제되었습니다.");
+                    button.closest(".post-comments").parentElement.remove(); // 댓글 UI 제거
+                  } else {
+                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error during deletion:", error);
+                  alert("댓글 삭제에 실패했습니다.");
+                });
+            }
+          });
+        });
+      </script>
     </div>
   </body>
 </html>

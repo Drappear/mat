@@ -1,11 +1,13 @@
 package com.example.mat.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
@@ -22,163 +24,152 @@ import com.example.mat.entity.recipe.RecipeStep;
 
 public interface RecipeService {
 
-  // 목록(페이지 나누기 + 검색)
-  PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto);
+    // 기존 메서드는 유지하고 새로운 메서드 추가
+    Page<RecipeDto> getRecipeList(String keyword, Long categoryId, String sortBy, Pageable pageable);
 
-  // 등록
-  Long register(RecipeDto recipeDto);
+    Long getTotalRecipeCount();
 
-  // 수정
-  Long modify(RecipeDto recipeDto);
+    // 목록(페이지 나누기 + 검색)
+    PageResultDto<RecipeDto, Object[]> getList(PageRequestDto pageRequestDto);
 
-  // 삭제
-  void delete(Long rno);
+    // 등록
+    Long register(RecipeDto recipeDto);
 
-  // 상세조회
-  RecipeDto get(Long rno);
+    // 수정
+    Long modify(RecipeDto recipeDto);
 
-  // 조회수
-  RecipeDto incrementViewCount(Long rno);
+    // 삭제
+    void delete(Long rno);
 
-  // 모든 카테고리를 가져오기
-  List<RecipeCategoryDto> getAllCategories();
+    // 상세조회
+    RecipeDto get(Long rno);
 
+    // 조회수
+    RecipeDto incrementViewCount(Long rno);
 
-  //TODO: recipe => RecipeDto
-  default RecipeDto entityToDto(Recipe recipe, RecipeCategory recipeCategory, List<RecipeImage> recipeImages, List<RecipeStep> recipeSteps, List<RecipeIngredient> recipeIngredients ) { // Double en
-    RecipeDto recipeDto = RecipeDto.builder()
-        .rno(recipe.getRno())
-        .title(recipe.getTitle())
-        .content(recipe.getContent())
-        .serving(recipe.getServing())
-        .time(recipe.getTime())
-        .difficulty(recipe.getDifficulty())
-        .viewCount(recipe.getViewCount())
+    // 모든 카테고리를 가져오기
+    List<RecipeCategoryDto> getAllCategories();
 
-        // .nickname(recipe.getMember().getNickname())
-        .regDate(recipe.getRegDate())
-        .updateDate(recipe.getUpdateDate())
-        .build();
+    // entityToDto 최적화
+    default RecipeDto entityToDto(Recipe recipe, RecipeCategory recipeCategory, List<RecipeImage> recipeImages,
+            List<RecipeStep> recipeSteps, List<RecipeIngredient> recipeIngredients) {
+        RecipeDto recipeDto = RecipeDto.builder()
+                .rno(recipe.getRno())
+                .title(recipe.getTitle())
+                .content(recipe.getContent())
+                .serving(recipe.getServing())
+                .time(recipe.getTime())
+                .difficulty(recipe.getDifficulty())
+                .viewCount(recipe.getViewCount())
+                .regDate(recipe.getRegDate())
+                .updateDate(recipe.getUpdateDate())
+                .build();
 
-    //TODO: 선택한 category 값 가져오기
-    if (recipe.getRecipeCategory() != null) {
-      RecipeCategoryDto categoryDto = RecipeCategoryDto.builder()
-          .rCateId(recipe.getRecipeCategory().getRCateId())
-          .name(recipe.getRecipeCategory().getName())
-          .build();
-      recipeDto.setRecipeCategoryDto(categoryDto);
-  }
+        // Category 변환
+        Optional.ofNullable(recipeCategory).ifPresent(category -> {
+            recipeDto.setRecipeCategoryDto(
+                    RecipeCategoryDto.builder()
+                            .rCateId(category.getRCateId())
+                            .name(category.getName())
+                            .build());
+        });
 
+        // 재료 변환
+        recipeDto.setRecipeIngredientDtos(
+                recipeIngredients.stream()
+                        .map(ingredient -> RecipeIngredientDto.builder()
+                                .ingId(ingredient.getIngId())
+                                .name(ingredient.getName())
+                                .quantity(ingredient.getQuantity())
+                                .build())
+                        .collect(Collectors.toList()));
 
-    //TODO: 재료 dto 변경 후 리스트 작업
-    List<RecipeIngredientDto> recipeIngredientDtos = recipeIngredients.stream().map(recipeIngredient ->{
-      return RecipeIngredientDto.builder()
-      .ingId(recipeIngredient.getIngId())
-      .name(recipeIngredient.getName())
-      .quantity(recipeIngredient.getQuantity())
-      .build();
-    }).collect(Collectors.toList());
-    recipeDto.setRecipeIngredientDtos(recipeIngredientDtos);
-    // return recipeDto;
+        // Step 변환
+        recipeDto.setRecipeStepDtos(
+                recipeSteps.stream()
+                        .map(step -> RecipeStepDto.builder()
+                                .stepNum(step.getStepNum())
+                                .content(step.getContent())
+                                .uuid(step.getUuid())
+                                .imgName(step.getImgName())
+                                .path(step.getPath())
+                                .build())
+                        .collect(Collectors.toList()));
 
-    //TODO: Step => StepDto 변경 후 리스트 작업
-    List<RecipeStepDto> recipeStepDtos = recipeSteps.stream().map(recipeStep -> {
-      return RecipeStepDto.builder()
-      .stepNum(recipeStep.getStepNum())
-      .content(recipeStep.getContent())
-      .uuid(recipeStep.getUuid())
-      .imgName(recipeStep.getImgName())
-      .path(recipeStep.getPath())
-      .build();
-    }).collect(Collectors.toList());
-    recipeDto.setRecipeStepDtos(recipeStepDtos);
-    // return recipeDto;
+        // 이미지 변환
+        recipeDto.setRecipeImageDtos(
+                recipeImages.stream()
+                        .map(image -> RecipeImageDto.builder()
+                                .rInum(image.getRInum())
+                                .uuid(image.getUuid())
+                                .imgName(image.getImgName())
+                                .path(image.getPath())
+                                .build())
+                        .collect(Collectors.toList()));
 
-    //TODO: RecipeImage => RecipeImageDto 변경 후 리스트 작업
-    List<RecipeImageDto> recipeImageDtos = recipeImages.stream().map(recipeImage -> {
-      return RecipeImageDto.builder()
-          .rInum(recipeImage.getRInum())
-          .uuid(recipeImage.getUuid())
-          .imgName(recipeImage.getImgName())
-          .path(recipeImage.getPath())
-          .build();
-    }).collect(Collectors.toList());
-    recipeDto.setRecipeImageDtos(recipeImageDtos);
-
-    return recipeDto;
-  }
-
-  
-  //TODO: dto => entity
-  default Map<String, Object> dtoToEntity(RecipeDto recipeDto) {
-    Map<String, Object> resultMap = new HashMap<>();
-
-    // Recipe 생성
-    Recipe recipe = Recipe.builder()
-        .rno(recipeDto.getRno())
-        .title(recipeDto.getTitle())
-        .content(recipeDto.getContent())
-        .serving(recipeDto.getServing())
-        .time(recipeDto.getTime())
-        .difficulty(recipeDto.getDifficulty())
-        .viewCount(0) // 초기 조회수 설정
-        .build();
-    resultMap.put("recipe", recipe);
-
-    // RecipeCategory 변환
-    if (recipeDto.getRecipeCategoryDto() != null) {
-      RecipeCategory category = RecipeCategory.builder()
-          .rCateId(recipeDto.getRecipeCategoryDto().getRCateId())
-          .name(recipeDto.getRecipeCategoryDto().getName())
-          .build();
-      recipe.setRecipeCategory(category);
-  }
-
-    // RecipeImage 변환
-    List<RecipeImageDto> recipeImageDtos = recipeDto.getRecipeImageDtos();
-    if (recipeImageDtos != null && !recipeImageDtos.isEmpty()) {
-        List<RecipeImage> recipeImages = recipeImageDtos.stream().map(dto -> 
-            RecipeImage.builder()
-                .uuid(dto.getUuid())
-                .imgName(dto.getImgName())
-                .path(dto.getPath())
-                .recipe(recipe)
-                .build()
-        ).collect(Collectors.toList());
-        resultMap.put("recipeImages", recipeImages);
+        return recipeDto;
     }
 
-    // RecipeStep 변환
-    List<RecipeStepDto> recipeStepDtos = recipeDto.getRecipeStepDtos();
-    if (recipeStepDtos != null && !recipeStepDtos.isEmpty()) {
-        List<RecipeStep> recipeSteps = recipeStepDtos.stream().map(dto -> 
-            RecipeStep.builder()
-                .stepNum(dto.getStepNum())
-                .content(dto.getContent())
-                .uuid(dto.getUuid())
-                .imgName(dto.getImgName())
-                .path(dto.getPath())
-                .recipe(recipe)
-                .build()
-        ).collect(Collectors.toList());
-        resultMap.put("recipeSteps", recipeSteps);
+    // dtoToEntity 최적화
+    default Map<String, Object> dtoToEntity(RecipeDto recipeDto) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        // Recipe 생성
+        Recipe recipe = Recipe.builder()
+                .rno(recipeDto.getRno())
+                .title(recipeDto.getTitle())
+                .content(recipeDto.getContent())
+                .serving(recipeDto.getServing())
+                .time(recipeDto.getTime())
+                .difficulty(recipeDto.getDifficulty())
+                .viewCount(0) // 초기 조회수
+                .build();
+        resultMap.put("recipe", recipe);
+
+        // RecipeCategory 변환
+        Optional.ofNullable(recipeDto.getRecipeCategoryDto()).ifPresent(categoryDto -> {
+            recipe.setRecipeCategory(
+                    RecipeCategory.builder()
+                            .rCateId(categoryDto.getRCateId())
+                            .name(categoryDto.getName())
+                            .build());
+        });
+
+        // RecipeImage 변환
+        resultMap.put("recipeImages",
+                recipeDto.getRecipeImageDtos().stream()
+                        .map(dto -> RecipeImage.builder()
+                                .uuid(dto.getUuid())
+                                .imgName(dto.getImgName())
+                                .path(dto.getPath())
+                                .recipe(recipe)
+                                .build())
+                        .collect(Collectors.toList()));
+
+        // RecipeStep 변환
+        resultMap.put("recipeSteps",
+                recipeDto.getRecipeStepDtos().stream()
+                        .map(dto -> RecipeStep.builder()
+                                .stepNum(dto.getStepNum())
+                                .content(dto.getContent())
+                                .uuid(dto.getUuid())
+                                .imgName(dto.getImgName())
+                                .path(dto.getPath())
+                                .recipe(recipe)
+                                .build())
+                        .collect(Collectors.toList()));
+
+        // RecipeIngredient 변환
+        resultMap.put("recipeIngredients",
+                recipeDto.getRecipeIngredientDtos().stream()
+                        .map(dto -> RecipeIngredient.builder()
+                                .ingId(dto.getIngId())
+                                .name(dto.getName())
+                                .quantity(dto.getQuantity())
+                                .recipe(recipe)
+                                .build())
+                        .collect(Collectors.toList()));
+
+        return resultMap;
     }
-
-    // RecipeIngredient 변환
-    List<RecipeIngredientDto> recipeIngredientDtos = recipeDto.getRecipeIngredientDtos();
-    if (recipeIngredientDtos != null && !recipeIngredientDtos.isEmpty()) {
-        List<RecipeIngredient> recipeIngredients = recipeIngredientDtos.stream().map(dto -> 
-            RecipeIngredient.builder()
-                .ingId(dto.getIngId())
-                .name(dto.getName())
-                .quantity(dto.getQuantity())
-                .recipe(recipe)
-                .build()
-        ).collect(Collectors.toList());
-        resultMap.put("recipeIngredients", recipeIngredients);
-    }
-
-    return resultMap;
-  }
-
 }

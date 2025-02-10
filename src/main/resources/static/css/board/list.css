@@ -1,43 +1,95 @@
+/* 전체 페이지 배경 및 기본 색상 */
 body {
-  margin-top: 20px;
-  background: #eee;
-  color: #708090;
+  margin-top: 20px; /* 상단 여백 추가 */
+  background: #eee; /* 페이지 배경색 설정 (연한 회색) */
+  color: #708090; /* 기본 텍스트 색상 (슬레이트 그레이) */
 }
+
+.text-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+/* 아이콘 크기 조정 */
 .icon-1x {
-  font-size: 24px !important;
+  font-size: 24px !important; /* 아이콘 크기를 24px로 고정 */
 }
+
+/* 링크 기본 스타일 제거 */
 a {
-  text-decoration: none;
+  text-decoration: none; /* 링크 밑줄 제거 */
 }
+
+/* 주요 텍스트 및 링크 색상 변경 */
 .text-primary,
 a.text-primary:focus,
 a.text-primary:hover {
-  color: #7fad39 !important;
-  font-size: 111%;
+  color: #7fad39 !important; /* 주요 텍스트 및 링크를 녹색으로 변경 */
+  font-size: 111%; /* 텍스트 크기 약간 확대 */
 }
+
+/* 검정 텍스트 및 호버 효과 */
 .text-black,
 .text-hover-black:hover {
-  color: #000 !important;
+  color: #000 !important; /* 검정 텍스트 색상 적용 */
 }
+
+/* 굵은 텍스트 */
 .font-weight-bold {
-  font-weight: 700 !important;
+  font-weight: 700 !important; /* 텍스트를 굵게 표시 */
 }
+
+/* 기본 버튼 스타일 */
 .btn-primary {
-  margin-top: 6px;
-  background-color: #7fad39;
-  border-color: #7fad39;
+  margin-top: 6px; /* 상단 여백 추가 */
+  background-color: #7fad39; /* 버튼 배경색 설정 (녹색) */
+  border-color: #7fad39; /* 버튼 테두리 색상 설정 */
 }
+
+/* 성공 버튼 스타일 */
 .btn-success {
-  margin-top: 10px;
-  background-color: #7fad39;
-  border-color: #7fad39;
+  margin-top: 10px; /* 상단 여백 추가 */
+  background-color: #7fad39; /* 버튼 배경색 설정 (녹색) */
+  border-color: #7fad39; /* 버튼 테두리 색상 설정 */
 }
 
+/* 페이징 활성 상태 스타일 */
 .pagination .page-item.active .page-link {
-  background-color: #7fad39;
-  border-color: #7fad39;
+  background-color: #7fad39; /* 활성 페이지 배경색 설정 */
+  border-color: #7fad39; /* 활성 페이지 테두리 색상 설정 */
 }
 
+/* 작은 크기의 텍스트 */
 .op-6 {
-  font-size: small;
+  font-size: small; /* 작은 폰트 크기 설정 */
+}
+
+/* 카테고리 드롭다운 스타일 */
+#categorySelect {
+  width: 150px; /* 드롭다운 너비 설정 (줄임) */
+  padding: 8px; /* 내부 여백 조정 */
+  font-size: 12px; /* 텍스트 크기 줄임 */
+  border: 1px solid #ccc; /* 테두리 설정 */
+  border-radius: 5px; /* 둥근 모서리 */
+  appearance: none; /* 기본 브라우저 드롭다운 화살표 제거 */
+  background-color: #fff; /* 배경색 설정 */
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"%3E%3Cpath fill="%23333333" d="M10 12l-5-5h10l-5 5z"/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* 화살표 위치 */
+  background-size: 12px; /* 화살표 크기 축소 */
+}
+
+/* Hover와 Focus 스타일 */
+#categorySelect:hover,
+#categorySelect:focus {
+  border-color: #7fad39; /* 호버 및 포커스 시 테두리 색 변경 */
+  outline: none; /* 기본 아웃라인 제거 */
+}
+
+/* 옵션 스타일 */
+#categorySelect option {
+  padding: 5px; /* 옵션 내부 여백 */
+  font-size: 12px; /* 옵션 텍스트 크기 */
 }
