@@ -10,6 +10,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.dto.diner.DinerImageDto;
+import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerCategory;
