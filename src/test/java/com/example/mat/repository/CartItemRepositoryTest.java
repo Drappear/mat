@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.mat.entity.market.Cart;
+import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Product;
 import com.example.mat.entity.shin.Member;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 public class CartItemRepositoryTest {
@@ -27,23 +30,36 @@ public class CartItemRepositoryTest {
     @Test
     public void testInsert(){
 
-        Member member = memberRepository.findById(21L).get();
-        Cart cart = Cart.builder().member(member).build();
+        Member member = memberRepository.findById(51L).get();
+        Cart cart = cartRepository.findByMember(member);
 
-        cartRepository.save(cart);  
+        CartItem cartItem = cartItemRepository.findByProductCart(cart.getCartid(),19L);
 
+        System.out.println(cartItem);     
         
+    }
+
+
+    @Transactional
+    @Test
+    public void testGet(){
+
+        Cart cart = cartRepository.findById(41L).get();        
+        // Product product = productRepository.findById(1L).get();   
+        
+        cartItemRepository.findByCartItem(cart).forEach(item ->{
+            System.out.println(item);
+        });
+
+      
         
     }
 
 
     @Test
-    public void testGet(){
+    public void testDelete(){
 
-        Cart cart = cartRepository.findById(23L).get();
-        Product product = productRepository.findById(1L).get();        
-
-        System.out.println(cartItemRepository.findByProductCart(cart, product));
+        cartItemRepository.deleteById(43L);
         
     }
     
