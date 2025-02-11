@@ -23,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnailator;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,10 +46,6 @@ public class DinerUploadController {
         List<UploadResultDto> UploadResultDtos = new ArrayList<>();
 
         for (MultipartFile multipartFile : uploadFiles) {
-            log.info("original file name : {}", multipartFile.getOriginalFilename());
-            log.info("size : {}", multipartFile.getSize());
-            log.info("content type : {}", multipartFile.getContentType());
-
             // 이미지 파일 여부 확인
             if (!multipartFile.getContentType().startsWith("image")) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -59,6 +54,7 @@ public class DinerUploadController {
             // 사용자가 올린 파일명
             String originName = multipartFile.getOriginalFilename();
 
+            // 저장 폴더 생성
             String saveFolderPath = makeFolder();
 
             // 파일 저장 - uuid(중복 해결)
@@ -139,9 +135,12 @@ public class DinerUploadController {
             dirs.mkdirs();
         }
 
-        // 날짜/시간/숫자에 특정 포맷 지정
-        // SimpleDateFormat sdf = new SimpleDateFormat("YYYY/mm/dd");
-        // sdf.format(new Date());
+        //
+        // log.info(uploadPageName+"폴더 생성");
+        // File dirs = new File(uploadPageName, uploadId)
+        // if (!dirs.exists()) {
+        // dirs.mkdirs();
+        // }
 
         return dateStr;
     }
