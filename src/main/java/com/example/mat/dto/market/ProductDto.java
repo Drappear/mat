@@ -19,13 +19,15 @@ public class ProductDto {
 
     private String name;
 
-    private String price;
+    private int price;
 
     private int quantity;
 
     private String productDetail;
 
     private String catename;
+
+    private ProductCategoryDto category;
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;

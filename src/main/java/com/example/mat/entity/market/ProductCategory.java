@@ -2,6 +2,7 @@ package com.example.mat.entity.market;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "mat_product_category")
 @ToString
 @Entity
 public class ProductCategory {

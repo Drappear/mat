@@ -15,7 +15,7 @@ public interface ProductService {
 
     PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto);
 
-    List<ProductCategoryDto> getProductCateList(Long cateid);
+    PageResultDto<ProductDto, Product> getProductsByCategory(Long cateid, PageRequestDto requestDto);
 
     // dto > entity
     public default Product dtoToEntity(ProductDto dto) {

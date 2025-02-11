@@ -6,4 +6,6 @@ import com.example.mat.entity.market.ProductCategory;
 
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
 
+    
+
 }
