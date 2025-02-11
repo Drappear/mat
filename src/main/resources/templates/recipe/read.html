@@ -9,31 +9,21 @@
       <div class="w-[1100px] mx-auto bg-white shadow rounded-lg px-[50px] py-6">
         <div class="relative pt-[60px] mx-[138px]">
           <img
-            th:if="${recipe != null and recipe.recipeImageDtos != null and !recipe.recipeImageDtos.empty}"
-            th:src="@{/upload/display(fileName=${recipe.recipeImageDtos[0].path})}"
-            alt="대표 이미지"
-            class="w-[1000px] h-[400px] object-cover rounded-t-lg mx-auto"
-          />
-          <!--대표이미지 embed: src="https://tools-api.webcrumbs.org/image-placeholder/760/400/food/1" -->
-          <img
-            th:unless="${recipe != null and recipe.recipeImageDtos != null and !recipe.recipeImageDtos.empty}"
             src="https://tools-api.webcrumbs.org/image-placeholder/760/400/food/1"
-            alt="embed 기본 이미지"
+            alt="Dish"
             class="w-[1000px] h-[400px] object-cover rounded-t-lg mx-auto"
           />
-
-          <!-- 사진 위에 조회수 -->
           <div class="absolute top-[410px] left-4">
             <div
               class="bg-black/60 text-primary-50 text-xs px-2 py-1 rounded-md flex items-center"
             >
-              <span class="material-symbols-outlined text-sm mr-1"></span>
-              <span th:text="${recipe.viewCount}"></span>
+              <span class="material-symbols-outlined text-sm mr-1"
+                >visibility</span
+              >
+              <span>1,234</span>
             </div>
           </div>
         </div>
-
-        <!-- 작성자 및 레시피 정보 -->
         <div class="p-4 text-center mx-[138px]">
           <div class="relative inline-block">
             <img
@@ -41,51 +31,40 @@
               alt="Circular Image"
               class="w-[110px] h-[110px] object-cover rounded-full mx-auto mb-2"
             />
-            <p
-              class="text-primary-950 font-medium text-sm mt-1"
-              th:text="작성자: ${recipe.userid}"
-            ></p>
+            <p class="text-primary-950 font-medium text-sm mt-1">
+              작성자: 김요리
+            </p>
           </div>
-          <h1
-            class="font-title text-2xl text-lime-600 mt-4 mb-2"
-            th:text="${recipe.title}"
-          ></h1>
-          <p class="text-neutral-700 mb-4" th:text="${recipe.content}"></p>
-
-          <!-- 요리 정보 -->
+          <h1 class="font-title text-2xl text-lime-600 mt-4 mb-2">
+            매콤 해물 찜탕 집에서 만들어도 맛있어요~
+          </h1>
+          <p class="text-neutral-700 mb-4">
+            이 요리는 맛있고 간편한 해물 요리를 집에서도 손쉽게 만들 수 있는
+            방법을 알려줍니다. 필요한 재료와 조리방법은 설명과 같습니다.
+          </p>
           <div
             class="flex items-center justify-center gap-4 border-y border-neutral-300 py-2 mb-4"
           >
-            <i
-              class="fa-solid fa-user-group text-primary-500 text-lg"
-              th:text="${recipe.serving}인분"
-            ></i>
-            <i
-              class="fa-solid fa-stopwatch text-primary-500 text-lg"
-              th:text="${recipe.time}분이내"
-            ></i>
-            <i
-              class="fa-solid fa-ranking-star text-primary-500 text-lg"
-              th:text="${recipe.difficulty == '1' ? '초급' : 
-            recipe.difficulty == '2' ? '보통' : 
-            recipe.difficulty == '3' ? '어려움' : 
-            recipe.difficulty == '4' ? '매우 어려움' : 
-            recipe.difficulty == '5' ? '신의 경지'}"
-            ></i>
+            <i class="fa-solid fa-user-group text-primary-500 text-lg">4인분</i>
+            <i class="fa-solid fa-stopwatch text-primary-500 text-lg"
+              >60분이내</i
+            >
+            <i class="fa-solid fa-ranking-star text-primary-500 text-lg"
+              >초급</i
+            >
           </div>
         </div>
         <div class="p-4">
           <div
             class="flex items-center justify-between border-b border-neutral-300 pb-2 mb-4"
           >
-            <button
+            <a
+            th:href="@{modify(rno=${recipeDto.rno},page=${requestDto.page},size=${requestDto.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
               class="px-4 py-2 bg-lime-600 text-primary-50 rounded-md hover:bg-lime-700"
             >
               수정버튼
-            </button>
+            </a>
           </div>
-
-          <!-- 재료 목록 -->
           <table class="w-full mb-6 border border-neutral-300">
             <thead>
               <tr class="bg-neutral-100">
@@ -98,47 +77,45 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:each="ingredient : ${recipe.recipeIngredientDtos}">
-                <td
-                  class="p-2 border border-neutral-300"
-                  th:text="${ingredient.name}"
-                ></td>
-                <td
-                  class="p-2 border border-neutral-300"
-                  th:text="${ingredient.quantity}"
-                ></td>
+              <tr>
+                <td class="p-2 border border-neutral-300">새우</td>
+                <td class="p-2 border border-neutral-300">200g</td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-neutral-300">홍합</td>
+                <td class="p-2 border border-neutral-300">500g</td>
+              </tr>
+              <tr>
+                <td class="p-2 border border-neutral-300">쭈꾸미</td>
+                <td class="p-2 border border-neutral-300">300g</td>
               </tr>
             </tbody>
           </table>
-
-          <!-- 조리 step 순서 -->
           <div class="my-6 border-t border-neutral-300"></div>
           <h2 class="font-title text-lg text-primary-950 mb-4">
             조리순서 Steps
           </h2>
           <div class="space-y-6">
-            <div class="flex gap-4" th:each="step : ${recipe.recipeStepDtos}">
+            <div class="flex gap-4">
               <div
                 class="flex-none w-10 h-10 flex items-center justify-center bg-lime-400 text-primary-50 rounded-full"
-                th:text="Step ${stepStat.count}"
-              ></div>
+              >
+                1
+              </div>
               <div class="basis-7/12">
-                <p
-                  class="text-neutral-700 text-left"
-                  th:text="${step.content}"
-                ></p>
+                <p class="text-neutral-700 text-left">
+                  깨끗이 씻은 해물과 새우를 물에 삶아 줍니다.
+                </p>
               </div>
               <div class="basis-5/12">
                 <img
-                  th:if="${step.uuid != null}"
-                  th:src="@{/upload/display(fileName=${step.path})}"
-                  th:alt="Step ${stepStat.count}"
+                  src="https://tools-api.webcrumbs.org/image-placeholder/360/240/food/2"
+                  alt="Step 1"
                   class="w-full h-[240px] object-cover rounded-md"
                 />
-                <!--embed 사진: src="https://tools-api.webcrumbs.org/image-placeholder/360/240/food/2" -->
               </div>
             </div>
-            <!-- <div class="flex gap-4">
+            <div class="flex gap-4">
               <div
                 class="flex-none w-10 h-10 flex items-center justify-center bg-lime-400 text-primary-50 rounded-full"
               >
@@ -175,7 +152,7 @@
                   class="w-full h-[240px] object-cover rounded-md"
                 />
               </div>
-            </div> -->
+            </div>
           </div>
           <div class="mt-6">
             <img
@@ -189,10 +166,17 @@
     </div>
   </div>
   <th:block layout:fragment="js">
-    <!-- <script>
+    <script>
       const csrfValue = "[[${_csrf.token}]]";
-    </script> -->
-    <script th:src="@{/js/recipe_main.js}"></script>
+
+      // login info
+      const loginUser = '[[${#authentication.name}]]';
+
+      // 레시피명 
+      const title = '[[${recipeDto.title}]]';
+      const rno = '[[${recipeDto.rno}]]';
+    </script>
+    <!-- <script th:src="@{/js/recipe_main.js}"></script> -->
     <!-- <script th:src="@{/js/create.js}"></script> -->
   </th:block>
 </html>
