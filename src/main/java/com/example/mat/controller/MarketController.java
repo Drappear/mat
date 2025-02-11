@@ -2,6 +2,7 @@ package com.example.mat.controller;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +31,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
 import com.example.mat.dto.market.ProductDto;
+import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
 import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.Product;
@@ -56,11 +58,24 @@ public class MarketController {
    
 
     @GetMapping("/list")
-    public void getList(PageRequestDto requestDto, Model model) {
-        log.info("식자재 전체 목록 요청");
+    public void getList(@RequestParam(required = false) Long cateid, PageRequestDto requestDto, Model model) {
+        log.info("식자재 전체 목록 요청 카테고리 ID : {}, 페이지 번호 : {}", cateid, requestDto.getPage());
+        
+        PageResultDto<ProductDto, Product> result;
 
-        PageResultDto<ProductDto, Product> result = productService.getList(requestDto);
+        if (cateid!=null) {
+            // 카테고리 ID 있는 경우
+            result = productService.getProductsByCategory(cateid, requestDto);
+            model.addAttribute("cateid", cateid);
+        } else {
+            // 전체 목록 조회(카테고리 ID 없는 경우)
+            result = productService.getList(requestDto);
+        }
+
         model.addAttribute("result", result);
+
+        // PageResultDto<ProductDto, Product> result = productService.getList(requestDto);
+        // model.addAttribute("result", result);
 
     }
 
@@ -73,40 +88,63 @@ public class MarketController {
     }
 
 
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/cart")
-        public @ResponseBody ResponseEntity<String> cart(CartItemDto cartItemDto) {
+        public String cart(@ModelAttribute CartItemDto cartItemDto) {
             log.info("카트 추가 정보 {}",cartItemDto);          
         
-      // 수정 필요
-       MemberDto memberDto = MemberDto.builder().mid(22L).build();
-       Long cartItemId;
+            MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
+            cartService.addCart(cartItemDto, memberDto);
+            return "redirect:cart";
 
-       try {
-        cartItemId = cartService.addCart(cartItemDto,memberDto);
-       } catch (Exception e) {
-        return new ResponseEntity<String>("카트 추가 실패", HttpStatus.BAD_REQUEST);
-       }
-       return new ResponseEntity<String>(String.valueOf(cartItemId), HttpStatus.OK);
-        
 }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "/cart")
+    @GetMapping("/cart")
     public void orderHist(Model model){
-        log.info("카트 목록");        
+        log.info("카트 목록{}", model);        
 
+        Long mid = getAuthentication().getMemberDto().getMid();
+        log.info("회원 ID", mid);
+        
+        List<CartDetailDto> cartDetailList = cartService.getCartList(mid);
+        System.out.println("controller cart");
+        // System.out.println(cartDetailDtoList);
+        for (CartDetailDto dto : cartDetailList) {
+            System.out.println(dto.getItemName());
+            System.out.println(dto.getPrice());
+            System.out.println(dto.getQuantity());
+            System.out.println(dto.getTotalPrice());
+        }
 
-        String email = getAuthentication().getUsername();
-        List<CartDetailDto> cartDetailList = cartService.getCartList(email);
-        model.addAttribute("cartItems", cartDetailList);
-     
+    
+        model.addAttribute("cartItems", cartDetailList);     
+        
     }
 
 
+    @PostMapping("/remove")
+    public String cartItemRemove(@RequestParam("cartitemid") Long cartitemid) {
+       log.info("카트 아이템 삭제 {}", cartitemid);
 
-       
+       cartService.deleteCartItem(cartitemid);
+      
+       return "redirect:/market/cart";
+    }
+
+    // @PreAuthorize("isAuthenticated()")
+    // @PostMapping("/cart/update")
+    // public String updateCartItemQuantity(@RequestParam Long cartItemId, @RequestParam int quantity, RedirectAttributes redirectAttributes) {
+    //     try {
+    //         cartService.updateCartItemQuantity(cartItemId, quantity);
+    //         return "redirect:/market/cart";
+    //     } catch (Exception e) {
+    //         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    //         return "redirect:/market/cart";
+    //     }
+    // }
+    
+    
 
     @GetMapping("/order")
     public void getOrder() {
@@ -119,17 +157,14 @@ public class MarketController {
     }   
 
    
-    private User getAuthentication() {
+    private AuthMemberDto getAuthentication() {
 
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
-
-
-        User user = (User) authentication.getPrincipal();
         
         // MemberDto 에 들어있는 값 접근 시
-        //AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-        return user;
+        AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
+        return authMemberDto;
     }
 
 }
