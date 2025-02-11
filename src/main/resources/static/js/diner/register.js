@@ -44,6 +44,8 @@ function DropFile(dropAreaId, fileListId) {
     for (let index = 0; index < files.length; index++) {
       formData.append("uploadFiles", files[index]);
     }
+    formData.append("uploadPageName", "diner");
+    formData.append("uploadId", "diner");
 
     fetch("/dfup/upload", {
       method: "post",
@@ -67,9 +69,9 @@ function DropFile(dropAreaId, fileListId) {
   }
 
   function renderFile(file) {
-    let fileDOM = document.createElement("div");
-    fileDOM.className = "file";
-    fileDOM.innerHTML = `
+    let previewDiv = document.createElement("div");
+    previewDiv.className = "file";
+    previewDiv.innerHTML = `
       <div class="thumbnail">
         <img src="https://img.icons8.com/pastel-glyph/2x/image-file.png" alt="파일타입 이미지" class="image">
       </div>
@@ -79,7 +81,7 @@ function DropFile(dropAreaId, fileListId) {
         </header>        
       </div>
     `;
-    return fileDOM;
+    return previewDiv;
   }
 
   return {
@@ -88,6 +90,17 @@ function DropFile(dropAreaId, fileListId) {
 }
 
 const dropFile = new DropFile("drop-file", "files");
+
+const fileInput = document.querySelector("#chooseFile");
+const filePreviewDiv = document.querySelector(".filePreview");
+
+fileInput.addEventListener("change", () => {
+  const reader = new FileReader();
+  reader.onload = ({ target }) => {
+    filePreviewDiv.src = target.result;
+  };
+  reader.readAsDataURL(fileInput.files[0]);
+});
 
 // 작성 클릭시
 document.querySelector("#createForm").addEventListener("submit", (e) => {

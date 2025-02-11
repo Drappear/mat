@@ -1,17 +1,13 @@
 package com.example.mat.controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +37,8 @@ public class DinerUploadController {
     private String uploadPath;
 
     @PostMapping("/upload")
-    public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles) {
+    public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles, String uploadPageName,
+            String uploadId) {
 
         List<UploadResultDto> UploadResultDtos = new ArrayList<>();
 
@@ -55,7 +52,7 @@ public class DinerUploadController {
             String originName = multipartFile.getOriginalFilename();
 
             // 저장 폴더 생성
-            String saveFolderPath = makeFolder();
+            String saveFolderPath = makeFolder(uploadPageName, uploadId);
 
             // 파일 저장 - uuid(중복 해결)
             String uuid = UUID.randomUUID().toString();
@@ -112,10 +109,6 @@ public class DinerUploadController {
     // File file = new File(uploadPath, srcFileName);
     // file.delete();
 
-    // // 썸네일 파일 삭제
-    // File thumbFile = new File(file.getParent(), "s_" + file.getName());
-    // thumbFile.delete();
-
     // return new ResponseEntity<>("success", HttpStatus.OK);
     // } catch (UnsupportedEncodingException e) {
     // e.printStackTrace();
@@ -124,25 +117,26 @@ public class DinerUploadController {
 
     // }
 
-    private String makeFolder() {
+    private String makeFolder(String uploadPageName, String uploadId) {
         // 오늘 날짜
-        LocalDate today = LocalDate.now();
-        log.info(today);
-        String dateStr = today.format(DateTimeFormatter.ofPattern("YYYY/MM/dd"));
+        // LocalDate today = LocalDate.now();
+        // log.info(today);
+        // String dateStr = today.format(DateTimeFormatter.ofPattern("YYYY/MM/dd"));
 
-        File dirs = new File(uploadPath, dateStr);
-        if (!dirs.exists()) {
-            dirs.mkdirs();
-        }
-
-        //
-        // log.info(uploadPageName+"폴더 생성");
-        // File dirs = new File(uploadPageName, uploadId)
+        // File dirs = new File(uploadPath, dateStr);
         // if (!dirs.exists()) {
         // dirs.mkdirs();
         // }
 
-        return dateStr;
+        String dirStr = uploadPageName + "/" + uploadId;
+
+        log.info(dirStr + "폴더 생성");
+        File dirs = new File(uploadPageName, uploadId);
+        if (!dirs.exists()) {
+            dirs.mkdirs();
+        }
+
+        return dirStr;
     }
 
 }
