@@ -1,7 +1,9 @@
 package com.example.mat.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -38,8 +40,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public Long addCart(CartItemDto cartItemDto, MemberDto memberDto) {
 
-        // Cart 생성
-        Cart cart = cartRepository.findByMember_mid(memberDto.getMid());
+        // 카트 생성   
+        Member member = memberRepository.findById(memberDto.getMid()).get();   
+        Cart cart = cartRepository.findByMember(member);
 
         if (cart == null) {
             // 멤버에게 카트 없으면, 카트 생성
@@ -48,56 +51,97 @@ public class CartServiceImpl implements CartService {
         }
 
         Product product = productRepository.findById(cartItemDto.getPid())
-                .orElseThrow(EntityNotFoundException::new);
+                            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다.")); 
+                            
+        // 상품의 수량 확인
+        int productQuantity = product.getQuantity();
+        System.out.println(product.getPid());
+        System.out.println(product.getQuantity());
 
-        CartItem savedCartItem = cartItemRepository.findByProductCart(cart, product);
+        CartItem savedCartItem = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
 
-        if (savedCartItem != null) {
-            // 이미 상품이 있다면 개수를 +
+        int requestedQuantity = cartItemDto.getQuantity();
+
+        if(savedCartItem != null){
+            // 카트에 이미 상품이 있다면 기존 수량과 request 수량을 +
+            int totalQuantity  = savedCartItem.getQuantity() + requestedQuantity;
+            if(totalQuantity > productQuantity) {
+                throw new IllegalStateException("구매 가능한 수량을 초과하였습니다");
+            }
+
+            // 수량 업데이트
             savedCartItem.addQuantity(cartItemDto.getQuantity());
             cartItemRepository.save(savedCartItem);
             return savedCartItem.getCartItemId();
+
         } else {
-            // CartItem cartItem = CartItem.createCartItem(cart, product,
-            // cartItemDto.getQuantity());
-            CartItem cartItem = CartItem.builder()
-                    .quantity(cartItemDto.getQuantity())
-                    .product(product)
-                    .cart(cart)
-                    .build();
+            
+            if(requestedQuantity > productQuantity){
+                throw new IllegalStateException("구매 가능한 수량을 초과하였습니다");
+            }
+
+            // 새로운 CartItem 생성
+            CartItem cartItem =  CartItem.builder()
+            .quantity(cartItemDto.getQuantity())
+            .product(product)
+            .cart(cart)            
+            .build();
             cartItemRepository.save(cartItem);
             return cartItem.getCartItemId();
         }
 
     }
 
-    public List<CartDetailDto> getCartList(String email) {
 
-        List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
+    public List<CartDetailDto> getCartList(Long mid){
 
-        Member member = memberRepository.findByEmail(email);
-        Product product = productRepository.findByPid();
+        List<CartDetailDto> cartDetailDtoList;
 
-        Cart cart = cartRepository.findByMember_mid(member.getMid());
+        //로그인 정보로 member 찾기기    
+        Member member = memberRepository.findById(mid).get();       
+        Cart cart = cartRepository.findByMember(member);
 
-        if (cart == null) { // 위에서 유저 카트 조회해서, 없으면은 그냥 반환
-            return cartDetailDtoList;
+        if(cart == null){ // 위에서 유저 카트 조회해서, 없으면은 그냥 반환
+            return new ArrayList<>();
         }
 
-        cartDetailDtoList = cartItemRepository.findByProductCart(cart.getCartid(), product.getPid());
+        List<CartItem> cartItems = cartItemRepository.findByCartItem(cart);
+
+        // entity => dto
+        // cartDetailDtoList = entityToDto()
+        cartDetailDtoList = entityToDto(cartItems);
+
+        System.out.println("service");
+        // System.out.println(cartDetailDtoList);
+        for (CartDetailDto dto : cartDetailDtoList) {
+            System.out.println(dto.getItemName());
+            System.out.println(dto.getTotalPrice());
+        }
+
+        //return cartDetailDtoList; 
         return cartDetailDtoList;
-    }
-
-    @Override
-    public void updateCartItemQuantity(Long cartitemid, int quantity) {
-
-        throw new UnsupportedOperationException("Unimplemented method 'updateCartItemQuantity'");
     }
 
     @Override
     public void deleteCartItem(Long cartitemid) {
 
+    cartItemRepository.deleteById(cartitemid);
+        
+    }
+
+    @Override
+    public void deleteCartItem(Long cartitemid) {
+        
         throw new UnsupportedOperationException("Unimplemented method 'deleteCartItem'");
     }
 
+
+
+
+
+    
+
+    
+
+    
 }
