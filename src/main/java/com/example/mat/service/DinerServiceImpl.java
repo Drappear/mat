@@ -93,13 +93,13 @@ public class DinerServiceImpl implements DinerService {
     Diner diner = Diner.builder().did(did).build();
     log.info("리뷰 이미지 삭제");
     dinerReviewImageRepository.deleteByDiner(diner);
-        
+
     log.info("리뷰 삭제");
     dinerReviewRepository.deleteByDiner(diner);
 
     log.info("식당 이미지 삭제");
     imageRepository.deleteByDiner(diner);
-    
+
     log.info("식당 삭제");
     dinerRepository.delete(diner);
   }
