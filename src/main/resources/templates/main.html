@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/layouts/layout}">
+  <!-- 페이지 별 css -->
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  </th:block>
+  <div layout:fragment="content">
+    <div class="container">
+      <div class="container-body">
+        <!-- 식당 영역 -->
+        <section class="diner-content">
+          <div class="diner-rangking">
+            <div id="diner-ranking-carousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#diner-ranking-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#diner-ranking-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#diner-ranking-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="https://placehold.co/1024x320" class="d-block w-100" alt="...">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>First slide label</h5>
+                    <p>Some representative placeholder content for the first slide.</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="https://placehold.co/1024x320" class="d-block w-100" alt="...">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Second slide label</h5>
+                    <p>Some representative placeholder content for the second slide.</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="https://placehold.co/1024x320" class="d-block w-100" alt="...">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Third slide label</h5>
+                    <p>Some representative placeholder content for the third slide.</p>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#diner-ranking-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#diner-ranking-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- 레시피 영역 -->
+        <section class="recipe-content">
+          <div class="recipe-board">
+            <ul class="recipe-board-list">
+              <li class="recipe-board-list-item">
+                <a href="">첫번째 레시피 입니다.</a>
+              </li>
+              <li class="recipe-board-list-item">
+                <a href="">두번째 레시피 입니다.</a>
+              </li>
+              <li class="recipe-board-list-item">
+                <a href="">세번째 레시피 입니다.</a>
+              </li>
+              <li class="recipe-board-list-item">
+                <a href="">네번째 레시피 입니다.</a>
+              </li>
+              <li class="recipe-board-list-item">
+                <a href="">다섯번째 레시피 입니다.</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <a th:href="@{/recipe/list}">더 많은 레시피 보기</a>
+          </div>
+        </section>
+        <!-- 자유 게시판 영역 -->
+        <section class="board-content">
+          <div class="board-body">
+            <ul class="board-list">
+              <li class="board-list-item">
+                <a href="">자유 게시판 작성글 1</a>
+              </li>
+              <li class="board-list-item">
+                <a href="">자유 게시판 작성글 2</a>
+              </li>
+              <li class="board-list-item">
+                <a href="">자유 게시판 작성글 3</a>
+              </li>
+              <li class="board-list-item">
+                <a href="">자유 게시판 작성글 4</a>
+              </li>
+              <li class="board-list-item">
+                <a href="">자유 게시판 작성글 5</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <a th:href="@{/board/list}">더 많은 글 보기</a>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- 마트 영역 -->
+    <section class="mart-content">
+      <ul>
+        <li>
+          <div class="card" style="width: 12rem;">
+            <img src="https://placehold.co/30x20" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">1번 상품</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="card" style="width: 12rem;">
+            <img src="https://placehold.co/30x20" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">2번 상품</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="card" style="width: 12rem;">
+            <img src="https://placehold.co/30x20" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">3번 상품</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- 페이지 별 js 영역 -->
+  <th:block layout:fragment="js">
+    <script th:src="@{/js/main.js}"></script>
+  </th:block>
+
+</html>

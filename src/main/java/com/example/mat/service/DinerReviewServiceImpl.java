@@ -1,5 +1,6 @@
 package com.example.mat.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
+import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.DinerReview;
@@ -46,10 +48,34 @@ public class DinerReviewServiceImpl implements DinerReviewService {
 
         Page<Object[]> result = imageRepository.getTotalReviewList(pageable, did);
 
-        Function<Object[], DinerReviewDto> function = (en -> entityToDto((DinerReview) en[0],
-                (List<Image>) Arrays.asList((Image) en[1])));
+        List<Object[]> contents = result.getContent();
+        List<Image> reviewImages = new ArrayList<>();
+        Function<Object[], DinerReviewDto> function = null;
 
-        return new PageResultDto<>(result, function);
+        List<DinerReviewDto> dinerReviewDtos = new ArrayList<>();
+
+        contents.forEach(en -> {
+            DinerReview dinerReview = (DinerReview) en[0];
+
+            DinerReviewDto dinnerReviewDto = DinerReviewDto.builder().rvid(dinerReview.getRvid()).build();
+
+            if (!dinerReviewDtos.contains(dinnerReviewDto)) {
+                dinerReviewDtos.add(dinnerReviewDto);
+            }
+        });
+
+        contents.forEach(en -> {
+            Image dinerImage = (Image) en[1];
+
+            dinerReviewDtos.forEach(dto -> {
+                if (dto.getRvid() == dinerImage.getDinerReview().getRvid()) {
+                    dto.getDinerImageDtos().add(DinerImageDto.builder().inum(dinerImage.getInum()).build());
+                }
+            });
+        });
+
+        return new PageResultDto<>(result, dinerReviewDtos);
+
     }
 
     @Override
