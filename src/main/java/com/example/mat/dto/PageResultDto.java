@@ -48,6 +48,13 @@ public class PageResultDto<DTO, EN> {
     makePageList(result.getPageable());
   }
 
+  public PageResultDto(Page<EN> result, List<DTO> dtoList) {
+
+    this.dtoList = dtoList;
+    totalPage = result.getTotalPages();
+    makePageList(result.getPageable());
+  }
+
   private void makePageList(Pageable pageable) {
     // 사용자가 요청한 페이지 번호
     // 0 이 1 page
