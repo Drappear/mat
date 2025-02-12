@@ -282,9 +282,16 @@
               <div class="sidebar__item">
                 <h4>CATEGORY</h4>
                 <ul>
-                  <li><a href="#">정육 • 가공육 • 계란</a></li>
-                  <li><a href="#">채소</a></li>
-                  <li><a href="#">과일 • 견과 • 쌀</a></li>
+                  <!-- <li><a th:href="@{/market/list}">전체</a></li> -->
+                  <li>
+                    <a th:href="@{/market/list(cateid=3)}"
+                      >정육 • 가공육 • 계란</a
+                    >
+                  </li>
+                  <li><a th:href="@{/market/list(cateid=1)}">채소</a></li>
+                  <li>
+                    <a th:href="@{/market/list(cateid=2)}">과일 • 견과 • 쌀</a>
+                  </li>
                   <li><a href="#">수산 • 해산 • 건어물</a></li>
                   <li><a href="#">면 • 양념 • 오일</a></li>
                   <li><a href="#">생수 • 음료</a></li>
@@ -472,94 +479,77 @@
             </div>
           </div>
           <div class="col-lg-9 col-md-7">
-            <!-- <div class="filter__item">
-              <div class="row">
-                <div class="col-lg-4 col-md-5">
-                  <div class="filter__sort">
-                    <span>Sort By</span>
-                    <select>
-                      <option value="0">Default</option>
-                      <option value="0">Default</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
-                  <div class="filter__found">
-                    <h6><span>16</span> Products found</h6>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-3">
-                  <div class="filter__option">
-                    <span class="icon_grid-2x2"></span>
-                    <span class="icon_ul"></span>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            <div class="row">
-              <div
-                class="col-lg-4 col-md-6 col-sm-6"
-                th:each=" dto: ${result.dtoList}"
-              >
-                <div class="product__item">
-                  <div class="product__item__pic set-bg">
-                    <a th:href="@{details(pid=${dto.pid})}"
-                      ><img
-                        th:src="@{/assets/img/product/fruits/product-__${dto.pid}__.jpg}"
-                      />
-                    </a>
-                    <ul class="product__item__pic__hover">
-                      <li>
-                        <a href="#"><i class="fa fa-heart"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="product__item__text">
-                    <h6>
-                      <a
-                        th:href="@{details(pid=${dto.pid})}"
-                        th:text="${dto.name}"
-                      ></a>
-                    </h6>
-                    <h5
-                      th:href="@{details(pid=${dto.pid})}"
-                      th:text="${dto.price}"
-                    ></h5>
-                  </div>
-                </div>
-              </div>
+            <div th:if="${result.dtoList.isEmpty()}">
+              <p>선택한 카테고리에 상품이 없습니다.</p>
             </div>
-            <div class="product__pagination">
-              <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item" th:if="${result.prev}">
-                    <a
-                      class="page-link"
-                      th:href="@{list(page=${result.start-1},size=${result.size})}"
-                    ></a>
-                  </li>
-                  <li
-                    th:class="'page-item ' + ${result.page == page ? 'active':''}"
-                    aria-current="page"
-                    th:each="page : ${result.pageList}"
-                  >
-                    <a
-                      class="page-link"
-                      th:href="@{list(page=${page},size=${result.size})}"
-                      th:text="${page}"
-                    ></a>
-                  </li>
-                  <li class="page-item" th:if="${result.next}">
-                    <a
-                      class="page-link"
-                      th:href="@{list(page=${result.end+1},size=${result.size})}"
-                    ></a>
-                  </li>
-                </ul>
-              </nav>
+            <div th:if="${not result.dtoList.isEmpty()}">
+              <div class="row">
+                <div
+                  class="col-lg-4 col-md-6 col-sm-6"
+                  th:each=" dto: ${result.dtoList}"
+                >
+                  <div class="product__item">
+                    <div class="product__item__pic set-bg">
+                      <a th:href="@{/market/details(pid=${dto.pid})}"
+                        ><img
+                          th:src="@{/assets/img/product/fruits/product-__${dto.pid}__.jpg}"
+                        />
+                      </a>
+                      <ul class="product__item__pic__hover">
+                        <li>
+                          <a href="#"><i class="fa fa-heart"></i></a>
+                        </li>
+                        <li>
+                          <a th:href="@{/market/cart}"
+                            ><i class="fa fa-shopping-cart"></i
+                          ></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="product__item__text">
+                      <h6>
+                        <a
+                          th:href="@{/market/details(pid=${dto.pid})}"
+                          th:text="${dto.name}"
+                        ></a>
+                      </h6>
+                      <h5
+                        th:href="@{details(pid=${dto.pid})}"
+                        th:text="${dto.price}"
+                      ></h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="product__pagination">
+                <nav aria-label="...">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${result.prev}">
+                      <a
+                        class="page-link"
+                        th:href="@{list(cateid=${cateid}, page=${result.start-1},size=${result.size})}"
+                      ></a>
+                    </li>
+                    <li
+                      th:class="'page-item ' + ${result.page == page ? 'active':''}"
+                      aria-current="page"
+                      th:each="page : ${result.pageList}"
+                    >
+                      <a
+                        class="page-link"
+                        th:href="@{list(cateid=${cateid}, page=${page},size=${result.size})}"
+                        th:text="${page}"
+                      ></a>
+                    </li>
+                    <li class="page-item" th:if="${result.next}">
+                      <a
+                        class="page-link"
+                        th:href="@{list(cateid=${cateid}, page=${result.end+1},size=${result.size})}"
+                      ></a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>

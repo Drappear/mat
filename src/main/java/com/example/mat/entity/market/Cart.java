@@ -29,7 +29,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"member"})
 @Getter
 @Setter
 @Table(name = "mat_cart")
