@@ -100,6 +100,33 @@
         return true; // 폼 제출 허용
       }
     </script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+      function daumPost() {
+        new daum
+          .Postcode({
+            oncomplete: function (data) {
+              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+              // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+
+              //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+              if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                addr = data.roadAddress;
+              } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                addr = data.jibunAddress;
+              }
+
+              document
+                .getElementById('addr')
+                .value = addr
+              document
+                .getElementById('detailAddress')
+                .focus()
+            }
+          })
+          .open();
+      }
+    </script>
   </head>
 
   <body>
@@ -139,10 +166,14 @@
             <input type="tel" th:field="*{tel}" class="form-control form-control-tel" placeholder="tel" th:value="${memberDto.tel}" name="tel" id="tel"/>
             <div th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="text-danger"></div>
 
-            <input type="text" class="form-control form-control-addr" placeholder="Address (선택)" th:value="${memberDto.addr}" th:field="*{addr}" name="addr"/>
-            <div th:if="${#fields.hasErrors('addr')}" th:errors="*{addr}" class="text-danger"></div>
-            <input type="text" class="form-control form-control-detailAddr" placeholder="DetailAddress (선택)" th:value="${memberDto.detailAddr}" th:field="*{detailAddr}" name="detailAddr"/>
-            <div th:if="${#fields.hasErrors('detailAddr')}" th:errors="*{detailAddr}" class="text-danger"></div>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-addr" placeholder="Address (선택)" th:value="${memberDto.addr}" th:field="*{addr}" name="addr" id="addr" readonly="readonly"/>
+              <span class="input-group-btn">
+                <button type="button" onclick="daumPost()" class="btn btn-default">주소 찾기</button>
+              </span>
+            </div>
+            <input type="text" class="form-control form-control-detailAddr" placeholder="DetailAddress (선택)" th:value="${memberDto.detailAddr}" th:field="*{detailAddr}" name="detailAddr" id="detailAddr"/>
+
             <button type="submit" class="btn btn-submit btn-default pull-right">
               Sign up
             </button>

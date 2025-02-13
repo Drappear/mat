@@ -34,7 +34,7 @@ public class SecurityConfig {
 
                 http.logout(logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                                .logoutSuccessUrl("/"));
+                                .logoutSuccessUrl("/diner/list"));
 
                 // CSRF 설정: 게시물 등록 경로에서 비활성화
                 http.csrf(csrf -> csrf
