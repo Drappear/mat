@@ -36,9 +36,9 @@ public class SecurityConfig {
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                                 .logoutSuccessUrl("/"));
 
-        // CSRF 설정: 게시물 등록 경로에서 비활성화
-        http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/board/register", "/board/modify", "/market/cart"));
+                // CSRF 설정: 게시물 등록 경로에서 비활성화
+                http.csrf(csrf -> csrf
+                                .ignoringRequestMatchers("/board/register", "/board/modify", "/market/cart"));
 
                 return http.build();
         }
