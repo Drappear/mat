@@ -21,14 +21,14 @@
           .getElementById("userid")
           .value;
         const message = document.getElementById("userid-message");
-        const regex = /^[a-zA-Z0-9]+$/; // 영문자 및 숫자만 허용
+        const regex = /^[a-zA-Z0-9]{5,15}$/; // 최소 5자, 최대 15자 영어와 숫자
         if (userid.trim() === "") {
           message.textContent = "아이디를 입력해주세요.";
           message.style.color = "red";
           return;
         }
         if (!regex.test(userid)) {
-          message.textContent = "아이디는 영문자와 숫자만 가능합니다.";
+          message.textContent = "아이디는 5~15자의 영문자와 숫자만 가능합니다.";
           message.style.color = "red";
           isUseridChecked = false;
           return;
