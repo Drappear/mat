@@ -23,7 +23,11 @@ import com.example.mat.dto.shin.UpdateMemberDto;
 
 import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.shin.MemberImage;
+import com.example.mat.repository.BoardRepository;
+import com.example.mat.repository.CartRepository;
 import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.RecipeRepository;
+import com.example.mat.repository.diner.DinerReviewRepository;
 import com.example.mat.repository.shin.MemberImageRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,10 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     private final MemberRepository memberRepository;
     private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BoardRepository boardRepository;
+    private final CartRepository cartRepository;
+    private final RecipeRepository recipeRepository;
+    private final DinerReviewRepository dinerReviewRepository;
 
     @Value("${com.example.mat.profile.path}")
     private String uploadPath;
@@ -159,7 +167,16 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), member.getPassword())) {
             throw new Exception("현재 비밀번호를 확인");
         }
-        memberImageRepository.deleteByMember(member);
+
+        // 자식 프로필이미지
+        MemberImage memberImage = memberImageRepository.findByMember(member);
+
+        boardRepository.deleteByMember(member);
+        recipeRepository.deleteByMember(member);
+        dinerReviewRepository.deleteByMember(member);
+        cartRepository.deleteByMember(member);
+        memberImageRepository.delete(memberImage);
+
         memberRepository.deleteById(member.getMid());
     }
 
