@@ -23,15 +23,13 @@ public class PaymentDto {
     private Long id; // PK
 
     private Member member; // 사용자
-    
+
     private Order order;
-    
+
     private Product product;
 
     private int price; // 상품 가격
-    
+
     private Long totalPrice; // 결제한 총 가격
 
-    private Boolean status = true; // 상태
-    
 }
