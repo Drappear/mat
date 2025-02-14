@@ -159,7 +159,6 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), member.getPassword())) {
             throw new Exception("현재 비밀번호를 확인");
         }
-
         memberImageRepository.deleteByMember(member);
         memberRepository.deleteById(member.getMid());
     }

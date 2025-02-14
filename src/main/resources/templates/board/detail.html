@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="zxx" layout:decorate="~{/layouts/board/detailLayout}">
+
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Board Content</title>
-    <link rel="stylesheet" th:href="@{/css/board/detail.css}" />
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <link rel="stylesheet" th:href="@{/css/board/detail.css}"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   </head>
+
   <body>
     <div layout:fragment="content">
       <div class="container">
@@ -16,51 +18,25 @@
               <article class="blog-article">
                 <div class="blog-article-header">
                   <h4>
-                    <a
-                      th:href="@{/board/list(category=${board.categoryId})}"
-                      th:text="${board.categoryId == 1 ? 'Free' : (board.categoryId == 2 ? 'Q&A' : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
-                    >
+                    <a th:href="@{/board/list(category=${board.categoryId})}" th:text="${board.categoryId == 1 ? 'Free' : (board.categoryId == 2 ? 'Q&A' : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}">
                       Category
                     </a>
                   </h4>
                   <h2 th:text="${board.title}">제목</h2>
                   <div class="media">
                     <div class="avatar">
-                      <img
-                        src="/sampleimg/hr1.jpg"
-                        title="My Avatar"
-                        alt="My Avatar"
-                      />
+                      <img src="/sampleimg/hr1.jpg" title="My Avatar" alt="My Avatar"/>
                     </div>
                     <div class="media-body">
-                      <label
-                        th:text="${#authentication.principal.memberDto.nickname}"
-                        >Nickname</label
-                      >
-                      <span
-                        th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
-                        >작성 시간</span
-                      >
+                      <label th:text="${#authentication.principal.memberDto.nickname}">Nickname</label >
+                      <span th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}">작성 시간</span >
                     </div>
                     <div class="post-buttons">
-                      <a
-                        th:if="${board.userid == #authentication.name}"
-                        th:href="@{/board/modify/{bno}(bno=${board.bno})}"
-                        class="btn btn-secondary modify-btn"
-                      >
+                      <a th:if="${board.userid == #authentication.name}" th:href="@{/board/modify/{bno}(bno=${board.bno})}" class="btn btn-secondary modify-btn">
                         Modify
                       </a>
-                      <form
-                        th:if="${board.userid == #authentication.name}"
-                        th:action="@{/board/delete/{bno}(bno=${board.bno})}"
-                        method="post"
-                        style="display: inline"
-                      >
-                        <input
-                          type="hidden"
-                          name="_csrf"
-                          th:value="${_csrf.token}"
-                        />
+                      <form th:if="${board.userid == #authentication.name}" th:action="@{/board/delete/{bno}(bno=${board.bno})}" method="post" style="display: inline">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                         <button type="submit" class="btn btn-danger delete-btn">
                           Delete
                         </button>
@@ -69,11 +45,7 @@
                   </div>
                 </div>
                 <div th:if="${board.imageFileName}" class="article-img">
-                  <img
-                    th:src="@{/upload/{filename}(filename=${board.imageFileName})}"
-                    alt="첨부 이미지"
-                    style="max-width: 100%; height: auto"
-                  />
+                  <img th:src="@{/upload/{filename}(filename=${board.imageFileName})}" alt="첨부 이미지" style="max-width: 100%; height: auto"/>
                 </div>
                 <div class="blog-article-body">
                   <p th:utext="${board.content}" class="content-text"></p>
@@ -82,20 +54,10 @@
 
               <!-- 댓글 작성 폼 -->
               <div class="blog-comment-form">
-                <textarea
-                  id="comment"
-                  name="content"
-                  rows="4"
-                  class="form-control"
-                  placeholder="타인의 권리를 침해하거나 명예를 훼손하는 댓글 작성 시 별도의 통보 없이 제재를 받을 수 있습니다."
-                ></textarea>
-                <input type="hidden" id="boardId" th:value="${board.bno}" />
-                <input type="hidden" id="parentId" name="parentId" value="" />
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  id="submitComment"
-                >
+                <textarea id="comment" name="content" rows="4" class="form-control" placeholder="타인의 권리를 침해하거나 명예를 훼손하는 댓글 작성 시 별도의 통보 없이 제재를 받을 수 있습니다."></textarea>
+                <input type="hidden" id="boardId" th:value="${board.bno}"/>
+                <input type="hidden" id="parentId" name="parentId" value=""/>
+                <button type="button" class="btn btn-primary" id="submitComment">
                   Submit
                 </button>
               </div>
@@ -108,28 +70,13 @@
                       <div class="blog-comment">
                         <ul class="comments">
                           <li th:each="comment : ${comments}" class="clearfix">
-                            <img
-                              src="/sampleimg/hr3.jpg"
-                              class="avatar"
-                              alt=""
-                            />
-                            <div
-                              class="post-comments"
-                              data-comment-id="${comment.id}"
-                            >
+                            <img src="/sampleimg/hr3.jpg" class="avatar" alt=""/>
+                            <div class="post-comments" data-comment-id="${comment.id}">
                               <p class="meta">
                                 <span th:text="${comment.userid}">작성자</span>
-                                <span
-                                  th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
-                                  >작성 시간</span
-                                >
+                                <span th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}">작성 시간</span >
                                 <i class="pull-right">
-                                  <a
-                                    th:if="${comment.userid == #authentication.name}"
-                                    href="#"
-                                    class="delete-link"
-                                    th:data-comment-id="${comment.id}"
-                                  >
+                                  <a th:if="${comment.userid == #authentication.name}" href="#" class="delete-link" th:data-comment-id="${comment.id}">
                                     <small>Delete</small>
                                   </a>
                                 </i>
@@ -154,13 +101,14 @@
         document
           .getElementById("submitComment")
           .addEventListener("click", function () {
-            const commentContent = document.getElementById("comment").value;
-            const boardId = document.getElementById("boardId").value;
+            const commentContent = document
+              .getElementById("comment")
+              .value;
+            const boardId = document
+              .getElementById("boardId")
+              .value;
 
-            console.log("Submitting comment:", {
-              commentContent,
-              boardId,
-            });
+            console.log("Submitting comment:", {commentContent, boardId});
 
             const csrfToken = document
               .querySelector("meta[name='_csrf']")
@@ -173,12 +121,9 @@
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                [csrfHeader]: csrfToken,
+                [csrfHeader]: csrfToken
               },
-              body: JSON.stringify({
-                content: commentContent,
-                boardId: boardId,
-              }),
+              body: JSON.stringify({content: commentContent, boardId: boardId})
             })
               .then((response) => {
                 console.log("Response status:", response.status);
@@ -186,10 +131,12 @@
                   alert("댓글이 등록되었습니다.");
                   location.reload(); // 페이지 새로고침
                 } else {
-                  return response.json().then((err) => {
-                    console.error("Error response from server:", err);
-                    alert("댓글 등록 중 오류가 발생했습니다.");
-                  });
+                  return response
+                    .json()
+                    .then((err) => {
+                      console.error("Error response from server:", err);
+                      alert("댓글 등록 중 오류가 발생했습니다.");
+                    });
                 }
               })
               .catch((error) => {
@@ -199,41 +146,46 @@
           });
 
         // 댓글 삭제
-        document.querySelectorAll(".delete-link").forEach((button) => {
-          button.addEventListener("click", function (event) {
-            event.preventDefault(); // 기본 동작 방지
+        document
+          .querySelectorAll(".delete-link")
+          .forEach((button) => {
+            button.addEventListener("click", function (event) {
+              event.preventDefault(); // 기본 동작 방지
 
-            const commentId = button.getAttribute("data-comment-id"); // 댓글 ID 가져오기
+              const commentId = button.getAttribute("data-comment-id"); // 댓글 ID 가져오기
 
-            if (confirm("이 댓글을 삭제하시겠습니까?")) {
-              const csrfToken = document
-                .querySelector("meta[name='_csrf']")
-                .getAttribute("content");
-              const csrfHeader = document
-                .querySelector("meta[name='_csrf_header']")
-                .getAttribute("content");
+              if (confirm("이 댓글을 삭제하시겠습니까?")) {
+                const csrfToken = document
+                  .querySelector("meta[name='_csrf']")
+                  .getAttribute("content");
+                const csrfHeader = document
+                  .querySelector("meta[name='_csrf_header']")
+                  .getAttribute("content");
 
-              fetch(`/board/comment/${commentId}`, {
-                method: "DELETE",
-                headers: {
-                  [csrfHeader]: csrfToken,
-                },
-              })
-                .then((response) => {
-                  if (response.ok) {
-                    alert("댓글이 삭제되었습니다.");
-                    button.closest(".post-comments").parentElement.remove(); // 댓글 UI 제거
-                  } else {
-                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                fetch(`/board/comment/${commentId}`, {
+                  method: "DELETE",
+                  headers: {
+                    [csrfHeader]: csrfToken
                   }
                 })
-                .catch((error) => {
-                  console.error("Error during deletion:", error);
-                  alert("댓글 삭제에 실패했습니다.");
-                });
-            }
+                  .then((response) => {
+                    if (response.ok) {
+                      alert("댓글이 삭제되었습니다.");
+                      button
+                        .closest(".post-comments")
+                        .parentElement
+                        .remove(); // 댓글 UI 제거
+                    } else {
+                      alert("댓글 삭제 중 오류가 발생했습니다.");
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Error during deletion:", error);
+                    alert("댓글 삭제에 실패했습니다.");
+                  });
+              }
+            });
           });
-        });
       </script>
     </div>
   </body>

@@ -109,3 +109,7 @@ function validateForm() {
 
   return true; // 검증 완료 시 폼 제출 허용
 }
+document.getElementById("nickname").addEventListener("input", function () {
+  isNicknameChecked = false; // 닉네임이 변경될 경우 중복 확인 다시 해야 함
+  document.getElementById("nickname-message").textContent = "";
+});
