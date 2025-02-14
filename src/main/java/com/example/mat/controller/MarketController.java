@@ -135,8 +135,8 @@ public class MarketController {
         log.info("선택된 장바구니 상품 IDs: {}", selectedCartItemIds);
 
         // ✅ 사용자 정보 가져오기
-        MemberDto memberDto = memberService.getMemberById(memberId);
-        model.addAttribute("member", memberDto); //
+        // MemberDto memberDto = memberService.getMemdberById(memberId);
+        // model.addAttribute("member", memberDto); //
 
         if (selectedCartItemIds == null || selectedCartItemIds.isEmpty()) {
             model.addAttribute("error", "장바구니에서 상품을 선택해주세요.");
