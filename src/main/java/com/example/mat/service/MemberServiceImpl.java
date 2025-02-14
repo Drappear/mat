@@ -107,22 +107,10 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     }
 
-    // @Override
-    // public boolean checkDuplicateEmail(String email) {
-    // return memberRepository.existsByEmail(email);
-    // }
-
     @Override
     public boolean checkDuplicateNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
-
-    // @Transactional
-    // @Override
-    // public void nickUpdate(MemberDto memberDto) {
-    // memberRepository.updateNickname(memberDto.getNickname(),
-    // memberDto.getUserid());
-    // }
 
     @Transactional
     @Override
@@ -180,37 +168,11 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         memberRepository.deleteById(member.getMid());
     }
 
-    // @Transactional
-    // @Override
-    // public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
-    // Member member = memberRepository.findById(memberId)
-    // .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
-
-    // MemberImage memberImage = new MemberImage();
-    // memberImage.setUuid(memberImageDto.getUuid());
-    // memberImage.setImgName(memberImageDto.getImgName());
-    // memberImage.setPath(memberImageDto.getPath());
-    // memberImage.setMember(member);
-
-    // memberImageRepository.save(memberImage); // MemberImageRepository 필요
-    // }
-
     @Transactional
     @Override
     public void updateProfile(MemberDto memberDto) {
         memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
     }
-
-    // @Transactional
-    // @Override
-    // public void updateProfile(MemberDto memberDto) {
-    // MemberImage memberImage =
-    // memberImageRepository.findByMember(Member.builder().mid(memberDto.getMid()).build());
-
-    // memberImage.setImgName(memberDto.getMemberImageDto().getImgName());
-    // memberImage.setUuid(memberDto.getMemberImageDto().getUuid());
-    // memberImageRepository.save(memberImage);
-    // }
 
     @Transactional
     @Override

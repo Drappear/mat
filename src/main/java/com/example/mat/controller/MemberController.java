@@ -116,14 +116,6 @@ public class MemberController {
         return new ResponseEntity<>(memberImageDto, HttpStatus.OK);
     }
 
-    // public ResponseEntity<String> registerMemberWithImage(
-    // @ModelAttribute MemberDto memberDto,
-    // MultipartFile imageFile) {
-
-    // memberService.saveMemberWithImage(memberDto, imageFile);
-    // return new ResponseEntity<>("회원 등록 및 이미지 저장 완료", HttpStatus.OK);
-    // }
-
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName, String size) {
 
@@ -203,30 +195,6 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("message", "프로필이 성공적으로 수정되었습니다.");
         return "redirect:/member/profile";
     }
-
-    // @PostMapping("/edit/profile/image")
-    // public String postUpdateProfileImage(MultipartFile uploadFiles,MemberDto
-    // memberDto) {
-
-    // Authentication authentication =
-    // SecurityContextHolder.getContext().getAuthentication();
-    // AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-
-    // // 현재 사용자 ID 설정
-    // memberDto.setMid(authMemberDto.getMemberDto().getMid());
-
-    // // 프로필 업데이트
-    // memberService.updateProfileImage(memberDto);
-
-    // // SecurityContextHolder 값 업데이트
-    // authMemberDto.getMemberDto().setMemberImageDto(memberDto.getMemberImageDto());
-
-    // SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    // // 성공적으로 수정한 후 리다이렉트
-    // redirectAttributes.addFlashAttribute("message", "프로필이 성공적으로 수정되었습니다.");
-    // return "redirect:/member/profile";
-    // }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/personalInformation")
@@ -324,12 +292,6 @@ public class MemberController {
         return "/member/login";
     }
 
-    // 이메일 중복 검사
-    // if (memberService.checkDuplicateEmail(memberDto.getEmail())) {
-    // result.rejectValue("email", "error.email", "이미 사용 중인 이메일입니다.");
-    // return "/member/register";
-    // }
-
     @GetMapping("/check-duplicate-userid")
     public ResponseEntity<Boolean> checkDuplicateUserid(@RequestParam String userid) {
         boolean isDuplicate = memberService.checkDuplicateUserid(userid);
@@ -342,13 +304,6 @@ public class MemberController {
         boolean isDuplicate = memberService.checkDuplicateNickname(nickname);
         return ResponseEntity.ok(isDuplicate);
     }
-
-    // @GetMapping("/check-duplicate-email")
-    // public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String
-    // email) {
-    // boolean isDuplicate = memberService.checkDuplicateEmail(email);
-    // return ResponseEntity.ok(isDuplicate);
-    // }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/leave")
@@ -375,48 +330,6 @@ public class MemberController {
         session.invalidate();
         return "redirect:/diner/list";
     }
-
-    // @PreAuthorize("isAuthenticated()")
-    // @PostMapping("/uploadProfilePicture")
-    // public String uploadProfilePicture(@RequestParam("profileImage")
-    // MultipartFile file,
-    // RedirectAttributes redirectAttributes) {
-    // log.info("프로필 사진 업로드 요청 {}", file);
-
-    // // 인증된 사용자 정보 가져오기
-    // Authentication authentication =
-    // SecurityContextHolder.getContext().getAuthentication();
-    // AuthMemberDto authMemberDto = (AuthMemberDto) authentication.getPrincipal();
-
-    // try {
-
-    // UploadResultDto uploadResult = uploadService.saveFile(file);
-
-    // // MemberImage 엔티티 생성 및 저장
-    // MemberImageDto memberImageDto = MemberImageDto.builder()
-    // .uuid(uploadResult.getUuid())
-    // .imgName(uploadResult.getFileName())
-    // .path(uploadResult.getFolderPath())
-    // .build();
-
-    // memberService.saveProfileImage(authMemberDto.getMemberDto().getMid(),
-    // memberImageDto);
-
-    // // SecurityContext의 프로필 사진 정보 업데이트
-    // authMemberDto.getMemberDto().getMemberImageDto().clear();
-    // authMemberDto.getMemberDto().getMemberImageDto().add(memberImageDto);
-
-    // SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    // redirectAttributes.addFlashAttribute("message", "프로필 사진이 성공적으로 업로드되었습니다!");
-
-    // } catch (Exception e) {
-    // log.error("프로필 사진 업로드 중 오류 발생", e);
-    // redirectAttributes.addFlashAttribute("error", "프로필 사진 업로드에 실패했습니다.");
-    // }
-
-    // return "redirect:/member/profile";
-    // }
 
     // 개발자용 - Authentication 확인용
     @PreAuthorize("isAuthenticated()")
