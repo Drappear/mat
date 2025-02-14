@@ -45,7 +45,6 @@ public class CartItemRepositoryTest {
     public void testGet(){
 
         Cart cart = cartRepository.findById(41L).get();        
-        // Product product = productRepository.findById(1L).get();   
         
         cartItemRepository.findByCartItem(cart).forEach(item ->{
             System.out.println(item);

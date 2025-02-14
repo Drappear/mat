@@ -19,13 +19,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 체크된 경우에만 합산
       if (checkbox.checked) {
-        totalSum += parseInt(rowTotalElement.textContent) || 0;
+        let rowTotalText = rowTotalElement.textContent.trim(); // 공백 제거
+        let rowTotal = parseFloat(rowTotalText.replace(/,/g, "")) || 0; // 쉼표 제거 후 숫자로 변환
+        totalSum += rowTotal;
       }
     });
 
     // 총합 표시
     if (totalElement) {
-      totalElement.textContent = totalSum; // 소수점 없이 정수로 표시
+      totalElement.textContent = totalSum.toLocaleString(); // 쉼표 추가하여 표시
     }
   }
 
