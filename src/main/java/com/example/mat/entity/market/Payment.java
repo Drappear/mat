@@ -1,14 +1,10 @@
 package com.example.mat.entity.market;
 
 import com.example.mat.entity.BaseEntity;
-import com.example.mat.entity.constant.OrderStatus;
 import com.example.mat.entity.shin.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,47 +16,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "mat_order")
+@Table(name = "mat_payment")
 @Entity
-public class Order extends BaseEntity {
+public class Payment extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "payment_id")
     @Id
-    private Long oid;
-
-    @Column(nullable = false)
-    private int price;
-
-    @Column(nullable = false)
-    private int quantity;
-
-    // 주문자 이름
-    @Column(nullable = false)
-    private String name;
-
-    private String phoneNumber;
-
-    private String zipcode;
-
-    private String addr;
-
-    private String detailAddr;
-
-    private String email;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private Long id; // PK
 
     @ManyToOne
     private Member member; // 사용자
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne
+    private Order order;
+    
+    @ManyToOne
     private Product product;
 
+    private int price; // 상품 가격
+    
+    private Long totalPrice; // 결제한 총 가격
+
+    @Column(name = "status")
+    private Boolean status = true; // 상태
 }
