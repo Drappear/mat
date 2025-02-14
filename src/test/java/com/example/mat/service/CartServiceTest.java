@@ -173,7 +173,7 @@ public class CartServiceTest {
         productRepository.save(product);
         
 
-        MemberDto memberDto = MemberDto.builder().mid(51L).build();
+        //MemberDto memberDto = MemberDto.builder().mid(51L).build();
         Cart cart = cartRepository.findByMember(Member.builder().mid(51L).build());
 
         if (cart == null) {

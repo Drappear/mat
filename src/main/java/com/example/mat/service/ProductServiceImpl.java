@@ -27,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductCategoryRepository productCategoryRepository;
 
     @Override
     public ProductDto getRow(Long pid) {
@@ -37,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto) {
-        // 강제로 기본 크기 9 적용
+        // 기본 크기 9로 설정
         int size = 9;
 
         // 페이지 번호 기본값 설정 (page 값이 1 미만일 경우)
@@ -55,10 +54,6 @@ public class ProductServiceImpl implements ProductService {
         // PageResultDto 반환
         return new PageResultDto<>(result, fn);
                 
-                // Pageable pageable = requestDto.getPageable(Sort.by("pid").descending());
-                // Page<Product> result = productRepository.findAll(pageable);
-                // Function<Product, ProductDto> fn = (product -> entityToDto(product));
-                // return new PageResultDto<>(result, fn);
         }
 
         @Override
