@@ -208,59 +208,6 @@
     </header>
     <!-- Header Section End -->
 
-    <!-- Hero Section Begin -->
-    <section class="hero hero-normal">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="hero__categories">
-              <div class="hero__categories__all">
-                <i class="fa fa-bars"></i>
-                <span>All departments</span>
-              </div>
-              <ul>
-                <li><a href="#">Fresh Meat</a></li>
-                <li><a href="#">Vegetables</a></li>
-                <li><a href="#">Fruit & Nut Gifts</a></li>
-                <li><a href="#">Fresh Berries</a></li>
-                <li><a href="#">Ocean Foods</a></li>
-                <li><a href="#">Butter & Eggs</a></li>
-                <li><a href="#">Fastfood</a></li>
-                <li><a href="#">Fresh Onion</a></li>
-                <li><a href="#">Papayaya & Crisps</a></li>
-                <li><a href="#">Oatmeal</a></li>
-                <li><a href="#">Fresh Bananas</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-9">
-            <div class="hero__search">
-              <div class="hero__search__form">
-                <form action="#">
-                  <div class="hero__search__categories">
-                    All Categories
-                    <span class="arrow_carrot-down"></span>
-                  </div>
-                  <input type="text" placeholder="What do yo u need?" />
-                  <button type="submit" class="site-btn">SEARCH</button>
-                </form>
-              </div>
-              <div class="hero__search__phone">
-                <div class="hero__search__phone__icon">
-                  <i class="fa fa-phone"></i>
-                </div>
-                <div class="hero__search__phone__text">
-                  <h5>+65 11.188.888</h5>
-                  <span>support 24/7 time</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Hero Section End -->
-
     <!-- Breadcrumb Section Begin -->
     <section
       class="breadcrumb-section set-bg"
@@ -270,10 +217,10 @@
         <div class="row">
           <div class="col-lg-12 text-center">
             <div class="breadcrumb__text">
-              <h2>Order List</h2>
+              <h2>ORDER</h2>
               <div class="breadcrumb__option">
                 <a href="./index.html">Home</a>
-                <span>Order List</span>
+                <span>ORDER</span>
               </div>
             </div>
           </div>
@@ -282,138 +229,167 @@
     </section>
     <!-- Breadcrumb Section End -->
 
-    <!-- Shoping Cart Section Begin -->
-    <section class="shoping-cart spad">
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="shoping__cart__table">
-              <table>
+        <div class="checkout__form">
+          <h4>주문 상품</h4>
+          <form th:action="@{/market/order}" method="post" id="orderForm">
+              <table class="table">
                 <thead>
                   <tr>
-                    <th class="shoping__product">주문 상품</th>
-                    <th>주문 날짜</th>
-                    <th>주문 상태</th>
-                    <th></th>
+                    <th>상품명</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="shoping__cart__item">
-                      <img src="/assets/img/cart/cart-1.jpg" alt="" />
-                      <h5>Vegetable’s Package</h5>
-                    </td>
-                    <td class="orderlist_date">2024/12/11</td>
-                    <td class="orderlist_status">주문 완료</td>
-                  </tr>
-                  <tr>
-                    <td class="shoping__cart__item">
-                      <img src="/assets/img/cart/cart-2.jpg" alt="" />
-                      <h5>Fresh Garden Vegetable</h5>
-                    </td>
-                    <td class="shoping__cart__price"></td>
-                    <td class="shoping__cart__total"></td>
-                  </tr>
-                  <tr>
-                    <td class="shoping__cart__item">
-                      <img src="/assets/img/cart/cart-3.jpg" alt="" />
-                      <h5>Organic Bananas</h5>
-                    </td>
-                    <td class="shoping__cart__price"></td>
-                    <td class="shoping__cart__total"></td>
+                  <tr th:each="item : ${cartItems}">
+                    <td th:text="${item.itemName}"></td>
+                    <td th:text="${#numbers.formatInteger(item.price,3,'COMMA')}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${#numbers.formatInteger(item.totalPrice,3,'COMMA')}"></td>
+                    <!-- 선택된 상품 서버로 전송하기 위한 hidden input -->
+                    <input
+                      type="hidden"
+                      name="cartItemIds"
+                      th:value="${item.cartItemId}"
+                    />
                   </tr>
                 </tbody>
+                <tfoot>
+                  <tr>
+                      <td colspan="3" style="text-align: left; font-weight: bold;">주문 금액</td>
+                      <td style="text-align: right; font-weight: bold;">[[${#numbers.formatInteger(totalOrderPrice,3,'COMMA')}]]</td>
+                  </tr>
+              </tfoot>
               </table>
             </div>
-          </div>
+
+            <div class="checkout__form">
+              <h4>주문자 정보</h4>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>이름<span>*</span></p>
+                    <input
+                      type="text"
+                      name="customerName"
+                      placeholder="이름"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>휴대폰 번호<span>*</span></p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      placeholder="연락처"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>이메일<span>*</span></p>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="이메일"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout__form">
+              <h4>배송지 정보</h4>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>이름<span>*</span></p>
+                    <input
+                      type="text"
+                      name="customerName"
+                      placeholder="이름"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>휴대폰 번호<span>*</span></p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      placeholder="연락처"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>이메일<span>*</span></p>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="이메일"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>우편 번호<span>*</span></p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      placeholder="우편 번호"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>주소<span>*</span></p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      placeholder="주소"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="checkout__input">
+                    <p>상세 주소<span>*</span></p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      placeholder="상세 주소"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout__order">
+              <h4>최종 주문 금액</h4>
+              <div class="checkout__order__products">
+                총 금액 <span id="totalAmount">[[${#numbers.formatInteger(totalOrderPrice,3,'COMMA')}]]</span>
+              </div>
+              <button type="submit" class="site-btn">PLACE ORDER</button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
-    <!-- Shoping Cart Section End -->
-
-    <!-- Footer Section Begin -->
-    <footer class="footer spad">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="footer__about">
-              <div class="footer__about__logo">
-                <a href="./index.html"
-                  ><img src="/assets/img/logo.png" alt=""
-                /></a>
-              </div>
-              <ul>
-                <li>Address: 60-49 Road 11378 New York</li>
-                <li>Phone: +65 11.188.888</li>
-                <li>Email: hello@colorlib.com</li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
-            <div class="footer__widget">
-              <h6>Useful Links</h6>
-              <ul>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">About Our Shop</a></li>
-                <li><a href="#">Secure Shopping</a></li>
-                <li><a href="#">Delivery infomation</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Our Sitemap</a></li>
-              </ul>
-              <ul>
-                <li><a href="#">Who We Are</a></li>
-                <li><a href="#">Our Services</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Innovation</a></li>
-                <li><a href="#">Testimonials</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-12">
-            <div class="footer__widget">
-              <h6>Join Our Newsletter Now</h6>
-              <p>
-                Get E-mail updates about our latest shop and special offers.
-              </p>
-              <form action="#">
-                <input type="text" placeholder="Enter your mail" />
-                <button type="submit" class="site-btn">Subscribe</button>
-              </form>
-              <div class="footer__widget__social">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-pinterest"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="footer__copyright">
-              <div class="footer__copyright__text">
-                <p>
-                  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                  Copyright &copy;
-                  <script>
-                    document.write(new Date().getFullYear());
-                  </script>
-                  All rights reserved | This template is made with
-                  <i class="fa fa-heart" aria-hidden="true"></i> by
-                  <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                </p>
-              </div>
-              <div class="footer__copyright__payment">
-                <img src="/assets/img/payment-item.png" alt="" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <!-- Footer Section End -->
+    <!-- Checkout Section End -->
 
     <!-- Js Plugins -->
     <script src="/assets/js/jquery-3.3.1.min.js"></script>
@@ -424,5 +400,7 @@
     <script src="/assets/js/mixitup.min.js"></script>
     <script src="/assets/js/owl.carousel.min.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script th:src="@{/market/js/order.js}"></script>
   </body>
+  <th:block layout:fragment="script"> </th:block>
 </html>

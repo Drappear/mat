@@ -8,10 +8,13 @@ import com.example.mat.entity.market.Order;
 public interface OrderService {
 
     // 주문 생성
-    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> quantities);
+    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> quantities, String recipientName, String phoneNumber, String zipcode, String addr, String detailAddr, String email);
 
     // 주문 정보 조회
     public OrderDto getOrder(Long orderId);
+
+    // 주문 정보 조회 (결제 및 상태 업데이트용)
+    public Order getOrderEntity(Long orderId);
 
     // dto > entity
     public default Order dtoToEntity(OrderDto dto) {
