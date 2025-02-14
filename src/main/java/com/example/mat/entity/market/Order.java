@@ -13,13 +13,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Builder
 @AllArgsConstructor
@@ -40,6 +40,8 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private int quantity;
 
+    private String orderUid; // 주문번호
+
     // 주문자 이름
     @Column(nullable = false)
     private String name;
@@ -57,10 +59,13 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member; // 사용자
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
 
 }

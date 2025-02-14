@@ -32,7 +32,6 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
@@ -42,7 +41,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> selectedQuantities) {
+    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> selectedQuantities,
+            String recipientName, String phoneNumber, String zipcode, String addr, String detailAddr, String email) {
+
         Member member = memberRepository.findById(mid)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -60,24 +61,25 @@ public class OrderServiceImpl implements OrderService {
             totalPrice += cartItem.getQuantity() * cartItem.getProduct().getPrice();
         }
 
+        // 주문 고유번호 생성 (아임포트에서 결제 후 검증할 때 필요)
+        String orderUid = "ORDER_" + System.currentTimeMillis();
+
         Order order = Order.builder()
                 .member(member)
                 .price(totalPrice)
                 .quantity(cartItems.size())
+                .orderUid(orderUid)
+                .name(recipientName)
+                .phoneNumber(phoneNumber)
+                .zipcode(zipcode)
+                .addr(addr)
+                .detailAddr(detailAddr)
+                .email(email)
                 .orderStatus(com.example.mat.entity.constant.OrderStatus.ORDER)
                 .build();
         orderRepository.save(order);
 
-        Payment payment = Payment.builder()
-                .member(member)
-                .order(order)
-                .price(totalPrice)
-                .totalPrice((long) totalPrice)
-                .status(true)
-                .build();
-        paymentRepository.save(payment);
-
-        // ✅ 선택한 상품만 삭제하도록 수정
+        // 선택한 상품만 삭제하도록 수정
         cartItemRepository.deleteAll(cartItems);
         cartItemRepository.flush();
         entityManager.clear();
@@ -92,11 +94,12 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("주문을 찾을 수 없습니다."));
 
-        return OrderDto.builder()
-                .oid(order.getOid())
-                .price(order.getPrice())
-                .quantity(order.getQuantity())
-                .orderStatus(order.getOrderStatus())
-                .build();
+        return entityToDto(order);
+    }
+
+    @Override
+    public Order getOrderEntity(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("주문을 찾을 수 없습니다"));
     }
 }
