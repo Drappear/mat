@@ -1,6 +1,7 @@
 package com.example.mat.entity.market;
 
 import com.example.mat.entity.BaseEntity;
+import com.example.mat.entity.constant.PaymentStatus;
 import com.example.mat.entity.shin.Member;
 
 import jakarta.persistence.Column;
@@ -30,19 +31,18 @@ public class Payment extends BaseEntity {
     @Id
     private Long id; // PK
 
+    private int totalPrice; // 결제한 총 가격
+
+    private String paymentUid; // 결제 고유 번호
+
+    // private int price; // 상품 가격
+
+    private PaymentStatus paymentStatus;
+
     @ManyToOne
     private Member member; // 사용자
-    
+
     @ManyToOne
     private Order order;
-    
-    @ManyToOne
-    private Product product;
 
-    private int price; // 상품 가격
-    
-    private Long totalPrice; // 결제한 총 가격
-
-    @Column(name = "status")
-    private Boolean status = true; // 상태
 }

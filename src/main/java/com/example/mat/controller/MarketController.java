@@ -3,9 +3,11 @@ package com.example.mat.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,8 +28,10 @@ import com.example.mat.dto.market.OrderDto;
 import com.example.mat.dto.market.ProductDto;
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
+import com.example.mat.entity.market.Order;
 import com.example.mat.entity.market.Product;
 import com.example.mat.service.CartService;
+import com.example.mat.service.MemberService;
 import com.example.mat.service.OrderService;
 import com.example.mat.service.ProductService;
 
@@ -47,6 +51,9 @@ public class MarketController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    MemberService memberService;
 
     @GetMapping("/list")
     public void getList(@RequestParam(required = false) Long cateid, PageRequestDto requestDto, Model model) {
@@ -127,6 +134,10 @@ public class MarketController {
         log.info("주문 페이지 요청 - 사용자 ID: {}", memberId);
         log.info("선택된 장바구니 상품 IDs: {}", selectedCartItemIds);
 
+        // ✅ 사용자 정보 가져오기
+        MemberDto memberDto = memberService.getMemberById(memberId);
+        model.addAttribute("member", memberDto); //
+
         if (selectedCartItemIds == null || selectedCartItemIds.isEmpty()) {
             model.addAttribute("error", "장바구니에서 상품을 선택해주세요.");
             return "redirect:/market/cart";
@@ -137,7 +148,7 @@ public class MarketController {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        // ✅ 체크된 상품만 조회
+        // 체크된 상품만 조회
         List<CartDetailDto> cartItems = cartService.getSelectedCartItems(memberId, cartItemIds);
 
         if (cartItems.isEmpty()) {
@@ -145,8 +156,15 @@ public class MarketController {
             return "redirect:/market/cart";
         }
 
+        // 총 주문 금액 계산 추가
+        int totalOrderPrice = cartItems.stream()
+                .mapToInt(item -> item.getQuantity() * item.getPrice())
+                .sum();
+
         model.addAttribute("cartItems", cartItems);
-        return "/market/order";
+        model.addAttribute("totalOrderPrice", totalOrderPrice); // 추가된 변수
+
+        return "market/order";
     }
 
     // 장바구니에서 주문 생성
@@ -154,15 +172,18 @@ public class MarketController {
     // 주문 완료 후, 주문 ID 반환
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
-    public String createOrder(
+    public ResponseEntity<?> createOrder(
             @RequestParam("selectedCartItemIds") String selectedCartItemIds,
             @RequestParam("selectedQuantities") String selectedQuantities,
-            Model model) {
+            @RequestParam("recipientName") String recipientName,
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("zipcode") String zipcode,
+            @RequestParam("addr") String addr,
+            @RequestParam("detailAddr") String detailAddr,
+            @RequestParam("email") String email) {
 
         Long memberId = getAuthentication().getMemberDto().getMid();
         log.info("주문 생성 요청 - 멤버 ID: {}", memberId);
-        log.info("체크된 상품 ID 리스트: {}", selectedCartItemIds);
-        log.info("체크된 상품 수량 리스트: {}", selectedQuantities);
 
         try {
             List<Long> cartItemIds = Arrays.stream(selectedCartItemIds.split(","))
@@ -173,25 +194,23 @@ public class MarketController {
                     .collect(Collectors.toList());
 
             if (cartItemIds.isEmpty() || quantities.isEmpty() || cartItemIds.size() != quantities.size()) {
-                model.addAttribute("error", "선택된 상품 정보가 올바르지 않습니다.");
-                return "redirect:/market/cart";
+                return ResponseEntity.badRequest().body("선택된 상품 정보가 올바르지 않습니다.");
             }
 
-            Long orderId = orderService.createOrder(memberId, cartItemIds, quantities);
+            Long orderId = orderService.createOrder(memberId, cartItemIds, quantities, recipientName, phoneNumber,
+                    zipcode, addr, detailAddr, email);
             log.info("주문 완료 - 주문 ID: {}", orderId);
 
-            OrderDto orderDto = orderService.getOrder(orderId);
-            model.addAttribute("order", orderDto);
-            return "/market/order";
+            Order order = orderService.getOrderEntity(orderId);
+            return ResponseEntity.ok(Map.of(
+                    "orderId", orderId,
+                    "orderUid", order.getOrderUid(),
+                    "totalPrice", order.getPrice()));
 
-        } catch (NumberFormatException e) {
-            log.error("숫자 변환 오류: {}", e.getMessage());
-            model.addAttribute("error", "상품 정보가 잘못되었습니다.");
-            return "redirect:/market/cart";
         } catch (Exception e) {
-            log.error("주문 실패: {}", e.getMessage());
-            model.addAttribute("error", "주문 생성 중 오류가 발생했습니다.");
-            return "redirect:/market/cart";
+            log.error("주문 생성 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "주문 생성 실패", "message", e.getMessage()));
         }
     }
 
