@@ -28,7 +28,7 @@ public class SecurityConfig {
                                 .requestMatchers("/recipe/**", "/upload/**").permitAll()
                                 .anyRequest().authenticated());
 
-                http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/"));
+                http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
 
                 http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 

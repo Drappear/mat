@@ -90,23 +90,23 @@ public class RecipeController {
     RecipeDto recipeDto = recipeService.get(rno);
     model.addAttribute("recipeDto", recipeDto);
     // try {
-    //   RecipeDto recipe = recipeService.get(rno);
-    //   if (recipe != null) {
-    //     model.addAttribute("recipe", recipe);
-    //     model.addAttribute("requestDto", pageRequestDto);
-    //     return "recipe/read"; // 명시적으로 뷰 이름 반환
-    //   }
-    //   return "redirect:/recipe/list";
+    // RecipeDto recipe = recipeService.get(rno);
+    // if (recipe != null) {
+    // model.addAttribute("recipe", recipe);
+    // model.addAttribute("requestDto", pageRequestDto);
+    // return "recipe/read"; // 명시적으로 뷰 이름 반환
+    // }
+    // return "redirect:/recipe/list";
     // } catch (Exception e) {
-    //   log.error("레시피 조회 중 오류 발생", e);
-    //   return "redirect:/recipe/list";
+    // log.error("레시피 조회 중 오류 발생", e);
+    // return "redirect:/recipe/list";
     // }
   }
 
   @PreAuthorize("isAuthenticated()")
   @GetMapping("/modify")
   public void getModify(@RequestParam Long rno, Model model,
-  @ModelAttribute("requestDto") PageRequestDto pageRequestDto) { 
+      @ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
     log.info("recipe 수정 페이지 요청 rno: {}", rno);
 
     RecipeDto recipeDto = recipeService.get(rno);
@@ -193,6 +193,8 @@ public class RecipeController {
         recipeDto.setRecipeStepDtos(steps);
       }
 
+      log.info("최종 recipeDto {}", recipeDto);
+
       Long createdRecipeRno = recipeService.register(recipeDto);
 
       rttr.addFlashAttribute("message", "레시피가 성공적으로 등록되었습니다.");
@@ -209,6 +211,5 @@ public class RecipeController {
       return "recipe/create";
     }
   }
-
 
 }
