@@ -285,7 +285,6 @@
                     </td>
                     <td class="shoping__cart__total" id="total-${cartItemId}">
                       [[${item.price * item.quantity}]]
-                      <!-- [[${item?.price*item?.quantity}]] -->
                     </td>
 
                     <td class="shoping__cart__item__close">
@@ -321,11 +320,16 @@
             <div class="shoping__checkout">
               <h5>Cart Total</h5>
               <ul>
-                <li>
-                  Total <span id="cart-total">[[${totalCartPrice}]]</span>
-                </li>
+                <li>Total <span id="cart-total">[[${totalPrice}]]</span></li>
               </ul>
-              <a th:href="@{/market/order}" class="primary-btn">ORDER</a>
+              <form id="orderForm" th:action="@{/market/order}" method="get">
+                <input
+                  type="hidden"
+                  name="selectedCartItemIds"
+                  id="selectedCartItemIds"
+                />
+                <a href="#" class="primary-btn" id="orderBtn">ORDER</a>
+              </form>
             </div>
           </div>
         </div>
@@ -352,5 +356,6 @@
     <script th:src="@{/market/check.js}"></script>
     <script th:src="@{/market/remove.js}"></script>
     <script th:src="@{/market/cart.js}"></script>
+    <script th:src="@{/market/order.js}"></script>
   </th:block>
 </html>

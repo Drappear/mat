@@ -1,241 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Sign Up Page</title>
 
     <!-- External CSS -->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 
     <!-- Internal CSS -->
-    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
 
     <script>
-function checkDuplicateUserid() {
-    const userid = document.getElementById("userid").value;
-    const message = document.getElementById("userid-message");
+      let isUseridChecked = false; // 아이디 중복 확인 상태
+      let isNicknameChecked = false; // 닉네임 중복 확인 상태
 
-    if (userid.trim() === "") {
-        message.textContent = "아이디를 입력해주세요.";
-        message.style.color = "red";
-        return;
-    }
+      function checkDuplicateUserid() {
+        const userid = document
+          .getElementById("userid")
+          .value;
+        const message = document.getElementById("userid-message");
+        const regex = /^[a-zA-Z0-9]{5,15}$/; // 최소 5자, 최대 15자 영어와 숫자
+        if (userid.trim() === "") {
+          message.textContent = "아이디를 입력해주세요.";
+          message.style.color = "red";
+          return;
+        }
+        if (!regex.test(userid)) {
+          message.textContent = "아이디는 5~15자의 영문자와 숫자만 가능합니다.";
+          message.style.color = "red";
+          isUseridChecked = false;
+          return;
+        }
 
-    fetch(`/member/check-duplicate-userid?userid=${userid}`)
-        .then((response) => response.json())
-        .then((isDuplicate) => {
+        fetch(`/member/check-duplicate-userid?userid=${userid}`)
+          .then((response) => response.json())
+          .then((isDuplicate) => {
             if (isDuplicate) {
-                message.textContent = "이미 사용 중인 아이디입니다.";
-                message.style.color = "red";
-                isUseridChecked = false;
+              message.textContent = "이미 사용 중인 아이디입니다.";
+              message.style.color = "red";
+              isUseridChecked = false;
             } else {
-                message.textContent = "사용 가능한 아이디입니다.";
-                message.style.color = "green";
-                isUseridChecked = true;
+              message.textContent = "사용 가능한 아이디입니다.";
+              message.style.color = "green";
+              isUseridChecked = true;
             }
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.error("Error:", error);
             message.textContent = "중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.";
             message.style.color = "red";
             isUseridChecked = false;
-        });
-}
+          });
+      }
 
-function checkDuplicateNickname() {
-    const nickname = document.getElementById("nickname").value;
-    const message = document.getElementById("nickname-message");
+      function checkDuplicateNickname() {
+        const nickname = document
+          .getElementById("nickname")
+          .value;
+        const message = document.getElementById("nickname-message");
 
-    if (nickname.trim() === "") {
-        message.textContent = "닉네임을 입력해주세요.";
-        message.style.color = "red";
-        return;
-    }
+        if (nickname.trim() === "") {
+          message.textContent = "닉네임을 입력해주세요.";
+          message.style.color = "red";
+          return;
+        }
 
-    fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
-        .then((response) => response.json())
-        .then((isDuplicate) => {
+        fetch(`/member/check-duplicate-nickname?nickname=${nickname}`)
+          .then((response) => response.json())
+          .then((isDuplicate) => {
             if (isDuplicate) {
-                message.textContent = "이미 사용 중인 닉네임입니다.";
-                message.style.color = "red";
-                isNicknameChecked = false;
+              message.textContent = "이미 사용 중인 닉네임입니다.";
+              message.style.color = "red";
+              isNicknameChecked = false;
             } else {
-                message.textContent = "사용 가능한 닉네임입니다.";
-                message.style.color = "green";
-                isNicknameChecked = true;
+              message.textContent = "사용 가능한 닉네임입니다.";
+              message.style.color = "green";
+              isNicknameChecked = true;
             }
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.error("Error:", error);
             message.textContent = "중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.";
             message.style.color = "red";
             isNicknameChecked = false;
-        });
-}
+          });
+      }
 
-function validateForm() {
-    if (!isUseridChecked) {
-        alert("아이디 중복 확인을 해주세요.");
-        return false;
-    }
+      function validateForm() {
+        console.log("isUseridChecked:", isUseridChecked);
+        console.log("isNicknameChecked:", isNicknameChecked);
+        if (!isUseridChecked) {
+          alert("아이디 중복 확인을 해주세요.");
 
-    if (!isNicknameChecked) {
-        alert("닉네임 중복 확인을 해주세요.");
-        return false;
-    }
+          return false;
+        }
 
-    return true; // 폼 제출 허용
-}
+        if (!isNicknameChecked) {
+          alert("닉네임 중복 확인을 해주세요.");
 
-  </script>
+          return false;
+        }
+
+        return true; // 폼 제출 허용
+      }
+    </script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+      function daumPost() {
+        new daum
+          .Postcode({
+            oncomplete: function (data) {
+              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+              // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+
+              //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+              if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                addr = data.roadAddress;
+              } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                addr = data.jibunAddress;
+              }
+
+              document
+                .getElementById('addr')
+                .value = addr
+              document
+                .getElementById('detailAddress')
+                .focus()
+            }
+          })
+          .open();
+      }
+    </script>
   </head>
+
   <body>
     <div class="login-page">
       <div class="login-content login-content-signup">
         <div>
           <h2>Sign Up</h2>
-          <form
-            th:action="@{/member/register}"
-            class="wrapper-box"
-            th:object="${memberDto}"
-            method="post"
-            onsubmit="return validateForm();"
-          ><div class="input-group">
-            <input
-                type="text"
-                class="form-control form-control-id"
-                placeholder="Id"
-                th:value="${memberDto.userid}"
-                th:field="*{userid}"
-                name="userid"
-                id="userid"
-            />
-         
+          <form th:action="@{/member/register}" class="wrapper-box" th:object="${memberDto}" method="post" onsubmit="return validateForm();">
+            <div class="input-group">
+              <input type="text" class="form-control form-control-id" placeholder="Id" th:value="${memberDto.userid}" th:field="*{userid}" name="userid" id="userid"/>
+
               <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
+                <button type="button" class="btn btn-default" onclick="checkDuplicateUserid()">중복 확인</button>
               </span>
-         
-        </div>
-        <div
-            
-           
-            class="text-danger"
-            id="userid-message"
-     
-        ></div> <!-- 여기에 중복된 아이디 경고 메시지 표시 -->
-        
-        <!-- 닉네임 중복 확인 -->
-        <div class="input-group">
-            <input
-                type="text"
-                class="form-control form-control-nickname"
-                placeholder="Nickname"
-                th:value="${memberDto.nickname}"
-                th:field="*{nickname}"
-                name="nickname"
-                id="nickname"
-            />
-            <span class="input-group-btn">
+
+            </div>
+            <div class="text-danger" id="userid-message"></div>
+            <!-- 여기에 중복된 아이디 경고 메시지 표시 -->
+
+            <!-- 닉네임 중복 확인 -->
+            <div class="input-group">
+              <input type="text" class="form-control form-control-nickname" placeholder="Nickname" th:value="${memberDto.nickname}" th:field="*{nickname}" name="nickname" id="nickname"/>
+              <span class="input-group-btn">
                 <button type="button" class="btn btn-default" onclick="checkDuplicateNickname()">중복 확인</button>
-            </span>
-        </div>
-        <div
-            
-          
-            class="text-danger"
-            id="nickname-message"
-        ></div> <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
-            <input
-              type="password"
-              th:field="*{password}"
-              class="form-control form-control-password"
-              placeholder="Password"
-              th:value="${memberDto.password}"
-              name="password"
-              
-            />
-            <div
-              th:if="${#fields.hasErrors('password')}"
-              th:errors="*{password}"
-              class="text-danger"
-            ></div>
-          
-            <input
-              type="text"
-              class="form-control form-control-username"
-              placeholder="Username"
-              th:value="${memberDto.username}"
-              th:field="*{username}"
-              name="username"
-            />
-            <div
-              th:if="${#fields.hasErrors('username')}"
-              th:errors="*{username}"
-              class="text-danger"
-            ></div>
+              </span>
+            </div>
+            <div class="text-danger" id="nickname-message"></div>
+            <!-- 여기에 중복된 닉네임 경고 메시지 표시 -->
+            <input type="password" th:field="*{password}" class="form-control form-control-password" placeholder="Password" th:value="${memberDto.password}" name="password"/>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
 
-   
-            <input
-              type="email"
-              th:field="*{email}"
-              class="form-control form-control-emailname"
-              placeholder="Email"
-              th:value="${memberDto.email}"
-              name="email"
-              id="email"
-            />
-            <div
-            th:if="${#fields.hasErrors('email')}"
-            th:errors="*{email}"
-              class="text-danger"
-            
-            ></div>
-            <input
-              type="tel"
-              th:field="*{tel}"
-              class="form-control form-control-tel"
-              placeholder="tel"
-              th:value="${memberDto.tel}"
-              name="tel"
-              id="tel"
-            />
-            <div
-            th:if="${#fields.hasErrors('tel')}"
-            th:errors="*{tel}"
-              class="text-danger"
-            
-            ></div>
+            <input type="text" class="form-control form-control-username" placeholder="Username" th:value="${memberDto.username}" th:field="*{username}" name="username"/>
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></div>
 
-            <input
-              type="text"
-              class="form-control form-control-addr"
-              placeholder="Address (선택)"
-              th:value="${memberDto.addr}"
-              th:field="*{addr}"
-              name="addr"
-            />
-            <div
-              th:if="${#fields.hasErrors('addr')}"
-              th:errors="*{addr}"
-              class="text-danger"
-            ></div>
-            <input
-              type="text"
-              class="form-control form-control-detailAddr"
-              placeholder="DetailAddress (선택)"
-              th:value="${memberDto.detailAddr}"
-              th:field="*{detailAddr}"
-              name="detailAddr"
-            />
-            <div
-              th:if="${#fields.hasErrors('detailAddr')}"
-              th:errors="*{detailAddr}"
-              class="text-danger"
-            ></div>
+            <input type="email" th:field="*{email}" class="form-control form-control-emailname" placeholder="Email" th:value="${memberDto.email}" name="email" id="email"/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+            <input type="tel" th:field="*{tel}" class="form-control form-control-tel" placeholder="tel" th:value="${memberDto.tel}" name="tel" id="tel"/>
+            <div th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" class="text-danger"></div>
+
+            <div class="input-group">
+              <input type="text" class="form-control form-control-addr" placeholder="Address (선택)" th:value="${memberDto.addr}" th:field="*{addr}" name="addr" id="addr" readonly="readonly"/>
+              <span class="input-group-btn">
+                <button type="button" onclick="daumPost()" class="btn btn-default">주소 찾기</button>
+              </span>
+            </div>
+            <input type="text" class="form-control form-control-detailAddr" placeholder="DetailAddress (선택)" th:value="${memberDto.detailAddr}" th:field="*{detailAddr}" name="detailAddr" id="detailAddr"/>
+
             <button type="submit" class="btn btn-submit btn-default pull-right">
               Sign up
             </button>
@@ -250,10 +194,61 @@ function validateForm() {
             <a th:href="@{/member/login}">Sign in</a>
           </button>
         </div>
-    </div>
+      </div>
 
-    <!-- External JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
-  </body>
-</html>
+      <!-- External JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
+      <script>
+
+        //submit() 중지
+
+        // 아이디 입력 변경 감지 → 중복 확인 다시 해야 함
+        document
+          .getElementById("userid")
+          .addEventListener("input", function () {
+
+            isUseridChecked = false;
+          });
+
+        // 닉네임 입력 변경 감지 → 중복 확인 다시 해야 함
+        document
+          .getElementById("nickname")
+          .addEventListener("input", function () {
+
+            isNicknameChecked = false;
+          });
+        document
+          .querySelector(".wrapper-box")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!isUseridChecked) {
+              document
+                .getElementById("userid-message")
+                .textContent = "아이디 중복 확인을 해주세요.";
+              document
+                .getElementById("userid-message")
+                .style
+                .color = "red";
+            }
+
+            if (!isNicknameChecked) {
+              document
+                .getElementById("nickname-message")
+                .textContent = "닉네임 중복 확인을 해주세요.";
+              document
+                .getElementById("nickname-message")
+                .style
+                .color = "red";
+            }
+            if (isNicknameChecked && isUseridChecked) {
+
+              e
+                .target
+                .submit();
+            }
+          })
+      </script>
+    </body>
+  </html>
