@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.shin.MemberImage;
-import com.example.mat.entity.won.Board;
-import com.example.mat.entity.won.BoardImage;
 
 @Repository
 public interface MemberImageRepository extends JpaRepository<MemberImage, Long> {

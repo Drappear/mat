@@ -23,7 +23,11 @@ import com.example.mat.dto.shin.UpdateMemberDto;
 
 import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.shin.MemberImage;
+import com.example.mat.repository.BoardRepository;
+import com.example.mat.repository.CartRepository;
 import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.RecipeRepository;
+import com.example.mat.repository.diner.DinerReviewRepository;
 import com.example.mat.repository.shin.MemberImageRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,10 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     private final MemberRepository memberRepository;
     private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BoardRepository boardRepository;
+    private final CartRepository cartRepository;
+    private final RecipeRepository recipeRepository;
+    private final DinerReviewRepository dinerReviewRepository;
 
     @Value("${com.example.mat.profile.path}")
     private String uploadPath;
@@ -99,22 +107,10 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     }
 
-    // @Override
-    // public boolean checkDuplicateEmail(String email) {
-    // return memberRepository.existsByEmail(email);
-    // }
-
     @Override
     public boolean checkDuplicateNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
-
-    // @Transactional
-    // @Override
-    // public void nickUpdate(MemberDto memberDto) {
-    // memberRepository.updateNickname(memberDto.getNickname(),
-    // memberDto.getUserid());
-    // }
 
     @Transactional
     @Override
@@ -160,41 +156,23 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
             throw new Exception("현재 비밀번호를 확인");
         }
 
-        memberImageRepository.deleteByMember(member);
+        // 자식 프로필이미지
+        MemberImage memberImage = memberImageRepository.findByMember(member);
+
+        boardRepository.deleteByMember(member);
+        recipeRepository.deleteByMember(member);
+        dinerReviewRepository.deleteByMember(member);
+        cartRepository.deleteByMember(member);
+        memberImageRepository.delete(memberImage);
+
         memberRepository.deleteById(member.getMid());
     }
-
-    // @Transactional
-    // @Override
-    // public void saveProfileImage(Long memberId, MemberImageDto memberImageDto) {
-    // Member member = memberRepository.findById(memberId)
-    // .orElseThrow(() -> new IllegalArgumentException("잘못된 회원 ID입니다."));
-
-    // MemberImage memberImage = new MemberImage();
-    // memberImage.setUuid(memberImageDto.getUuid());
-    // memberImage.setImgName(memberImageDto.getImgName());
-    // memberImage.setPath(memberImageDto.getPath());
-    // memberImage.setMember(member);
-
-    // memberImageRepository.save(memberImage); // MemberImageRepository 필요
-    // }
 
     @Transactional
     @Override
     public void updateProfile(MemberDto memberDto) {
         memberRepository.updateProfile(memberDto.getNickname(), memberDto.getBio(), memberDto.getUserid());
     }
-
-    // @Transactional
-    // @Override
-    // public void updateProfile(MemberDto memberDto) {
-    // MemberImage memberImage =
-    // memberImageRepository.findByMember(Member.builder().mid(memberDto.getMid()).build());
-
-    // memberImage.setImgName(memberDto.getMemberImageDto().getImgName());
-    // memberImage.setUuid(memberDto.getMemberImageDto().getUuid());
-    // memberImageRepository.save(memberImage);
-    // }
 
     @Transactional
     @Override

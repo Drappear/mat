@@ -3,6 +3,7 @@ package com.example.mat.entity.shin;
 import com.example.mat.entity.BaseEntity;
 import com.example.mat.entity.constant.MemberRole;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -58,6 +59,9 @@ public class Member extends BaseEntity {
 
     private String detailAddr;
     private String bio;
+
+    @OneToOne(mappedBy = "member", cascade = { CascadeType.ALL, CascadeType.REMOVE }, orphanRemoval = true)
+    private MemberImage memberImage;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;

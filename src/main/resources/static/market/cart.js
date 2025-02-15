@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 장바구니 페이지에서만 실행
   if (!document.querySelector(".shoping-cart")) return;
 
-  console.log("✅ cart-page.js 실행됨");
+  console.log("cart-page.js 실행됨");
 
   // 장바구니의 모든 상품 행을 가져옴
   const cartItems = document.querySelectorAll("tr[data-cart-id]");
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const plusButton = item.querySelector(".pro-qty .inc");
     const minusButton = item.querySelector(".pro-qty .dec");
 
-    // ✅ 기존 이벤트 제거를 위한 새로운 버튼 생성
+    // 기존 이벤트 제거를 위한 새로운 버튼 생성
     const newPlusButton = plusButton.cloneNode(true);
     const newMinusButton = minusButton.cloneNode(true);
     plusButton.replaceWith(newPlusButton);
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     newPlusButton.addEventListener("click", (event) => {
       event.preventDefault(); // 기본 동작 중단
       event.stopPropagation(); // 이벤트 전파 차단
-      console.log("✅ + 버튼 클릭됨");
+      console.log("+ 버튼 클릭됨");
 
       const currentQuantity = parseInt(quantityInput.value);
       if (currentQuantity + 1 > maxQuantity) {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     newMinusButton.addEventListener("click", (event) => {
       event.preventDefault(); // 기본 동작 중단
       event.stopPropagation(); // 이벤트 전파 차단
-      console.log("✅ - 버튼 클릭됨");
+      console.log("버튼 클릭됨");
 
       const currentQuantity = parseInt(quantityInput.value);
       if (currentQuantity - 1 < 1) {
@@ -70,25 +70,3 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTotal();
   });
 });
-
-// document.querySelector(".primary-btn").addEventListener("click", (e) => {
-//   const cartItems = document.querySelectorAll("tr[data-cart-id]");
-//   let isValid = true;
-
-//   cartItems.forEach((item) => {
-//     const quantityInput = item.querySelector(".quantity-input");
-//     const cartQuantity = parseInt(quantityInput.value);
-//     const maxQuantity = parseInt(item.getAttribute("data-quantity"));
-
-//     if (cartQuantity > maxQuantity) {
-//       alert(
-//         `"${item.querySelector("h5").innerText}" 상품의 재고가 부족합니다.`
-//       );
-//       isValid = false;
-//     }
-//   });
-
-//   if (!isValid) {
-//     e.preventDefault(); // 주문 버튼 클릭 막기
-//   }
-// });

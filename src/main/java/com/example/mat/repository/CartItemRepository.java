@@ -1,19 +1,19 @@
 package com.example.mat.repository;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.entity.market.Cart;
 import com.example.mat.entity.market.CartItem;
-import com.example.mat.entity.market.Product;
 
-public interface CartItemRepository extends JpaRepository<CartItem, Long>{
-   
+import jakarta.transaction.Transactional;
+
+@Repository
+public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
    // 장바구니 목록
    @Query("select ci from CartItem ci where ci.cart = :cart")
@@ -23,13 +23,14 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long>{
    @Query("select ci from CartItem ci where ci.cart.cartid = :cartid and ci.product.pid = :pid")
    CartItem findByProductCart(@Param("cartid") Long cartid, @Param("pid") Long pid);
 
-   
    @Query("select ci from CartItem ci where ci.cart.cartid = :cartid")
    List<CartItem> findByCartId(@Param("cartid") Long cartid);
-  
 
-   
+   @Query("SELECT COUNT(ci) FROM CartItem ci WHERE ci.cart = :cart")
+   int countByCartItem(@Param("cart") Cart cart);
 
-    
+   // 선택된 상품들만 조회
+   @Query("SELECT ci FROM CartItem ci WHERE ci.cartItemId IN :cartItemIds")
+   List<CartItem> findByCartItemIds(@Param("cartItemIds") List<Long> cartItemIds);
+
 }
- 
