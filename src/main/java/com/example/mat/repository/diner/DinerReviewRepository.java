@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerReview;
+import com.example.mat.entity.shin.Member;
 
 public interface DinerReviewRepository extends JpaRepository<DinerReview, Long> {
     // 리뷰 가져오기
@@ -19,4 +20,8 @@ public interface DinerReviewRepository extends JpaRepository<DinerReview, Long> 
     @Modifying
     @Query("DELETE FROM DinerReview dr WHERE dr.diner = :diner")
     void deleteByDiner(Diner diner);
+
+    @Modifying
+    @Query("DELETE FROM DinerReview dr WHERE dr.member =:member")
+    void deleteByMember(Member member);
 }

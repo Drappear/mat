@@ -5,10 +5,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,13 +16,15 @@ public class ProductDto {
 
     private String name;
 
-    private String price;
+    private int price;
 
     private int quantity;
 
     private String productDetail;
 
     private String catename;
+
+    private ProductCategoryDto category;
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;

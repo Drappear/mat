@@ -41,7 +41,8 @@ public class DinerReviewController {
 
         PageResultDto<DinerReviewDto, Object[]> review = dinerReviewService.getDinerReviews(pageRequestDto, did);
         log.info("리뷰 리스트 {}", review);
-        model.addAttribute("review", review);
+
+        // model.addAttribute("review", review);
 
         return review;
     }

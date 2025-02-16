@@ -138,6 +138,8 @@ public class RecipeServiceImpl implements RecipeService {
           .member(member) // Member 세팅
           .build();
 
+      System.out.println("service " + recipe);
+
       // 3. Category 설정
       if (recipeDto.getRecipeCategoryDto() != null) {
         RecipeCategory category = recipeCategoryRepository.findById(recipeDto.getRecipeCategoryDto().getRCateId())
