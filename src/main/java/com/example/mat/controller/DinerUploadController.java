@@ -36,45 +36,45 @@ public class DinerUploadController {
     @Value("${com.example.mat.upload.path}")
     private String uploadPath;
 
-    @PostMapping("/upload")
-    public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles, String uploadPageName,
-            String uploadId) {
+    // @PostMapping("/upload")
+    // public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles, String uploadPageName
+    //        ) {
 
-        List<UploadResultDto> UploadResultDtos = new ArrayList<>();
+    //     List<UploadResultDto> UploadResultDtos = new ArrayList<>();
 
-        for (MultipartFile multipartFile : uploadFiles) {
-            // 이미지 파일 여부 확인
-            if (!multipartFile.getContentType().startsWith("image")) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+    //     for (MultipartFile multipartFile : uploadFiles) {
+    //         // 이미지 파일 여부 확인
+    //         if (!multipartFile.getContentType().startsWith("image")) {
+    //             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    //         }
 
-            // 사용자가 올린 파일명
-            String originName = multipartFile.getOriginalFilename();
+    //         // 사용자가 올린 파일명
+    //         String originName = multipartFile.getOriginalFilename();
 
-            // 저장 폴더 생성
-            String saveFolderPath = makeFolder(uploadPageName, uploadId);
+    //         // 저장 폴더 생성
+    //         String saveFolderPath = makeFolder(uploadPageName, uploadId);
 
-            // 파일 저장 - uuid(중복 해결)
-            String uuid = UUID.randomUUID().toString();
+    //         // 파일 저장 - uuid(중복 해결)
+    //         String uuid = UUID.randomUUID().toString();
 
-            String saveName = uploadPath + File.separator + saveFolderPath + File.separator + uuid + "_" + originName;
+    //         String saveName = uploadPath + File.separator + saveFolderPath + File.separator + uuid + "_" + originName;
 
-            Path savePath = Paths.get(saveName);
+    //         Path savePath = Paths.get(saveName);
 
-            try {
-                // 폴더 저장
-                multipartFile.transferTo(savePath);
+    //         try {
+    //             // 폴더 저장
+    //             multipartFile.transferTo(savePath);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    //         } catch (Exception e) {
+    //             e.printStackTrace();
+    //         }
 
-            // 저장된 파일 정보 추가
-            UploadResultDtos.add(new UploadResultDto(uuid, originName, saveFolderPath));
-        }
+    //         // 저장된 파일 정보 추가
+    //         UploadResultDtos.add(new UploadResultDto(uuid, originName, saveFolderPath));
+    //     }
 
-        return new ResponseEntity<List<UploadResultDto>>(UploadResultDtos, HttpStatus.OK);
-    }
+    //     return new ResponseEntity<List<UploadResultDto>>(UploadResultDtos, HttpStatus.OK);
+    // }
 
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName, String size) {
@@ -117,26 +117,16 @@ public class DinerUploadController {
 
     // }
 
-    private String makeFolder(String uploadPageName, String uploadId) {
-        // 오늘 날짜
-        // LocalDate today = LocalDate.now();
-        // log.info(today);
-        // String dateStr = today.format(DateTimeFormatter.ofPattern("YYYY/MM/dd"));
+    // private String makeFolder(String uploadPageName, String uploadId) {
+    //     String dirStr = uploadPageName + "/" + uploadId;
 
-        // File dirs = new File(uploadPath, dateStr);
-        // if (!dirs.exists()) {
-        // dirs.mkdirs();
-        // }
+    //     log.info(dirStr + " 폴더 생성");
+    //     File dirs = new File(uploadPageName, uploadId);
+    //     if (!dirs.exists()) {
+    //         dirs.mkdirs();
+    //     }
 
-        String dirStr = uploadPageName + "/" + uploadId;
-
-        log.info(dirStr + "폴더 생성");
-        File dirs = new File(uploadPageName, uploadId);
-        if (!dirs.exists()) {
-            dirs.mkdirs();
-        }
-
-        return dirStr;
-    }
+    //     return dirStr;
+    // }
 
 }

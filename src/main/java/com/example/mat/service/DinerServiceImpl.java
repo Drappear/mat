@@ -44,10 +44,8 @@ public class DinerServiceImpl implements DinerService {
   public Long createDiner(DinerDto dinerDto) {
     Map<String, Object> entityMap = dtoToEntity(dinerDto);
     Diner diner = (Diner) entityMap.get("diner");
-    List<Image> dinerImages = (List<Image>) entityMap.get("dinerImages");
 
     dinerRepository.save(diner);
-    dinerImages.forEach(dinerImage -> imageRepository.save(dinerImage));
 
     return diner.getDid();
   }
@@ -57,8 +55,6 @@ public class DinerServiceImpl implements DinerService {
     List<Object[]> result = imageRepository.getDinerRow(did);
 
     Diner diner = (Diner) result.get(0)[0];
-    // Long reviewCnt = (Long) result.get(0)[2];
-    // Double reviewAvg = (Double) result.get(0)[3];
 
     // 식당 이미지
     List<Image> dinerImages = new ArrayList<>();
