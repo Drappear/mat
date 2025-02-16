@@ -13,7 +13,7 @@
             <div class="row justify-content-center m-3">
               <h4>식당 등록</h4>
             </div>
-            <form th:action="@{create}" method="post" id="createForm">
+            <form th:action="@{create}" method="post" id="createForm" enctype="multipart/form-data">
               <div class="register-items">
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
@@ -35,7 +35,7 @@
                   </div>
                 </div>
 
-                <div class="row justify-content-center">
+                <div class="row justify-content-center mb-3">
                   <div class="col-lg-3 mb-3">
                     <label for="dinerPhone" class="form-label">전화번호</label>
                     <input type="text" class="form-control" id="dinerPhone" name="phone" />
@@ -47,22 +47,29 @@
                 </div>
 
                 <div class="row justify-content-center">
-                  <div class="col-lg-6 mb-3">
-                    <label for="dinerAddr" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="dinerAddr" name="address" />
-                  </div>
-                </div>
-
-                <div class="row justify-content-center">
-                  <div class="col-lg-6 mb-3">
-                    <label for="dinerAddrDetail" class="form-label">상세주소</label>
-                    <input
+                  <div class="col-lg-3 mb-3">
+                    <div>
+                      <button class="form-control" id="postCodeSearch" name="postCodeSearch" onclick="postCodeSearch()">주소검색</button>
+                    </div>
+                    <div>
+                      <label for="dinerAddr" class="form-label">주소</label>
+                      <input type="text" class="form-control" id="dinerAddr" name="address" />
+                    </div>
+                    
+                    <div>
+                      <label for="dinerAddrDetail" class="form-label">상세주소</label>
+                      <input
                       type="text"
                       class="form-control"
                       id="dinerAddrDetail"
                       name="addressDetail"
-                    />
+                      />
+                    </div>
                   </div>
+                    <div class="col-lg-3">
+                      <div id="map" style="width: 250px; height: 200px;">                     
+                      </div>
+                    </div>
                 </div>
 
                 <div class="row justify-content-center">
@@ -98,30 +105,16 @@
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
-                    <div class="contents upload-section">
-                      <div class="upload-box">
-                        <div id="drop-file" class="drag-file">
-                          <img
-                            src="https://img.icons8.com/pastel-glyph/2x/image-file.png"
-                            alt="파일 아이콘"
-                            class="image"
-                          />
-                          <p class="message mt-3">Drag files to upload</p>
-                        </div>
-                      </div>
-                      <label class="file-label" for="chooseFile">사진 업로드</label>
+                    <div class="contents upload-section">                      
+                      <label class="file-label" for="uploadFiles">사진 업로드</label>
                       <input
                         name="uploadFiles"
                         class="file"
-                        id="chooseFile"
+                        id="uploadFiles"
                         type="file"
                         multiple
-                        onchange="dropFile.handleFiles(this.files)"
                         accept="image/png, image/jpg, image/jpeg"
                       />
-                      <div id="files" class="files">
-                        <div class="file"></div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -143,10 +136,62 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=앱 키"></script>
     <script>
       const csrfValue = "[[${_csrf.token}]]";
+
+      //지도를 담을 영역
+      var mapContainer = document.getElementById("map"); 
+
+      // 지도 생성 옵션
+    	var mapOptions = { 
+        // 지도의 중심좌표
+	    	center: new kakao.maps.LatLng(33.450701, 126.570667), 
+
+        // 지도의 레벨(확대, 축소 정도)
+		    level: 3 
+	    };
+
+      //지도 생성
+	    var map = new kakao.maps.Map(mapContainer, mapOptions); 
+
+      var geocoder = new kakao.maps.services.Geocoder();
+      // 마커 생성
+      var marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(37.537187, 127.005476),
+          map: map
+      });
+
+      function postCodeSearch(){
+
+        new daum.Postcode({
+          oncomplete: function(data) {
+            var addr = data.address; // 최종 주소 변수
+                // 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("dinerAddr").value = addr;
+                // 주소로 상세 정보를 검색
+                geocoder.addressSearch(data.address, function(results, status) {
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === kakao.maps.services.Status.OK) {
+
+                        var result = results[0]; //첫번째 결과의 값을 활용
+
+                        // 해당 주소에 대한 좌표를 받아서
+                        var coords = new kakao.maps.LatLng(result.y, result.x);
+                        // 지도를 보여준다.
+                        mapContainer.style.display = "block";
+                        map.relayout();
+                        // 지도 중심을 변경한다.
+                        map.setCenter(coords);
+                        // 마커를 결과값으로 받은 위치로 옮긴다.
+                        marker.setPosition(coords)
+                    }
+                });
+          }
+        }).open();
+      }
     </script>
-    <script th:src="@{/js/diner/register.js}"></script>
-    <script th:src="@{/js/diner/upload.js}"></script>
+    <!-- <script th:src="@{/js/diner/register.js}"></script> -->
   </th:block>
 </html>
