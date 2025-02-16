@@ -9,6 +9,7 @@ import java.util.Optional;
 import com.example.mat.entity.BaseEntity;
 import com.example.mat.entity.shin.Member;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"member"})
 @Getter
 @Setter
 @Table(name = "mat_cart")
@@ -42,5 +43,8 @@ public class Cart extends BaseEntity {
     
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();
 
 }

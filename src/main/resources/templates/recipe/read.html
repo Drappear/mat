@@ -58,11 +58,12 @@
           <div
             class="flex items-center justify-between border-b border-neutral-300 pb-2 mb-4"
           >
-            <button
+            <a
+            th:href="@{modify(rno=${recipeDto.rno},page=${requestDto.page},size=${requestDto.size},type=${requestDto.type},keyword=${requestDto.keyword})}"
               class="px-4 py-2 bg-lime-600 text-primary-50 rounded-md hover:bg-lime-700"
             >
               수정버튼
-            </button>
+            </a>
           </div>
           <table class="w-full mb-6 border border-neutral-300">
             <thead>

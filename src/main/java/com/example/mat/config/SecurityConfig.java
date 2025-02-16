@@ -28,19 +28,17 @@ public class SecurityConfig {
                                 .requestMatchers("/recipe/**", "/upload/**").permitAll()
                                 .anyRequest().authenticated());
 
-                // http.formLogin(login ->
-                // login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
-                http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/recipe/list"));
+                http.formLogin(login -> login.loginPage("/member/login").permitAll().defaultSuccessUrl("/diner/list"));
 
                 http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
                 http.logout(logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                                .logoutSuccessUrl("/"));
+                                .logoutSuccessUrl("/diner/list"));
 
                 // CSRF 설정: 게시물 등록 경로에서 비활성화
                 http.csrf(csrf -> csrf
-                                .ignoringRequestMatchers("/board/register", "/board/modify"));
+                                .ignoringRequestMatchers("/board/register", "/board/modify", "/market/cart"));
 
                 return http.build();
         }

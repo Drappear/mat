@@ -1,10 +1,7 @@
 package com.example.mat.service;
 
-import java.util.List;
-
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
-import com.example.mat.dto.market.ProductCategoryDto;
 import com.example.mat.dto.market.ProductDto;
 import com.example.mat.entity.market.Product;
 import com.example.mat.entity.market.ProductCategory;
@@ -15,7 +12,7 @@ public interface ProductService {
 
     PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto);
 
-    List<ProductCategoryDto> getProductCateList(Long cateid);
+    PageResultDto<ProductDto, Product> getProductsByCategory(Long cateid, PageRequestDto requestDto);
 
     // dto > entity
     public default Product dtoToEntity(ProductDto dto) {

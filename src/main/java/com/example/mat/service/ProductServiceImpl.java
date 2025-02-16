@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductCategoryRepository productCategoryRepository;
 
     @Override
     public ProductDto getRow(Long pid) {
@@ -36,20 +36,44 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResultDto<ProductDto, Product> getList(PageRequestDto requestDto) {
-        
-        Pageable pageable = requestDto.getPageable(Sort.by("pid").descending());
+        // 기본 크기 9로 설정
+        int size = 9;
+
+        // 페이지 번호 기본값 설정 (page 값이 1 미만일 경우)
+        int page = (requestDto.getPage() > 0) ? requestDto.getPage() - 1 : 0;
+
+        // Pageable 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by("pid").descending());
+
+        // 데이터 조회
         Page<Product> result = productRepository.findAll(pageable);
 
+        // Entity -> DTO 변환 함수
         Function<Product, ProductDto> fn = (product -> entityToDto(product));
 
+        // PageResultDto 반환
         return new PageResultDto<>(result, fn);
-    }
+                
+        }
 
-    @Override
-    public List<ProductCategoryDto> getProductCateList(Long cateid) {
-      
-    
-        return null;
-    }
+        @Override
+        public PageResultDto<ProductDto, Product> getProductsByCategory(Long cateid, PageRequestDto requestDto) {
+            int page = (requestDto.getPage() > 0) ? requestDto.getPage() - 1 : 0;
+            int size = 9; // 한 페이지에 9개씩 표시
+        
+            // Pageable 객체 생성
+            Pageable pageable = PageRequest.of(page, size, Sort.by("pid").descending());
+        
+            // 특정 카테고리에 해당하는 상품 조회 (페이징 포함)
+            Page<Product> result = productRepository.findByProductCategory_Cateid(cateid, pageable);
+        
+            // Entity -> DTO 변환 함수
+            Function<Product, ProductDto> fn = this::entityToDto;
+        
+            // PageResultDto 반환
+            return new PageResultDto<>(result, fn);
+        }
+
+
 
 }

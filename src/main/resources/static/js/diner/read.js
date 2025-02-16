@@ -101,54 +101,54 @@ const reviewLoaded = () => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      console.log(data.dtoList);
+      console.log("전체 리뷰 ", data.dtoList);
 
       // 도착한 data 화면에 보여주기
 
-      // document.querySelector(".review-cnt").innerHTML = data.length;
+      //document.querySelector(".review-cnt").innerHTML = data.length;
 
-      // if (data.length > 0) {
-      //   reviewList.classList.remove("hidden");
-      // }
+      if (data.length > 0) {
+        reviewList.classList.remove("hidden");
+      }
 
       let result = "";
 
-      // data.dtoList.forEach((review) => {
-      //   console.log(review);
+      data.dtoList.forEach((review) => {
+        console.log(review);
 
-      // result += `
-      //   <li class="review-list-item">
-      //     <div class="review-reviewer-img">
-      //       <img src="https://placehold.co/50x50" alt="" />
-      //     </div>
-      //     <table class="review-table">
-      //       <tr>
-      //         <td>작성자${review.nickname}</td>
-      //         <td th:text="${review.regDate}">작성일</td>
-      //       </tr>
-      //       <tr>
-      //         <td>총점</td>
-      //         <td th:text="${review.tasteScore}">맛</td>
-      //         <td th:text="${review.priceScore}">가격</td>
-      //         <td th:text="${review.serviceScore}">서비스</td>
-      //       </tr>
-      //     </table>
-      //     <div class="row" th:text="${review.content}">review text</div>
-      //     <div class="row">
-      //       `;
-      // review.dinerImageDtos.forEach(
-      //   `<img th:src="|/dfup/display?fileName=${reviewImageURL}|" th:if="${
-      //     path != null
-      //   }" width="80px" height="60px"/>`
-      // );
-      // `
-      //     </div>
-      //   </li>
-      //     `;
-      // });
+        result += `
+        <li class="review-list-item">
+          <div class="review-reviewer-img">
+            <img src="https://placehold.co/50x50" alt="" />
+          </div>
+          <table class="review-table">
+            <tr>
+              <td>작성자${review.nickname}</td>
+              <td th:text="${review.regDate}">작성일</td>
+            </tr>
+            <tr>
+              <td>총점</td>
+              <td th:text="${review.tasteScore}">맛</td>
+              <td th:text="${review.priceScore}">가격</td>
+              <td th:text="${review.serviceScore}">서비스</td>
+            </tr>
+          </table>
+          <div class="row" th:text="${review.content}">review text</div>
+          <div class="row">
+            `;
+        review.dinerImageDtos.forEach(
+          `<img th:src="|/dfup/display?fileName=${review.reviewImageURL}|" th:if="${
+            path != null
+          }" width="80px" height="60px"/>`
+        );
+        `
+          </div>
+        </li>
+          `;
+      });
 
-      // 리뷰 영역에 보여주기
-      // reviewList.insertAdjacentHTML("beforeend", result);
+      //리뷰 영역에 보여주기
+      reviewList.insertAdjacentHTML("beforeend", result);
     });
 };
 
