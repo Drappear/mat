@@ -33,13 +33,7 @@ public class Image extends BaseEntity {
     @Id
     private Long inum;
 
-    private String uuid;
-
-    private String imgName;
-
     private String path;
-
-    private int imgCate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;

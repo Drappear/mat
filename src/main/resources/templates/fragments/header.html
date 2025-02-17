@@ -32,6 +32,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        margin: 15px;
         padding: 10px;
         background: linear-gradient(to right, #7fad39, #95c24d);
         color: white;
@@ -218,7 +219,7 @@
         </div>
         <div class="col-lg-3">
           <div class="header-member-container">
-            <div class="header__cart">
+            <div class="header__cart" sec:authorize="isAuthenticated()">
               <ul>
                 <li>
                   <a href="#">

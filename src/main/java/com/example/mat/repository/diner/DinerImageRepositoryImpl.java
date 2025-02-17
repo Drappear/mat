@@ -24,6 +24,9 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         implements DinerImageRepository {
     public DinerImageRepositoryImpl() {
@@ -44,9 +47,8 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         // JPQLQuery<Double> rAvg =
         // JPAExpressions.select(review.grade.avg().round()).from(review)
         // .where(review.diner.eq(dinerImage.diner));
-
         JPQLQuery<Tuple> tuple = query.select(diner, image)
-                .where(image.diner.did.eq(did).and(image.imgCate.eq(1)))
+                .where(image.diner.did.eq(did).and(image.path.substring(10, 17).contains("diner")))
                 .orderBy(image.inum.desc());
 
         List<Tuple> result = tuple.fetch();
@@ -72,7 +74,8 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Long> inum = JPAExpressions.select(
                 image.inum.max()).from(
                         image)
-                .where(image.imgCate.eq(1))
+                .where(image.path.substring(10, 17).contains(
+                        "diner"))
                 .groupBy(image.diner);
 
         JPQLQuery<Tuple> tuple = query.select(
@@ -137,7 +140,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Tuple> tuple = query.select(
                 dinerReview,
                 image)
-                .where(image.imgCate.eq(2).and(dinerReview.diner.did.eq(did)))
+                .where(image.path.substring(10, 17).contains("review").and(dinerReview.diner.did.eq(did)))
                 .orderBy(image.inum.desc());
 
         // rvid > 0 조건

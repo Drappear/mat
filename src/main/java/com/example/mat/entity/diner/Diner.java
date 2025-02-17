@@ -1,5 +1,7 @@
 package com.example.mat.entity.diner;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.example.mat.entity.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -38,7 +40,10 @@ public class Diner extends BaseEntity {
     private String content;
     private String menu;
     private String workTime;
+
+    @ColumnDefault("'0'")
     private Long viewCount;
+
     private String regNum;
 
     @ManyToOne(fetch = FetchType.LAZY)

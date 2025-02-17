@@ -3,6 +3,7 @@ package com.example.mat.controller;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
+import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.service.DinerService;
 
 import lombok.RequiredArgsConstructor;
@@ -77,36 +79,46 @@ public class DinerController {
         log.info("식당 등록 {}", dinerDto);
 
         Long did = dinerService.createDiner(dinerDto);
-        
-        String uploadId = did.toString();
 
-        for (MultipartFile multipartFile : uploadFiles) {            
+        log.info("식당 등록 {}", did);
+
+        List<DinerImageDto> dinerImageDtos = new ArrayList<>();
+
+        for (MultipartFile multipartFile : uploadFiles) {
 
             // 사용자가 올린 파일명
             String originName = multipartFile.getOriginalFilename();
             log.info("파일명 :  {}", originName);
 
             // 저장 폴더 생성
-            String saveFolderPath = makeFolder("diner", uploadId);
+            String saveFolderPath = makeFolder("diner", did);
 
-            // 파일 저장 - uuid(중복 해결)
+            // 파일명 중복 해결 - UUID
             String uuid = UUID.randomUUID().toString();
 
-            String saveName = uploadPath + File.separator + saveFolderPath + File.separator + uuid + "_" + originName;
+            String saveName = saveFolderPath + File.separator + uuid + "_" + originName;
 
             Path savePath = Paths.get(saveName);
 
             try {
-                // 폴더 저장
+                // 폴더에 파일 저장
                 multipartFile.transferTo(savePath);
+                log.info("파일 저장 완료");
+                DinerImageDto dinerImageDto = new DinerImageDto();
+                dinerImageDto.setDid(did);
+                dinerImageDto.setPath(savePath.toString());
+                dinerImageDtos.add(dinerImageDto);
 
             } catch (Exception e) {
                 e.printStackTrace();
+                log.info("파일 저장 실패");
+                dinerService.deleteDiner(did);
+                removeFolder("diner", did);
             }
+            dinerDto.setDinerImageDtos(dinerImageDtos);
+            dinerService.updateDiner(dinerDto);
 
         }
-
-        log.info("식당 등록 완료 {}", did);
 
         rttr.addAttribute("did", did);
         rttr.addAttribute("page", 1);
@@ -164,15 +176,38 @@ public class DinerController {
         log.info("get diner review 페이지 요청");
     }
 
-    private String makeFolder(String uploadPageName, String uploadId) {
-        String dirStr = uploadPageName + "/" + uploadId;
+    private String makeFolder(String uploadPageName, Long uploadId) {
+        String dirStr = "c:\\upload\\" + uploadPageName + "/" + uploadId;
 
-        log.info(dirStr + " 폴더 생성");
-        File dirs = new File(uploadPageName, uploadId);
+        File dirs = new File(dirStr);
+
+        // 생성할 폴더 존재 여부
         if (!dirs.exists()) {
             dirs.mkdirs();
+            log.info(dirStr + " 폴더 생성");
         }
 
         return dirStr;
+    }
+
+    private void removeFolder(String uploadPageName, Long uploadId) {
+        String dirStr = "c:\\upload\\" + uploadPageName + "/" + uploadId;
+
+        File dirs = new File(dirStr);
+
+        // 삭제할 폴더 존재 여부
+        while (dirs.exists()) {
+            File[] files = dirs.listFiles();
+
+            // 하위 파일 삭제
+            for (File file : files) {
+                file.delete();
+            }
+
+            if (files.length == 0 && dirs.isDirectory()) { // 하위 파일이 없는지와 폴더인지 확인 후 폴더 삭제
+                dirs.delete();
+                log.info(dirStr + " 폴더 삭제");
+            }
+        }
     }
 }

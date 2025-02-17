@@ -2,8 +2,8 @@
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
-    <link rel="stylesheet" th:href="@{/css/diner/upload.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/register.css}"/>
+    <link rel="stylesheet" th:href="@{/css/diner/upload.css}"/>
   </th:block>
   <div layout:fragment="content">
     <section class="diner-register">
@@ -19,68 +19,45 @@
                   <div class="row align-items-center mt-3">
                     <div class="col col-lg-1">
                       <select class="form-select" name="categoryName" id="categoryName">
-                        <option selected>분류</option>
-                        <option
-                          th:each="category : ${categories}"
-                          th:value="${category.dcid}"
-                          th:text="${category.name}"
-                          th:selected="${dinerDto.categoryName} == ${category.name}"
-                        ></option>
+                        <option selected="selected">분류</option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.name}"></option>
                       </select>
                     </div>
                   </div>
                   <div class="col col-lg-5 mb-3">
                     <label for="dinerName" class="form-label">이름</label>
-                    <input type="text" class="form-control" id="dinerName" name="name" />
-                  </div>
-                </div>
-
-                <div class="row justify-content-center mb-3">
-                  <div class="col-lg-3 mb-3">
-                    <label for="dinerPhone" class="form-label">전화번호</label>
-                    <input type="text" class="form-control" id="dinerPhone" name="phone" />
-                  </div>
-                  <div class="col-lg-3 mb-3">
-                    <label for="dinerRegNum" class="form-label">사업자 등록번호</label>
-                    <input type="text" class="form-control" id="dinerRegNum" name="regNum" />
+                    <input type="text" class="form-control" id="dinerName" name="name"/>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-3 mb-3">
-                    <div>
-                      <button class="form-control" id="postCodeSearch" name="postCodeSearch" onclick="postCodeSearch()">주소검색</button>
-                    </div>
-                    <div>
-                      <label for="dinerAddr" class="form-label">주소</label>
-                      <input type="text" class="form-control" id="dinerAddr" name="address" />
-                    </div>
-                    
-                    <div>
-                      <label for="dinerAddrDetail" class="form-label">상세주소</label>
-                      <input
-                      type="text"
-                      class="form-control"
-                      id="dinerAddrDetail"
-                      name="addressDetail"
-                      />
-                    </div>
+                    <label for="dinerPhone" class="form-label">전화번호</label>
+                    <input type="text" class="form-control" id="dinerPhone" name="phone"/>
                   </div>
-                    <div class="col-lg-3">
-                      <div id="map" style="width: 250px; height: 200px;">                     
-                      </div>
-                    </div>
+                  <div class="col-lg-3 mb-3">
+                    <label for="dinerRegNum" class="form-label">사업자 등록번호</label>
+                    <input type="text" class="form-control" id="dinerRegNum" name="regNum"/>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerAddr" class="form-label">주소</label>
+                    <input type="text" class="form-control" id="dinerAddr" name="address" onclick="dinerPostCodeSearch()"/>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <label for="dinerAddrDetail" class="form-label">상세주소</label>
+                    <input type="text" class="form-control" id="dinerAddrDetail" name="addressDetail"/>
+                  </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerDesc" class="form-label">소개글</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerDesc"
-                      name="content"
-                      rows="5"
-                    ></textarea>
+                    <textarea class="form-control" id="dinerDesc" name="content" rows="5"></textarea>
                   </div>
                 </div>
 
@@ -94,27 +71,15 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerTime" class="form-label">영업 시간</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerTime"
-                      name="workTime"
-                      rows="3"
-                    ></textarea>
+                    <textarea class="form-control" id="dinerTime" name="workTime" rows="3"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
-                    <div class="contents upload-section">                      
+                    <div class="contents upload-section">
                       <label class="file-label" for="uploadFiles">사진 업로드</label>
-                      <input
-                        name="uploadFiles"
-                        class="file"
-                        id="uploadFiles"
-                        type="file"
-                        multiple
-                        accept="image/png, image/jpg, image/jpeg"
-                      />
+                      <input name="uploadFiles" class="file" id="uploadFiles" type="file" multiple="multiple" accept="image/png, image/jpg, image/jpeg"/>
                     </div>
                   </div>
                 </div>
@@ -137,61 +102,27 @@
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=앱 키"></script>
+
     <script>
       const csrfValue = "[[${_csrf.token}]]";
 
-      //지도를 담을 영역
-      var mapContainer = document.getElementById("map"); 
+      function dinerPostCodeSearch() {
 
-      // 지도 생성 옵션
-    	var mapOptions = { 
-        // 지도의 중심좌표
-	    	center: new kakao.maps.LatLng(33.450701, 126.570667), 
+        new daum
+          .Postcode({
+            oncomplete: function (data) {
+              var addr = data.address; // 최종 주소 변수
+              // 주소 정보를 해당 필드에 넣는다.
+              document
+                .getElementById("dinerAddr")
+                .value = addr;
 
-        // 지도의 레벨(확대, 축소 정도)
-		    level: 3 
-	    };
-
-      //지도 생성
-	    var map = new kakao.maps.Map(mapContainer, mapOptions); 
-
-      var geocoder = new kakao.maps.services.Geocoder();
-      // 마커 생성
-      var marker = new kakao.maps.Marker({
-          position: new kakao.maps.LatLng(37.537187, 127.005476),
-          map: map
-      });
-
-      function postCodeSearch(){
-
-        new daum.Postcode({
-          oncomplete: function(data) {
-            var addr = data.address; // 최종 주소 변수
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("dinerAddr").value = addr;
-                // 주소로 상세 정보를 검색
-                geocoder.addressSearch(data.address, function(results, status) {
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === kakao.maps.services.Status.OK) {
-
-                        var result = results[0]; //첫번째 결과의 값을 활용
-
-                        // 해당 주소에 대한 좌표를 받아서
-                        var coords = new kakao.maps.LatLng(result.y, result.x);
-                        // 지도를 보여준다.
-                        mapContainer.style.display = "block";
-                        map.relayout();
-                        // 지도 중심을 변경한다.
-                        map.setCenter(coords);
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords)
-                    }
-                });
-          }
-        }).open();
+            }
+          })
+          .open();
       }
     </script>
     <!-- <script th:src="@{/js/diner/register.js}"></script> -->
   </th:block>
+
 </html>

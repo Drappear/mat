@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.example.mat.dto.diner.DinerImageDto;
-import com.example.mat.dto.market.ImageDto;
 import com.example.mat.dto.recipe.RecipeImageDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.recipe.RecipeImage;
@@ -52,7 +51,7 @@ public class FileCheckTask {
     // db에서 전일자 이미지 파일 목록 추출
     List<RecipeImage> oldRecipeImages = recipeImageRepository.findOldFileAll();
     List<Image> oldImages = imageRepository.findOldFileAll();
-    
+
     // entity => dto
     List<RecipeImageDto> recipeImageDtos = oldRecipeImages.stream().map(recipeImage -> {
       return RecipeImageDto.builder()
@@ -65,19 +64,16 @@ public class FileCheckTask {
 
     List<DinerImageDto> dinerImageDtos = oldImages.stream().map(dinerImage -> {
       return DinerImageDto.builder()
-              .inum(dinerImage.getInum())
-              .uuid(dinerImage.getUuid())
-              .imgName(dinerImage.getImgName())
-              .path(dinerImage.getPath())
-              .build();
+          .inum(dinerImage.getInum())
+          .path(dinerImage.getPath())
+          .build();
     }).collect(Collectors.toList());
-
 
     // uplod/2024/12/03/~~~~~~_1.jpg
     List<Path> filePaths = recipeImageDtos.stream()
         .map(dto -> Paths.get(uploadPath, dto.getImageURL(), dto.getUuid() + "_" + dto.getImgName()))
         .collect(Collectors.toList());
-        List<Path> dinerFilePaths = dinerImageDtos.stream()
+    List<Path> dinerFilePaths = dinerImageDtos.stream()
         .map(dto -> Paths.get(uploadPath, dto.getImageURL(), dto.getUuid() + "_" + dto.getImgName()))
         .collect(Collectors.toList());
 
