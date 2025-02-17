@@ -55,16 +55,12 @@ public interface DinerService {
                 .phone(diner.getPhone())
                 .regNum(diner.getRegNum())
                 .regDate(diner.getRegDate())
-                // .viewCount(viewCount)
                 .build();
 
         List<DinerImageDto> dinerImageDtos = dinerImages.stream().map(dinerImage -> {
             return DinerImageDto.builder()
                     .inum(dinerImage.getInum())
-                    .uuid(dinerImage.getUuid())
-                    .imgName(dinerImage.getImgName())
                     .path(dinerImage.getPath())
-                    .imgCate(dinerImage.getImgCate())
                     .build();
         }).collect(Collectors.toList());
 
@@ -97,10 +93,7 @@ public interface DinerService {
         if (dinerImageDtos != null && dinerImageDtos.size() > 0) {
             List<Image> images = dinerImageDtos.stream().map(dto -> {
                 Image image = Image.builder()
-                        .uuid(dto.getUuid())
-                        .imgName(dto.getImgName())
                         .path(dto.getPath())
-                        .imgCate(dto.getImgCate())
                         .diner(diner)
                         .build();
                 return image;
