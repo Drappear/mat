@@ -115,10 +115,12 @@ public class DinerController {
                 dinerService.deleteDiner(did);
                 removeFolder("diner", did);
             }
-            dinerDto.setDinerImageDtos(dinerImageDtos);
-            dinerService.updateDiner(dinerDto);
+            
+          }
 
-        }
+        dinerDto.setDinerImageDtos(dinerImageDtos);
+        dinerDto.setDid(did);
+        dinerService.updateDiner(dinerDto);
 
         rttr.addAttribute("did", did);
         rttr.addAttribute("page", 1);
@@ -134,6 +136,7 @@ public class DinerController {
             Model model) {
         log.info("get diner modify 페이지 요청");
         DinerDto dinerDto = dinerService.getDinerDetail(did);
+        log.info("수정 글 이미지 {}", dinerDto.getDinerImageDtos());
         List<DinerCategoryDto> categories = dinerService.getCategoryList();
 
         model.addAttribute("categories", categories);

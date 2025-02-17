@@ -74,7 +74,7 @@ public class FileCheckTask {
         .map(dto -> Paths.get(uploadPath, dto.getImageURL(), dto.getUuid() + "_" + dto.getImgName()))
         .collect(Collectors.toList());
     List<Path> dinerFilePaths = dinerImageDtos.stream()
-        .map(dto -> Paths.get(uploadPath, dto.getImageURL(), dto.getUuid() + "_" + dto.getImgName()))
+        .map(dto -> Paths.get(uploadPath))
         .collect(Collectors.toList());
 
     // uplod/2024/12/03/s_~~~~~~_1.jpg

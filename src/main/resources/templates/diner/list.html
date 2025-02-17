@@ -75,10 +75,11 @@
                     <input type="hidden" name="page" value="1"/>
                     <input type="hidden" name="size" th:value="${requestDto.size}"/>
                     <input type="hidden" name="type" value="n"/>
-                    <input type="text" id="keyword" name="keyword" th:value="${requestDto.keyword}"/>
+                    <input type="text" id="keyword" name="keyword"/>
                     <button class="btn btn-outline-dark">
                       <i class="fa-solid fa-magnifying-glass"></i>
-                      검색</button>
+                      <span>검색</span>
+                    </button>
                   </form>
                 </div>
               </div>

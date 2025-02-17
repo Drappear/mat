@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 
 public interface DinerImageRepository {
