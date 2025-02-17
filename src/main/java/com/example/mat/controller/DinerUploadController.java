@@ -36,53 +36,13 @@ public class DinerUploadController {
     @Value("${com.example.mat.upload.path}")
     private String uploadPath;
 
-    // @PostMapping("/upload")
-    // public ResponseEntity<List<UploadResultDto>> postDinerFileUpload(MultipartFile[] uploadFiles, String uploadPageName
-    //        ) {
-
-    //     List<UploadResultDto> UploadResultDtos = new ArrayList<>();
-
-    //     for (MultipartFile multipartFile : uploadFiles) {
-    //         // 이미지 파일 여부 확인
-    //         if (!multipartFile.getContentType().startsWith("image")) {
-    //             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    //         }
-
-    //         // 사용자가 올린 파일명
-    //         String originName = multipartFile.getOriginalFilename();
-
-    //         // 저장 폴더 생성
-    //         String saveFolderPath = makeFolder(uploadPageName, uploadId);
-
-    //         // 파일 저장 - uuid(중복 해결)
-    //         String uuid = UUID.randomUUID().toString();
-
-    //         String saveName = uploadPath + File.separator + saveFolderPath + File.separator + uuid + "_" + originName;
-
-    //         Path savePath = Paths.get(saveName);
-
-    //         try {
-    //             // 폴더 저장
-    //             multipartFile.transferTo(savePath);
-
-    //         } catch (Exception e) {
-    //             e.printStackTrace();
-    //         }
-
-    //         // 저장된 파일 정보 추가
-    //         UploadResultDtos.add(new UploadResultDto(uuid, originName, saveFolderPath));
-    //     }
-
-    //     return new ResponseEntity<List<UploadResultDto>>(UploadResultDtos, HttpStatus.OK);
-    // }
-
     @GetMapping("/display")
     public ResponseEntity<byte[]> getFile(String fileName, String size) {
         ResponseEntity<byte[]> result = null;
 
         try {
             String srcFileName = URLDecoder.decode(fileName, "utf-8");
-            File file = new File(uploadPath + File.separator + srcFileName);
+            File file = new File(srcFileName);
 
             if (size != null && size.equals("1")) {
                 file = new File(file.getParent(), file.getName().substring(2));

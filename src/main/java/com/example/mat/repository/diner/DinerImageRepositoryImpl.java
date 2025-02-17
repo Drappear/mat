@@ -1,6 +1,5 @@
 package com.example.mat.repository.diner;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,17 +35,10 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
     @Override
     public List<Object[]> getDinerRow(Long did) {
         QImage image = QImage.image;
-        // QReview review = QReview.review;
         QDiner diner = QDiner.diner;
 
         JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
-        // JPQLQuery<Long> rCnt =
-        // JPAExpressions.select(review.countDistinct()).from(review)
-        // .where(review.diner.eq(dinerImage.diner));
-        // JPQLQuery<Double> rAvg =
-        // JPAExpressions.select(review.grade.avg().round()).from(review)
-        // .where(review.diner.eq(dinerImage.diner));
         JPQLQuery<Tuple> tuple = query.select(diner, image)
                 .where(image.diner.did.eq(did).and(image.path.substring(10, 17).contains("diner")))
                 .orderBy(image.inum.desc());

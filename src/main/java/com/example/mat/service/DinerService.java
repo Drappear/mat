@@ -100,7 +100,7 @@ public interface DinerService {
             }).collect(Collectors.toList());
 
             resultMap.put("dinerImages", images);
-        }
+          }
 
         return resultMap;
     }
