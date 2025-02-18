@@ -121,6 +121,7 @@
               </div>
             </div>
 
+            <!-- 페이지네이션 -->
             <nav aria-label="Page navigation">
               <ul class="pagination justify-content-center">
                 <li
@@ -129,12 +130,13 @@
                 >
                   <a
                     class="page-link"
-                    th:href="@{/board/list(page=${boards.number - 1})}"
+                    th:href="@{/board/list(page=${boards.number - 1}, keyword=${param.keyword}, category=${param.category})}"
                     aria-label="Previous"
                   >
                     Previous
                   </a>
                 </li>
+
                 <li
                   th:each="pageNum : ${#numbers.sequence(1, boards.totalPages)}"
                   th:classappend="${pageNum == boards.number + 1} ? 'active'"
@@ -142,17 +144,18 @@
                 >
                   <a
                     class="page-link"
-                    th:href="@{/board/list(page=${pageNum - 1})}"
+                    th:href="@{/board/list(page=${pageNum - 1}, keyword=${param.keyword}, category=${param.category})}"
                     th:text="${pageNum}"
                   ></a>
                 </li>
+
                 <li
                   th:classappend="${boards.hasNext()} ? '' : 'disabled'"
                   class="page-item"
                 >
                   <a
                     class="page-link"
-                    th:href="@{/board/list(page=${boards.number + 1})}"
+                    th:href="@{/board/list(page=${boards.number + 1}, keyword=${param.keyword}, category=${param.category})}"
                     aria-label="Next"
                   >
                     Next
