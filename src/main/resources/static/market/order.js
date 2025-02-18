@@ -12,8 +12,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (checkbox.checked) {
         const row = checkbox.closest("tr");
         const quantityInput = row.querySelector(".quantity-input");
+
+        if (!quantityInput.value) {
+          alert("수량을 입력해주세요.");
+          return;
+        }
+
         selectedIds.push(checkbox.value);
-        selectedQuantities.push(quantityInput.value); // 최신 수량 가져오기
+        selectedQuantities.push(quantityInput.value); // 수량 데이터 수집
       }
     });
 
