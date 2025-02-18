@@ -2,7 +2,7 @@
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/register.css}"/>
   </th:block>
   <div layout:fragment="content">
     <section class="diner-register">
@@ -25,7 +25,7 @@
                   </div>
                   <div class="col col-lg-5 mb-3">
                     <label for="dinerName" class="form-label">이름</label>
-                    <input type="text" class="form-control" id="dinerName" name="name" th:value="${dinerDto.name}" />
+                    <input type="text" class="form-control" id="dinerName" name="name" th:value="${dinerDto.name}"/>
                   </div>
                 </div>
 
@@ -50,27 +50,14 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerAddrDetail" class="form-label">상세주소</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="dinerAddrDetail"
-                      name="addressDetail"
-                      th:value="${dinerDto.addressDetail}"
-                    />
+                    <input type="text" class="form-control" id="dinerAddrDetail" name="addressDetail" th:value="${dinerDto.addressDetail}"/>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerDesc" class="form-label">소개글</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerDesc"
-                      name="content"
-                      rows="5"
-                      th:value="${dinerDto.content}"
-                      th:text="${dinerDto.content}"
-                    ></textarea>
+                    <textarea class="form-control" id="dinerDesc" name="content" rows="5" th:value="${dinerDto.content}" th:text="${dinerDto.content}"></textarea>
                   </div>
                 </div>
 
@@ -84,34 +71,29 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerTime" class="form-label">영업 시간</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerTime"
-                      name="workTime"
-                      rows="3"
-                    th:value="${dinerDto.workTime}" th:text="${dinerDto.workTime}"></textarea>
+                    <textarea class="form-control" id="dinerTime" name="workTime" rows="3" th:value="${dinerDto.workTime}" th:text="${dinerDto.workTime}"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
-                    <div class="contents upload-section">                      
+                    <div class="contents upload-section">
                       <label class="file-label" for="uploadFiles">사진 업로드</label>
-                      <input
-                        name="uploadFiles"
-                        class="file"
-                        id="uploadFiles"
-                        type="file"
-                        multiple
-                        accept="image/png, image/jpg, image/jpeg"
-                      />
-                      <div id="imageFilesDiv">
-                        <!-- <th:block th:each="image : ${dinerDto.dinerImageDto}">
-                          <div>
-                            <img th:src="|/dfup/display?fileName=${image.path}|" th:if="${image.size() > 0 && image.path != null}" alt="" loading="lazy" width="220px" height="150px"/>
-                          </div>
-                          </th:block> -->
-                      </div>
+                      <input name="uploadFiles" class="file" id="uploadFiles" type="file" multiple="multiple" accept="image/png, image/jpg, image/jpeg"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <div id="imageFilesDiv">
+                      <ul>
+                        <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+                          <img th:attr="data-file=${dinerImage.getImageURL()}" th:src="|/dfup/display?fileName=${dinerImage.getImageURL()}|" th:if="${dinerImage.path != null}" alt="" class="block" width="120px" height="100px"/>
+                          <a th:href="${dinerImage.getImageURL()}" data-file="">
+                            <i class="fa-solid fa-xmark"></i>
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -121,7 +103,7 @@
                     <div class="row justify-content-center">
                       <button type="submit" class="btn btn-primary m-3">수정하기</button>
                       <button type="button" class="btn btn-danger m-3" id="delBtn">삭제</button>
-                      <button type="button" class="btn btn-success m-3">목록이동</button>
+                      <button type="button" class="btn btn-success m-3" id="listBtn">목록이동</button>
                     </div>
                   </div>
                 </div>
@@ -138,6 +120,7 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
       const csrfValue = "[[${_csrf.token}]]";
+      const did = "[[${dinerDto.did}]]";
 
       function dinerPostCodeSearch() {
 
@@ -157,4 +140,5 @@
     </script>
     <script th:src="@{/js/diner/modify.js}"></script>
   </th:block>
+
 </html>

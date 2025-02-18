@@ -121,4 +121,11 @@ public class DinerServiceImpl implements DinerService {
     return result.stream().map(c -> entityToDto(c)).collect(Collectors.toList());
   }
 
+  @Transactional
+  @Override
+  public void deleteDinerImage(String filePath) {
+    log.info("식당 이미지 삭제 : {}", filePath);
+    imageRepository.deleteByPath(filePath);
+  }
+
 }

@@ -32,6 +32,9 @@ public interface DinerService {
     // 식당 삭제
     void deleteDiner(Long did);
 
+    // 식당 이미지 삭제
+    void deleteDinerImage(String filePath);
+
     List<DinerCategoryDto> getCategoryList();
 
     public default DinerCategoryDto entityToDto(DinerCategory entity) {
@@ -100,7 +103,7 @@ public interface DinerService {
             }).collect(Collectors.toList());
 
             resultMap.put("dinerImages", images);
-          }
+        }
 
         return resultMap;
     }

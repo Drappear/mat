@@ -37,6 +37,9 @@ public class DinerController {
     @Value("${com.example.mat.upload.path}")
     private String uploadPath;
 
+    @Value("${kakaoApp}")
+    private String kakaoApp;
+
     private final DinerService dinerService;
 
     @GetMapping("/list")
@@ -61,6 +64,7 @@ public class DinerController {
         log.info("get diner read 페이지 요청");
         DinerDto dinerDto = dinerService.getDinerDetail(did);
         model.addAttribute("dinerDto", dinerDto);
+        model.addAttribute("kakaoApp", kakaoApp);
     }
 
     @GetMapping("/register")
@@ -115,8 +119,8 @@ public class DinerController {
                 dinerService.deleteDiner(did);
                 removeFolder("diner", did);
             }
-            
-          }
+
+        }
 
         dinerDto.setDinerImageDtos(dinerImageDtos);
         dinerDto.setDid(did);
@@ -145,7 +149,7 @@ public class DinerController {
 
     @PostMapping("/modify")
     public String postDinerModify(DinerDto dinerDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
-            RedirectAttributes rttr) {
+            RedirectAttributes rttr, @RequestParam(value = "uploadFiles") MultipartFile[] uploadFiles) {
         log.info("식당 정보 수정 {}", dinerDto);
 
         Long did = dinerService.updateDiner(dinerDto);

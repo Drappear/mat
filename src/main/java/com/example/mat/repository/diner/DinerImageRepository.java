@@ -24,5 +24,9 @@ public interface DinerImageRepository {
   @Query("DELETE FROM Image di WHERE di.diner = :diner")
   void deleteByDiner(Diner diner);
 
-  
+  // path 제거
+  @Modifying
+  @Query("DELETE FROM Image di WHERE di.path = :path")
+  void deleteByPath(String path);
+
 }
