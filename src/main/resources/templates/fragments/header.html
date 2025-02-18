@@ -2,7 +2,7 @@
 <html lang="en">
   <!-- Header Section Begin -->
   <header class="header" th:fragment="header">
-    <link rel="stylesheet" th:href="@{/css/headerLogo.css}"/>
+    <link rel="stylesheet" th:href="@{/css/headerLogo.css}" />
     <style>
       /* 헤더 카트 영역 스타일링 */
       .header__cart {
@@ -14,7 +14,7 @@
       /* 메인 프로필 컨테이너 */
       .header__top__right__auth {
         position: relative;
-        margin-left: 25px;
+        margin-left: 0px;
       }
 
       /* 비로그인 상태 로그인 버튼 */
@@ -163,7 +163,7 @@
         <div class="col-lg-3">
           <div class="header__logo">
             <a th:href="@{/main}">
-              <img th:src="@{/assets/img/logo.png}" class="logo" alt=""/>
+              <img th:src="@{/assets/img/logo.png}" class="logo" alt="" />
             </a>
           </div>
         </div>
@@ -182,23 +182,7 @@
               <li>
                 <a th:href="@{/diner/list}">Diner</a>
               </li>
-              <li>
-                <a href="#">Pages</a>
-                <ul class="header__menu__dropdown">
-                  <li>
-                    <a href="./shop-details.html">Shop Details</a>
-                  </li>
-                  <li>
-                    <a href="./shoping-cart.html">Shoping Cart</a>
-                  </li>
-                  <li>
-                    <a href="./checkout.html">Check Out</a>
-                  </li>
-                  <li>
-                    <a href="./blog-details.html">Blog Details</a>
-                  </li>
-                </ul>
-              </li>
+
               <li>
                 <a th:href="@{/board/list}">Forum</a>
                 <ul class="header__menu__dropdown">
@@ -213,26 +197,25 @@
                   </li>
                 </ul>
               </li>
-              <li>
-                <a href="./contact.html">Contact</a>
-              </li>
             </ul>
           </nav>
         </div>
         <div class="col-lg-3">
           <div class="header__cart">
-            <ul>
+            <!-- <ul>
               <li>
                 <a href="#">
                   <i class="fa fa-heart"></i>
-                  <span>1</span></a>
+                  <span>1</span></a
+                >
               </li>
               <li>
                 <a href="#">
                   <i class="fa fa-shopping-bag"></i>
-                  <span>3</span></a>
+                  <span>3</span></a
+                >
               </li>
-            </ul>
+            </ul> -->
             <div class="header__top__right__auth">
               <!-- 로그인하지 않은 사용자를 위한 Login 버튼 -->
               <a th:href="@{/member/login}" sec:authorize="!isAuthenticated()">
@@ -242,28 +225,52 @@
 
               <a sec:authorize="isAuthenticated()">
                 <div>
-                  <div id="profileForm" class="profile-photo" style="display: flex; align-items: center; gap: 5px">
-                    <img alt="" th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto != null}" style="
+                  <div
+                    id="profileForm"
+                    class="profile-photo"
+                    style="display: flex; align-items: center; gap: 5px"
+                  >
+                    <img
+                      alt=""
+                      th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|"
+                      loading="lazy"
+                      th:if="${#authentication.principal.memberDto.memberImageDto != null}"
+                      style="
                         width: 50px;
                         height: 50px;
                         border-radius: 50%;
                         object-fit: cover;
-                      "/>
-                    <img alt="" th:src="@{/images/default-profile.png}" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto == null}" style="
+                      "
+                    />
+                    <img
+                      alt=""
+                      th:src="@{/images/default-profile.png}"
+                      loading="lazy"
+                      th:if="${#authentication.principal.memberDto.memberImageDto == null}"
+                      style="
                         width: 50px;
                         height: 50px;
                         border-radius: 50%;
                         object-fit: cover;
-                      "/>
-                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                    <a th:href="@{/member/profile}" th:text="${#authentication.principal.memberDto.nickname + ' 님'}" style="margin-left: 5px"></a>
+                      "
+                    />
+                    <div
+                      class="absolute inset-0 rounded-full shadow-inner"
+                      aria-hidden="true"
+                    ></div>
+                    <a
+                      th:href="@{/member/profile}"
+                      th:text="${#authentication.principal.memberDto.nickname + ' 님'}"
+                      style="margin-left: 5px"
+                    ></a>
                   </div>
                 </div>
 
                 <!-- 로그인한 사용자를 위한 Log out 버튼 -->
                 <a th:href="@{/member/logout}">
                   <i class="fa fa-sign-out"></i>
-                  Log out</a >
+                  Log out</a
+                >
               </a>
             </div>
           </div>
