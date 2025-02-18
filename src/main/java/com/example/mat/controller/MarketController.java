@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.market.CartDetailDto;
 import com.example.mat.dto.market.CartItemDto;
 import com.example.mat.dto.market.OrderDto;
+import com.example.mat.dto.market.OrderRequestDto;
 import com.example.mat.dto.market.ProductDto;
 import com.example.mat.dto.shin.AuthMemberDto;
 import com.example.mat.dto.shin.MemberDto;
@@ -37,6 +39,7 @@ import com.example.mat.service.ProductService;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Log4j2
 @RequestMapping("/market")
@@ -135,8 +138,8 @@ public class MarketController {
         log.info("선택된 장바구니 상품 IDs: {}", selectedCartItemIds);
 
         // ✅ 사용자 정보 가져오기
-        // MemberDto memberDto = memberService.getMemdberById(memberId);
-        // model.addAttribute("member", memberDto); //
+        MemberDto memberDto = memberService.getMemberById(memberId);
+        model.addAttribute("member", memberDto); //
 
         if (selectedCartItemIds == null || selectedCartItemIds.isEmpty()) {
             model.addAttribute("error", "장바구니에서 상품을 선택해주세요.");
@@ -172,43 +175,43 @@ public class MarketController {
     // 주문 완료 후, 주문 ID 반환
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/order")
-    public ResponseEntity<?> createOrder(
-            @RequestParam("selectedCartItemIds") String selectedCartItemIds,
-            @RequestParam("selectedQuantities") String selectedQuantities,
-            @RequestParam("recipientName") String recipientName,
-            @RequestParam("phoneNumber") String phoneNumber,
-            @RequestParam("zipcode") String zipcode,
-            @RequestParam("addr") String addr,
-            @RequestParam("detailAddr") String detailAddr,
-            @RequestParam("email") String email) {
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDto orderRequest) {
+        log.info("📌 주문 생성 요청 - {}", orderRequest);
 
-        Long memberId = getAuthentication().getMemberDto().getMid();
-        log.info("주문 생성 요청 - 멤버 ID: {}", memberId);
+        if (orderRequest.getSelectedCartItemIds() == null || orderRequest.getSelectedCartItemIds().isEmpty() ||
+                orderRequest.getSelectedQuantities() == null || orderRequest.getSelectedQuantities().isEmpty()) {
+            log.error("❌ 상품 정보가 올바르지 않습니다.");
+            return ResponseEntity.badRequest().body(Map.of("error", "선택된 상품 정보가 올바르지 않습니다."));
+        }
 
         try {
-            List<Long> cartItemIds = Arrays.stream(selectedCartItemIds.split(","))
+            Long memberId = getAuthentication().getMemberDto().getMid();
+            List<Long> cartItemIds = Arrays.stream(orderRequest.getSelectedCartItemIds().split(","))
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
-            List<Integer> quantities = Arrays.stream(selectedQuantities.split(","))
+
+            List<Integer> quantities = Arrays.stream(orderRequest.getSelectedQuantities().split(","))
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
 
-            if (cartItemIds.isEmpty() || quantities.isEmpty() || cartItemIds.size() != quantities.size()) {
-                return ResponseEntity.badRequest().body("선택된 상품 정보가 올바르지 않습니다.");
+            if (cartItemIds.size() != quantities.size()) {
+                log.error("❌ 상품 ID 개수와 수량 개수가 맞지 않습니다.");
+                return ResponseEntity.badRequest().body(Map.of("error", "상품 정보가 올바르지 않습니다."));
             }
 
-            Long orderId = orderService.createOrder(memberId, cartItemIds, quantities, recipientName, phoneNumber,
-                    zipcode, addr, detailAddr, email);
-            log.info("주문 완료 - 주문 ID: {}", orderId);
+            Long orderId = orderService.createOrder(memberId, cartItemIds, quantities,
+                    orderRequest.getRecipientName(), orderRequest.getPhoneNumber(),
+                    orderRequest.getEmail(), orderRequest.getZipcode(), orderRequest.getAddr(),
+                    orderRequest.getDetailAddr());
 
             Order order = orderService.getOrderEntity(orderId);
             return ResponseEntity.ok(Map.of(
                     "orderId", orderId,
-                    "orderUid", order.getOrderUid(),
-                    "totalPrice", order.getPrice()));
+                    "orderUid", Objects.requireNonNullElse(order.getOrderUid(), "UNKNOWN"),
+                    "totalPrice", Objects.requireNonNullElse(order.getPrice(), 0)));
 
         } catch (Exception e) {
-            log.error("주문 생성 중 오류 발생: {}", e.getMessage());
+            log.error("❌ 주문 처리 중 오류 발생:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "주문 생성 실패", "message", e.getMessage()));
         }
@@ -224,12 +227,49 @@ public class MarketController {
         try {
             OrderDto orderDto = orderService.getOrder(orderId);
             model.addAttribute("order", orderDto);
-            return "orderDetails"; // 주문 상세 페이지
+            return "market/orderComplete"; // 주문 상세 페이지
 
         } catch (Exception e) {
             log.error("주문 조회 실패: {}", e.getMessage());
             model.addAttribute("error", "주문 조회 중 오류가 발생했습니다.");
-            return "orderList"; // 실패 시 주문 목록 페이지로 이동
+            return "redirect:/market/list"; // 실패 시 주문 목록 페이지로 이동
+        }
+    }
+
+    @GetMapping("/orderComplete")
+    public String getOrderComplete(@RequestParam(value = "orderid", required = false) Long orderId, Model model) {
+        log.info("📌 주문 완료 페이지 요청 - 주문 ID: {}", orderId);
+
+        if (orderId == null) {
+            log.error("❌ orderId가 없습니다.");
+            model.addAttribute("error", "잘못된 접근입니다.");
+            return "redirect:/market/list";
+        }
+
+        try {
+            OrderDto orderDto = orderService.getOrder(orderId);
+
+            // ✅ 디버깅 로그 추가
+            log.info("🔍 orderService.getOrder({}) 결과: {}", orderId, orderDto);
+
+            if (orderDto == null) {
+                log.error("❌ orderDto가 null 입니다. 주문 데이터를 찾을 수 없습니다.");
+                model.addAttribute("error", "주문 데이터를 찾을 수 없습니다.");
+                return "redirect:/market/list";
+            }
+
+            log.info("✅ 주문 조회 성공: {}", orderDto);
+            log.info("✅ 주문 ID: {}", orderDto.getOid());
+            log.info("✅ 주문자: {}", orderDto.getName());
+            log.info("✅ 주문 상품 개수: {}", orderDto.getOrderItems().size());
+
+            model.addAttribute("order", orderDto);
+            return "market/orderComplete";
+
+        } catch (Exception e) {
+            log.error("❌ 주문 조회 실패: {}", e.getMessage());
+            model.addAttribute("error", "주문 조회 중 오류가 발생했습니다.");
+            return "redirect:/market/list";
         }
     }
 
