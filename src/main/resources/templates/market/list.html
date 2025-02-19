@@ -72,19 +72,10 @@
           <div class="col-lg-6">
             <nav class="header__menu">
               <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li class="active"><a href="./shop-grid.html">Shop</a></li>
-                <li>
-                  <a href="#">Pages</a>
-                  <ul class="header__menu__dropdown">
-                    <li><a href="./shop-details.html">Shop Details</a></li>
-                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                    <li><a href="./checkout.html">Check Out</a></li>
-                    <li><a href="./blog-details.html">Blog Details</a></li>
-                  </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
+                <li><a th:href="@{/main}">Home</a></li>
+                <li class="active"><a th:href="@{/main}">Shop</a></li>
+                <li><a th:href="@{/board/list}">FORUM</a></li>
+                <li><a th:href="@{/member/profile}">MEMBER</a></li>
               </ul>
             </nav>
           </div>
@@ -92,12 +83,8 @@
             <div class="header__cart">
               <ul>
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                </li>
-                <li>
-                  <a href="#"
-                    ><i class="fa fa-shopping-bag"></i> <span>3</span></a
-                  >
+                  <a th:href="@{/market/cart}"
+                    ><i class="fa fa-shopping-bag"></i></a>
                 </li>
               </ul>
             </div>
@@ -181,11 +168,11 @@
                   <li>
                     <a th:href="@{/market/list(cateid=2)}">과일 • 견과 • 쌀</a>
                   </li>
-                  <li><a href="#">수산 • 해산 • 건어물</a></li>
-                  <li><a href="#">면 • 양념 • 오일</a></li>
-                  <li><a href="#">생수 • 음료</a></li>
-                  <li><a href="#">간식 • 베이커리</a></li>
-                  <li><a href="#">유제품</a></li>
+                  <li><a th:href="@{/market/list(cateid=4)}">수산 • 해산 • 건어물</a></li>
+                  <li><a th:href="@{/market/list(cateid=5)}">면 • 양념 • 오일</a></li>
+                  <li><a th:href="@{/market/list(cateid=6)}">생수 • 음료</a></li>
+                  <li><a th:href="@{/market/list(cateid=7)}">간식 • 베이커리</a></li>
+                  <li><a th:href="@{/market/list(cateid=8)}">유제품</a></li>
                 </ul>
               </div>
             </div>

@@ -77,16 +77,10 @@
           <div class="col-lg-6">
             <nav class="header__menu">
               <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li class="active"><a href="./shop-grid.html">Shop</a></li>
-                <li>
-                  <a href="#">Pages</a>
-                  <ul class="header__menu__dropdown">
-                    <li><a href="./details.html">Shop Details</a></li>
-                    <li><a href="./cart.html">Shoping Cart</a></li>
-                    <li><a href="./order.html">Check Out</a></li>
-                  </ul>
-                </li>
+                <li><a th:href="@{/main}">Home</a></li>
+                <li class="active"><a th:href="@{/main}">Shop</a></li>
+                <li><a th:href="@{/board/list}">FORUM</a></li>
+                <li><a th:href="@{/member/profile}">MEMBER</a></li>
               </ul>
             </nav>
           </div>
@@ -94,12 +88,9 @@
             <div class="header__cart">
               <ul>
                 <li>
-                  <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                </li>
-                <li>
-                  <a href="#"
-                    ><i class="fa fa-shopping-bag"></i> <span>3</span></a
-                  >
+                  <a th:href="@{/market/cart}"
+                    ><i class="fa fa-shopping-bag"></i
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -124,7 +115,7 @@
               <h2 th:text="${dto.name}"></h2>
               <div class="breadcrumb__option">
                 <a th:href="@{/market/list}">Home</a>
-                <a href="./index.html">Vegetables</a>
+                <span>Product Detail</span>
                 <!-- <span th:text="${dto.name}"></span> -->
               </div>
             </div>
