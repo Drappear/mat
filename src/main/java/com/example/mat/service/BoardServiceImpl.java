@@ -4,11 +4,13 @@ import com.example.mat.dto.won.BoardDto;
 import com.example.mat.entity.won.Board;
 import com.example.mat.entity.won.BoardImage;
 import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
 import com.example.mat.repository.BoardCategoryRepository;
 import com.example.mat.repository.BoardRepository;
 import com.example.mat.repository.BoardImageRepository;
 import com.example.mat.repository.BoardCommentRepository;
 import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.shin.MemberImageRepository;
 import com.example.mat.util.HtmlUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class BoardServiceImpl implements BoardService {
         private final BoardRepository boardRepository;
         private final BoardCategoryRepository boardCategoryRepository;
         private final MemberRepository memberRepository;
+        private final MemberImageRepository memberImageRepository;
         private final BoardImageRepository boardImageRepository;
         private final BoardCommentRepository boardCommentRepository;
 
@@ -106,6 +109,32 @@ public class BoardServiceImpl implements BoardService {
                 board.setViewCount(board.getViewCount() + 1);
                 boardRepository.save(board);
 
+                return convertToDto(board);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Page<BoardDto> getList(String keyword, Long category, Pageable pageable) {
+                return boardRepository.findByKeywordAndCategory(keyword, category, pageable)
+                                .map(this::convertToDto);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Page<BoardDto> getListByUserid(String userid, Pageable pageable) {
+                return boardRepository.findByUserid(userid, pageable)
+                                .map(this::convertToDto);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Long getMemberIdByUserId(String userId) {
+                Member member = memberRepository.findByUserid(userId)
+                                .orElseThrow(() -> new IllegalArgumentException("해당 사용자 ID를 찾을 수 없습니다: " + userId));
+                return member.getMid();
+        }
+
+        private BoardDto convertToDto(Board board) {
                 return BoardDto.builder()
                                 .bno(board.getBno())
                                 .title(board.getTitle())
@@ -119,29 +148,21 @@ public class BoardServiceImpl implements BoardService {
                                                 : null)
                                 .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
                                 .commentCount(boardCommentRepository.countByBoardId(board.getBno()))
+                                .profileImage(getProfileImageByMember(board.getMember())) // 추가: 프로필 이미지 설정
                                 .build();
         }
 
-        @Override
-        @Transactional(readOnly = true)
-        public Page<BoardDto> getList(String keyword, Long category, Pageable pageable) {
-                return boardRepository.findByKeywordAndCategory(keyword, category, pageable)
-                                .map(board -> convertToDto(board));
-        }
+        private String getProfileImageByMember(Member member) {
+                if (member == null) {
+                        return "/images/default-profile.png"; // 기본 이미지
+                }
 
-        @Override
-        @Transactional(readOnly = true)
-        public Page<BoardDto> getListByUserid(String userid, Pageable pageable) {
-                return boardRepository.findByUserid(userid, pageable)
-                                .map(board -> convertToDto(board));
-        }
+                MemberImage memberImage = memberImageRepository.findByMember(member);
+                if (memberImage != null) {
+                        return "/member/display?fileName=" + memberImage.getUuid() + "_" + memberImage.getImgName();
+                }
 
-        @Override
-        @Transactional(readOnly = true)
-        public Long getMemberIdByUserId(String userId) {
-                Member member = memberRepository.findByUserid(userId)
-                                .orElseThrow(() -> new IllegalArgumentException("해당 사용자 ID를 찾을 수 없습니다: " + userId));
-                return member.getMid();
+                return "/images/default-profile.png"; // 기본 이미지
         }
 
         private void handleImageProcessing(Board board, MultipartFile imageFile) {
@@ -195,22 +216,5 @@ public class BoardServiceImpl implements BoardService {
                         uuid = UUID.randomUUID().toString();
                 } while (boardImageRepository.existsByUuid(uuid));
                 return uuid;
-        }
-
-        private BoardDto convertToDto(Board board) {
-                return BoardDto.builder()
-                                .bno(board.getBno())
-                                .title(board.getTitle())
-                                .content(board.getContent())
-                                .memberId(board.getMember().getMid())
-                                .userid(board.getMember().getUserid())
-                                .viewCount(board.getViewCount())
-                                .regDate(board.getRegDate())
-                                .updateDate(board.getUpdateDate())
-                                .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo()
-                                                : null)
-                                .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
-                                .commentCount(boardCommentRepository.countByBoardId(board.getBno()))
-                                .build();
         }
 }
