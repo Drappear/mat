@@ -123,10 +123,10 @@ public class OrderServiceImpl implements OrderService {
                 log.info("✅ 주문 저장 완료 - 주문 ID: {}, 주문번호(orderUid): {}, 총 금액: {}",
                                 order.getOid(), order.getOrderUid(), order.getPrice());
 
-                // ✅ 주문 완료 후 장바구니에서 해당 상품 삭제
-                cartItemRepository.deleteAll(cartItems);
-                cartItemRepository.flush();
-                entityManager.clear();
+                // // ✅ 주문 완료 후 장바구니에서 해당 상품 삭제
+                // cartItemRepository.deleteAll(cartItems);
+                // cartItemRepository.flush();
+                // entityManager.clear();
 
                 return order.getOid();
         }
