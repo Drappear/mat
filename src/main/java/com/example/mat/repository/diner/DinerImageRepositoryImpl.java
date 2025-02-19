@@ -1,6 +1,5 @@
 package com.example.mat.repository.diner;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,9 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         implements DinerImageRepository {
     public DinerImageRepositoryImpl() {
@@ -33,20 +35,12 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
     @Override
     public List<Object[]> getDinerRow(Long did) {
         QImage image = QImage.image;
-        // QReview review = QReview.review;
         QDiner diner = QDiner.diner;
 
         JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
-        // JPQLQuery<Long> rCnt =
-        // JPAExpressions.select(review.countDistinct()).from(review)
-        // .where(review.diner.eq(dinerImage.diner));
-        // JPQLQuery<Double> rAvg =
-        // JPAExpressions.select(review.grade.avg().round()).from(review)
-        // .where(review.diner.eq(dinerImage.diner));
-
         JPQLQuery<Tuple> tuple = query.select(diner, image)
-                .where(image.diner.did.eq(did).and(image.imgCate.eq(1)))
+                .where(image.diner.did.eq(did).and(image.path.substring(10, 17).contains("diner")))
                 .orderBy(image.inum.desc());
 
         List<Tuple> result = tuple.fetch();
@@ -72,7 +66,8 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Long> inum = JPAExpressions.select(
                 image.inum.max()).from(
                         image)
-                .where(image.imgCate.eq(1))
+                .where(image.path.substring(10, 17).contains(
+                        "diner"))
                 .groupBy(image.diner);
 
         JPQLQuery<Tuple> tuple = query.select(
@@ -137,7 +132,7 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         JPQLQuery<Tuple> tuple = query.select(
                 dinerReview,
                 image)
-                .where(image.imgCate.eq(2).and(dinerReview.diner.did.eq(did)))
+                .where(image.path.substring(10, 17).contains("review").and(dinerReview.diner.did.eq(did)))
                 .orderBy(image.inum.desc());
 
         // rvid > 0 조건
@@ -166,5 +161,11 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
 
         return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
                 count);
+    }
+
+    @Override
+    public void deleteByPath(String path) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteByPath'");
     }
 }

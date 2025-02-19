@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -17,9 +16,8 @@ public class BoardCommentDto {
     private String content;
     private String userid;
     private Long boardId;
-    // private Long parentId;
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
 
-    // private List<BoardCommentDto> replies; // 대댓글 리스트
+    private String profileImage; // 추가: 댓글 작성자의 프로필 이미지 URL
 }

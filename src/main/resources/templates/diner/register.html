@@ -3,7 +3,6 @@
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
-    <link rel="stylesheet" th:href="@{/css/diner/upload.css}" />
   </th:block>
   <div layout:fragment="content">
     <section class="diner-register">
@@ -13,13 +12,22 @@
             <div class="row justify-content-center m-3">
               <h4>식당 등록</h4>
             </div>
-            <form th:action="@{create}" method="post" id="createForm">
+            <form
+              th:action="@{create}"
+              method="post"
+              id="createForm"
+              enctype="multipart/form-data"
+            >
               <div class="register-items">
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
                     <div class="col col-lg-1">
-                      <select class="form-select" name="categoryName" id="categoryName">
-                        <option selected>분류</option>
+                      <select
+                        class="form-select"
+                        name="categoryName"
+                        id="categoryName"
+                      >
+                        <option selected="selected">분류</option>
                         <option
                           th:each="category : ${categories}"
                           th:value="${category.dcid}"
@@ -31,31 +39,55 @@
                   </div>
                   <div class="col col-lg-5 mb-3">
                     <label for="dinerName" class="form-label">이름</label>
-                    <input type="text" class="form-control" id="dinerName" name="name" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dinerName"
+                      name="name"
+                    />
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-3 mb-3">
                     <label for="dinerPhone" class="form-label">전화번호</label>
-                    <input type="text" class="form-control" id="dinerPhone" name="phone" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dinerPhone"
+                      name="phone"
+                    />
                   </div>
                   <div class="col-lg-3 mb-3">
-                    <label for="dinerRegNum" class="form-label">사업자 등록번호</label>
-                    <input type="text" class="form-control" id="dinerRegNum" name="regNum" />
+                    <label for="dinerRegNum" class="form-label"
+                      >사업자 등록번호</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dinerRegNum"
+                      name="regNum"
+                    />
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerAddr" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="dinerAddr" name="address" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dinerAddr"
+                      name="address"
+                      onclick="dinerPostCodeSearch()"
+                    />
                   </div>
                 </div>
-
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
-                    <label for="dinerAddrDetail" class="form-label">상세주소</label>
+                    <label for="dinerAddrDetail" class="form-label"
+                      >상세주소</label
+                    >
                     <input
                       type="text"
                       class="form-control"
@@ -80,7 +112,12 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerMenu" class="form-label">메뉴 정보</label>
-                    <textarea class="form-control" id="dinerMenu" name="menu" rows="3"></textarea>
+                    <textarea
+                      class="form-control"
+                      id="dinerMenu"
+                      name="menu"
+                      rows="3"
+                    ></textarea>
                   </div>
                 </div>
 
@@ -99,29 +136,17 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <div class="contents upload-section">
-                      <div class="upload-box">
-                        <div id="drop-file" class="drag-file">
-                          <img
-                            src="https://img.icons8.com/pastel-glyph/2x/image-file.png"
-                            alt="파일 아이콘"
-                            class="image"
-                          />
-                          <p class="message mt-3">Drag files to upload</p>
-                        </div>
-                      </div>
-                      <label class="file-label" for="chooseFile">사진 업로드</label>
+                      <label class="file-label" for="uploadFiles"
+                        >사진 업로드</label
+                      >
                       <input
                         name="uploadFiles"
                         class="file"
-                        id="chooseFile"
+                        id="uploadFiles"
                         type="file"
-                        multiple
-                        onchange="dropFile.handleFiles(this.files)"
+                        multiple="multiple"
                         accept="image/png, image/jpg, image/jpeg"
                       />
-                      <div id="files" class="files">
-                        <div class="file"></div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -129,8 +154,12 @@
                 <div class="row justify-content-center">
                   <div class="col-6 mt-3 mb-3 buttons">
                     <div class="row justify-content-center">
-                      <button type="submit" class="btn btn-primary m-3">등록하기</button>
-                      <a th:href="@{list}" class="btn btn-success m-3">목록이동</a>
+                      <button type="submit" class="btn btn-primary m-3">
+                        등록하기
+                      </button>
+                      <a th:href="@{list}" class="btn btn-success m-3"
+                        >목록이동</a
+                      >
                     </div>
                   </div>
                 </div>
@@ -143,10 +172,23 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script
+      src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+    ></script>
+
     <script>
       const csrfValue = "[[${_csrf.token}]]";
+
+      function dinerPostCodeSearch() {
+        new daum.Postcode({
+          oncomplete: function (data) {
+            var addr = data.address; // 최종 주소 변수
+            // 주소 정보를 해당 필드에 넣는다.
+            document.getElementById("dinerAddr").value = addr;
+          },
+        }).open();
+      }
     </script>
-    <script th:src="@{/js/diner/register.js}"></script>
-    <script th:src="@{/js/diner/upload.js}"></script>
+    <!-- <script th:src="@{/js/diner/register.js}"></script> -->
   </th:block>
 </html>

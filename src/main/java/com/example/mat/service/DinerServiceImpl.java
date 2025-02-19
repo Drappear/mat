@@ -16,6 +16,7 @@ import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
+import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerCategory;
@@ -44,10 +45,8 @@ public class DinerServiceImpl implements DinerService {
   public Long createDiner(DinerDto dinerDto) {
     Map<String, Object> entityMap = dtoToEntity(dinerDto);
     Diner diner = (Diner) entityMap.get("diner");
-    List<Image> dinerImages = (List<Image>) entityMap.get("dinerImages");
 
     dinerRepository.save(diner);
-    dinerImages.forEach(dinerImage -> imageRepository.save(dinerImage));
 
     return diner.getDid();
   }
@@ -57,8 +56,6 @@ public class DinerServiceImpl implements DinerService {
     List<Object[]> result = imageRepository.getDinerRow(did);
 
     Diner diner = (Diner) result.get(0)[0];
-    // Long reviewCnt = (Long) result.get(0)[2];
-    // Double reviewAvg = (Double) result.get(0)[3];
 
     // 식당 이미지
     List<Image> dinerImages = new ArrayList<>();
@@ -123,6 +120,30 @@ public class DinerServiceImpl implements DinerService {
     List<DinerCategory> result = dinerCategoryRepository.findAll();
 
     return result.stream().map(c -> entityToDto(c)).collect(Collectors.toList());
+  }
+
+  @Transactional
+  @Override
+  public void deleteDinerImage(String filePath) {
+    log.info("식당 이미지 삭제 : {}", filePath);
+    imageRepository.deleteByPath(filePath);
+  }
+
+  @Override
+  public String getCategoryName(String dcid) {
+    log.info("카테고리 id : {}", dcid);
+    return dinerCategoryRepository.findById(Long.parseLong(dcid)).get().getName();
+  }
+
+  @Transactional
+  @Override
+  public void createDinerImage(DinerImageDto dinerImageDto) {
+    DinerDto dinerDto = getDinerDetail(dinerImageDto.getDid());
+    List<DinerImageDto> dinerImageDtos = dinerDto.getDinerImageDtos();
+    dinerImageDtos.add(dinerImageDto);
+    dinerDto.setDinerImageDtos(dinerImageDtos);
+    updateDiner(dinerDto);
+    log.info("이미지 정보 업데이트");
   }
 
 }

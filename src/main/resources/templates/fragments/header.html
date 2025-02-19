@@ -2,27 +2,38 @@
 <html lang="en">
   <!-- Header Section Begin -->
   <header class="header" th:fragment="header">
-    <link rel="stylesheet" th:href="@{/css/headerLogo.css}"/>
+    <link rel="stylesheet" th:href="@{/css/headerLogo.css}" />
     <style>
+      .header-member-container {
+        display: flex;
+        align-items: center;
+      }
+
       /* 헤더 카트 영역 스타일링 */
       .header__cart {
         position: relative;
         display: flex;
         align-items: center;
+        text-align: justify;
+        padding: 0;
+      }
+
+      .header__cart ul {
+        margin: 0;
       }
 
       /* 메인 프로필 컨테이너 */
       .header__top__right__auth {
         position: relative;
-        margin-left: 25px;
       }
 
       /* 비로그인 상태 로그인 버튼 */
-      .header__top__right__auth > a:not(:has(div)) {
+      .header-member-login > a.login-button {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 10px 20px;
+        margin: 15px;
+        padding: 10px;
         background: linear-gradient(to right, #7fad39, #95c24d);
         color: white;
         border-radius: 8px;
@@ -32,7 +43,7 @@
         box-shadow: 0 4px 15px rgba(127, 173, 57, 0.2);
       }
 
-      .header__top__right__auth > a:not(:has(div)):hover {
+      .header-member-login > a.login-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(127, 173, 57, 0.3);
       }
@@ -69,8 +80,7 @@
         display: flex;
         align-items: center;
         padding: 10px 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        margin-bottom: 12px;
+        margin-left: 5px;
       }
 
       /* 프로필 이름 링크 */
@@ -88,7 +98,7 @@
       }
 
       /* 로그아웃 버튼 */
-      .header__top__right__auth > a[href*="logout"] {
+      .header-member-login > a.logout-button {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -102,18 +112,18 @@
         transition: all 0.3s ease;
       }
 
-      .header__top__right__auth > a[href*="logout"]:hover {
+      .header-member-login > a.logout-button:hover {
         background: #f0f0f0;
         color: #333;
         transform: translateY(-1px);
       }
 
-      .header__top__right__auth > a[href*="logout"] i {
+      .header-member-login > a.logout-button i {
         font-size: 16px;
         transition: transform 0.3s ease;
       }
 
-      .header__top__right__auth > a[href*="logout"]:hover i {
+      .header-member-login > a.logout-button i {
         transform: translateX(3px);
       }
 
@@ -157,13 +167,12 @@
         animation: slideIn 0.3s ease;
       }
     </style>
-    <!-- <div class="header__top"> <div class="container"> <div class="row"> <div class="col-lg-6 col-md-6"> <div class="header__top__left"> <ul> <li><i class="fa fa-envelope"></i> hello@colorlib.com</li> <li>Free Shipping for all Order of $99</li> </ul> </div> </div> <div class="col-lg-6 col-md-6"> <div class="header__top__right"> <div class="header__top__right__social"> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-pinterest-p"></i></a> </div> <div class="header__top__right__language"> <img th:src="@{/assets/img/language.png}" alt="" /> <div>English</div> <span class="arrow_carrot-down"></span> <ul> <li><a href="#">Spanis</a></li> <li><a href="#">English</a></li> </ul> </div> </div> </div> </div> </div> </div> </div> -->
     <div class="container">
       <div class="row">
         <div class="col-lg-3">
           <div class="header__logo">
             <a th:href="@{/main}">
-              <img th:src="@{/assets/img/logo.png}" class="logo" alt=""/>
+              <img th:src="@{/assets/img/logo.png}" class="logo" alt="" />
             </a>
           </div>
         </div>
@@ -174,31 +183,23 @@
                 <a th:href="@{/main}">Home</a>
               </li>
               <li>
-                <a th:href="@{/market/list}">Shop</a>
+                <a th:href="@{/market/list}">Market</a>
               </li>
               <li>
                 <a th:href="@{/recipe/list}">Recipe</a>
               </li>
               <li>
                 <a th:href="@{/diner/list}">Diner</a>
-              </li>
-              <li>
-                <a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
                   <li>
-                    <a href="./shop-details.html">Shop Details</a>
+                    <a th:href="@{/diner/list}">식당 목록</a>
                   </li>
                   <li>
-                    <a href="./shoping-cart.html">Shoping Cart</a>
-                  </li>
-                  <li>
-                    <a href="./checkout.html">Check Out</a>
-                  </li>
-                  <li>
-                    <a href="./blog-details.html">Blog Details</a>
+                    <a th:href="@{/diner/register}">식당 등록</a>
                   </li>
                 </ul>
               </li>
+              <!-- <li> <a href="#">Pages</a> <ul class="header__menu__dropdown"> <li> <a href="./shop-details.html">Shop Details</a> </li> <li> <a href="./shoping-cart.html">Shoping Cart</a> </li> <li> <a href="./checkout.html">Check Out</a> </li> <li> <a href="./blog-details.html">Blog Details</a> </li> </ul> </li> -->
               <li>
                 <a th:href="@{/board/list}">Forum</a>
                 <ul class="header__menu__dropdown">
@@ -213,66 +214,68 @@
                   </li>
                 </ul>
               </li>
-              <li>
-                <a href="./contact.html">Contact</a>
-              </li>
             </ul>
           </nav>
         </div>
         <div class="col-lg-3">
-          <div class="header__cart">
-            <ul>
-              <li>
-                <a href="#">
-                  <i class="fa fa-heart"></i>
-                  <span>1</span></a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-shopping-bag"></i>
-                  <span>3</span></a>
-              </li>
-            </ul>
+          <div class="header-member-container">
+            <div class="header__cart" sec:authorize="isAuthenticated()">
+              <ul>
+                <li>
+                  <a href="#">
+                    <i class="fa fa-heart"></i>
+                    <span>1</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="fa fa-shopping-bag"></i>
+                    <span>3</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
             <div class="header__top__right__auth">
-              <!-- 로그인하지 않은 사용자를 위한 Login 버튼 -->
-              <a th:href="@{/member/login}" sec:authorize="!isAuthenticated()">
-                <i class="fa fa-user"></i>
-                Login
-              </a>
-
               <a sec:authorize="isAuthenticated()">
                 <div>
                   <div id="profileForm" class="profile-photo" style="display: flex; align-items: center; gap: 5px">
                     <img alt="" th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto != null}" style="
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                      "/>
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    "/>
                     <img alt="" th:src="@{/images/default-profile.png}" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto == null}" style="
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                      "/>
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    "/>
                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                     <a th:href="@{/member/profile}" th:text="${#authentication.principal.memberDto.nickname + ' 님'}" style="margin-left: 5px"></a>
                   </div>
                 </div>
+              </div>
+              <div class="header-member-login">
+                <!-- 로그인하지 않은 사용자를 위한 Login 버튼 -->
+                <a class="login-button" th:href="@{/member/login}" sec:authorize="!isAuthenticated()">
+                  <i class="fa fa-user"></i>
+                  Login
+                </a>
 
                 <!-- 로그인한 사용자를 위한 Log out 버튼 -->
-                <a th:href="@{/member/logout}">
+                <a class="logout-button" th:href="@{/member/logout}" sec:authorize="isAuthenticated()">
                   <i class="fa fa-sign-out"></i>
-                  Log out</a >
-              </a>
+                  Log out
+                </a>
+              </div>
             </div>
           </div>
         </div>
+        <div class="humberger__open">
+          <i class="fa fa-bars"></i>
+        </div>
       </div>
-      <div class="humberger__open">
-        <i class="fa fa-bars"></i>
-      </div>
-    </div>
-  </header>
-  <!-- Header Section End -->
-</html>
+    </header>
+    <!-- Header Section End -->
+  </html>

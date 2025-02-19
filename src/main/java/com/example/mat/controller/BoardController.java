@@ -11,6 +11,7 @@ import com.example.mat.util.HtmlUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,9 +36,13 @@ public class BoardController {
     public String list(@RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
             @RequestParam(required = false) String userid,
-            Pageable pageable, Model model) {
+            @RequestParam(defaultValue = "0") int page, // 기본값 0
+            Model model) {
         log.info("[REQUEST] board list page");
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
+
+        // 페이지 크기 4로 설정
+        Pageable pageable = PageRequest.of(page, 4);
 
         var boards = (userid != null && !userid.isEmpty())
                 ? boardService.getListByUserid(userid, pageable)

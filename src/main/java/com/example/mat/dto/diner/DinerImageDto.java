@@ -16,10 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class DinerImageDto {
     private Long inum;
-    private String uuid;
-    private String imgName;
+
     private String path;
-    private int imgCate;
 
     private Long did;
 
@@ -30,7 +28,8 @@ public class DinerImageDto {
     public String getImageURL() {
         String fullPath = "";
         try {
-            fullPath = URLEncoder.encode(path + File.separator + uuid + "_" + imgName, "utf-8");
+
+            fullPath = URLEncoder.encode(path + File.separator, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -40,7 +39,8 @@ public class DinerImageDto {
     public String getReviewImageURL() {
         String fullPath = "";
         try {
-            fullPath = URLEncoder.encode(path + File.separator + "r_" + uuid + "_" + imgName, "utf-8");
+
+            fullPath = URLEncoder.encode(path + File.separator, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -31,7 +31,6 @@ public class OrderDto {
     private String addr;
 
     private String detailAddr;
-
     private String email;
 
     private OrderStatus orderStatus;
