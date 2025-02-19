@@ -2,31 +2,30 @@
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/diner/register.css}" />
-    <link rel="stylesheet" th:href="@{/css/diner/upload.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/register.css}"/>
   </th:block>
   <div layout:fragment="content">
     <section class="diner-register">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <div class="row justify-content-center mt-5">
+            <div class="row justify-content-center mt-3">
               <h4>식당 수정</h4>
             </div>
-            <form th:action="@{modify}" method="post" id="createForm">
+            <form th:action="@{modify}" method="post" id="createForm" enctype="multipart/form-data">
               <div class="register-items">
                 <div class="row justify-content-center">
                   <div class="row align-items-center mt-3">
                     <div class="col col-lg-1">
                       <select class="form-select" name="categoryName" id="categoryName">
                         <option>분류</option>
-                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.name}"></option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.dcid}"></option>
                       </select>
                     </div>
                   </div>
                   <div class="col col-lg-5 mb-3">
                     <label for="dinerName" class="form-label">이름</label>
-                    <input type="text" class="form-control" id="dinerName" name="name" th:value="${dinerDto.name}" />
+                    <input type="text" class="form-control" id="dinerName" name="name" th:value="${dinerDto.name}"/>
                   </div>
                 </div>
 
@@ -44,82 +43,57 @@
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerAddr" class="form-label">주소</label>
-                    <input type="text" class="form-control" id="dinerAddr" name="address" th:value="${dinerDto.address}"/>
+                    <input type="text" class="form-control" id="dinerAddr" name="address" th:value="${dinerDto.address}" onclick="dinerPostCodeSearch()"/>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerAddrDetail" class="form-label">상세주소</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="dinerAddrDetail"
-                      name="addressDetail"
-                      th:value="${dinerDto.addressDetail}"
-                    />
+                    <input type="text" class="form-control" id="dinerAddrDetail" name="addressDetail" th:value="${dinerDto.addressDetail}"/>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerDesc" class="form-label">소개글</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerDesc"
-                      name="content"
-                      rows="10"
-                      th:value="${dinerDto.content}"
-                      th:text="${dinerDto.content}"
-                    ></textarea>
+                    <textarea class="form-control" id="dinerDesc" name="content" rows="5" th:value="${dinerDto.content}" th:text="${dinerDto.content}"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerMenu" class="form-label">메뉴 정보</label>
-                    <textarea class="form-control" id="dinerMenu" name="menu" rows="5" th:value="${dinerDto.menu}" th:text="${dinerDto.menu}"></textarea>
+                    <textarea class="form-control" id="dinerMenu" name="menu" rows="3" th:value="${dinerDto.menu}" th:text="${dinerDto.menu}"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <label for="dinerTime" class="form-label">영업 시간</label>
-                    <textarea
-                      class="form-control"
-                      id="dinerTime"
-                      name="workTime"
-                      rows="5"
-                    th:value="${dinerDto.workTime}" th:text="${dinerDto.workTime}"></textarea>
+                    <textarea class="form-control" id="dinerTime" name="workTime" rows="3" th:value="${dinerDto.workTime}" th:text="${dinerDto.workTime}"></textarea>
                   </div>
                 </div>
 
                 <div class="row justify-content-center">
                   <div class="col-lg-6 mb-3">
                     <div class="contents upload-section">
-                      <div class="upload-box">
-                        <div id="drop-file" class="drag-file">
-                          <img
-                            src="https://img.icons8.com/pastel-glyph/2x/image-file.png"
-                            alt="파일 아이콘"
-                            class="image"
-                          />
-                          <p class="message mt-3">Drag files to upload</p>
-                        </div>
-                      </div>
-                      <label class="file-label" for="chooseFile">사진 업로드</label>
-                      <input
-                        name="uploadFiles"
-                        class="file"
-                        id="chooseFile"
-                        type="file"
-                        multiple
-                        onchange="dropFile.handleFiles(this.files)"
-                        accept="image/png, image/jpg, image/jpeg"
-                      />
-                      <div id="files" class="files">
-                        <div class="file"></div>
-                      </div>
+                      <label class="file-label" for="uploadFiles">사진 업로드</label>
+                      <input name="uploadFiles" class="file" id="uploadFiles" type="file" multiple="multiple" accept="image/png, image/jpg, image/jpeg"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-lg-6 mb-3">
+                    <div id="imageFilesDiv">
+                      <ul>
+                        <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
+                          <img th:attr="data-file=${dinerImage.getImageURL()}" th:src="|/dfup/display?fileName=${dinerImage.getImageURL()}|" th:if="${dinerImage.path != null}" alt="" class="block" width="120px" height="100px"/>
+                          <a th:href="${dinerImage.getImageURL()}" data-file="">
+                            <i class="fa-solid fa-xmark"></i>
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -129,7 +103,7 @@
                     <div class="row justify-content-center">
                       <button type="submit" class="btn btn-primary m-3">수정하기</button>
                       <button type="button" class="btn btn-danger m-3" id="delBtn">삭제</button>
-                      <button type="button" class="btn btn-success m-3">목록이동</button>
+                      <button type="button" class="btn btn-success m-3" id="listBtn">목록이동</button>
                     </div>
                   </div>
                 </div>
@@ -143,10 +117,28 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
       const csrfValue = "[[${_csrf.token}]]";
+      const did = "[[${dinerDto.did}]]";
+
+      function dinerPostCodeSearch() {
+
+        new daum
+          .Postcode({
+            oncomplete: function (data) {
+              var addr = data.address; // 최종 주소 변수
+              // 주소 정보를 해당 필드에 넣는다.
+              document
+                .getElementById("dinerAddr")
+                .value = addr;
+
+            }
+          })
+          .open();
+      }
     </script>
     <script th:src="@{/js/diner/modify.js}"></script>
-    <script th:src="@{/js/diner/upload.js}"></script>
   </th:block>
+
 </html>

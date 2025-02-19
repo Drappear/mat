@@ -16,9 +16,10 @@ public class GlobalExceptionHandler {
     }
 
     // IllegalArgumentException 처리
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleIllegalArgumentException(IllegalArgumentException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/board/list"; // 예외 상황에 따라 리다이렉트
-    }
+    // @ExceptionHandler(IllegalArgumentException.class)
+    // public String handleIllegalArgumentException(IllegalArgumentException e,
+    // RedirectAttributes redirectAttributes) {
+    // redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    // return "redirect:/board/list"; // 예외 상황에 따라 리다이렉트
+    // }
 }

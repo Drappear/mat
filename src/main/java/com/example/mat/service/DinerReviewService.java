@@ -45,9 +45,6 @@ public interface DinerReviewService {
         List<DinerImageDto> dinerImageDtos = images.stream().map(image -> {
             return DinerImageDto.builder()
                     .inum(image.getInum())
-                    .uuid(image.getUuid())
-                    .imgName(image.getImgName())
-                    .imgCate(image.getImgCate())
                     .path(image.getPath())
                     .build();
         }).collect(Collectors.toList());
@@ -78,10 +75,7 @@ public interface DinerReviewService {
         if (dinerImageDtos != null && dinerImageDtos.size() > 0) {
             List<Image> images = dinerImageDtos.stream().map(dto -> {
                 Image image = Image.builder()
-                        .uuid(dto.getUuid())
-                        .imgName(dto.getImgName())
                         .path(dto.getPath())
-                        .imgCate(dto.getImgCate())
                         .dinerReview(dinerReview)
                         .diner(dinerReview.getDiner())
                         .build();

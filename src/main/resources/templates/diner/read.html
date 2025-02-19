@@ -2,7 +2,7 @@
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <!-- 페이지 별 css -->
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/diner/read.css}" />
+    <link rel="stylesheet" th:href="@{/css/diner/read.css}"/>
   </th:block>
   <div layout:fragment="content">
     <div class="container main-wrapper">
@@ -11,42 +11,27 @@
           <div class="col-lg-9 diner-main-img">
             <div class="row">
               <div class="main-img">
-                <img
-                  th:src="|/dfup/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|"
-                  th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}"
-                  alt=""
-                  loading="lazy"
-                  width="680px"
-                  height="420px"
-                />
+                <img th:src="|/dfup/display?fileName=${dinerDto.dinerImageDtos[0].getImageURL()}|" th:if="${dinerDto.dinerImageDtos.size() > 0 && dinerDto.dinerImageDtos[0].path != null}" alt="" loading="lazy" width="680px" height="420px"/>
               </div>
               <div class="sub-img">
                 <ul>
                   <li th:each="dinerImage : ${dinerDto.dinerImageDtos}">
-                    <img
-                      th:attr="data-file=${dinerImage.getImageURL()}"
-                      data-bs-toggle="modal"
-                      data-bs-target="#imgModal"
-                      th:src="|/dfup/display?fileName=${dinerImage.getImageURL()}|"
-                      th:if="${dinerImage.path != null}"
-                      alt=""
-                      class="block"
-                      width="180px"
-                      height="140px"
-                    />
+                    <img th:attr="data-file=${dinerImage.getImageURL()}" data-bs-toggle="modal" data-bs-target="#imgModal" th:src="|/dfup/display?fileName=${dinerImage.getImageURL()}|" th:if="${dinerImage.path != null}" alt="" class="block" width="180px" height="140px"/>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
           <div class="col-lg-3 diner-map clearfix">
-            <div class="row ml-3"><img src="https://placehold.co/320x320" alt="" /></div>
+            <div class="row">
+              <div id="map" style="width: 320px; height: 320px;"></div>
+            </div>
             <div class="adress mt-3">
               <div class="row diner-address p-3">
-                <h4 th:text="${dinerDto.address}"></h4>
+                <h5 th:text="${dinerDto.address}"></h5>
               </div>
               <div class="row diner-detail-address p-3">
-                <h5 th:text="${dinerDto.addressDetail}"></h5>
+                <h6 th:text="${dinerDto.addressDetail}"></h6>
               </div>
             </div>
           </div>
@@ -55,18 +40,28 @@
       <div class="container">
         <div class="row mt-3 diner-overview-section">
           <div class="col-lg-3">
-            <div class="row diner-name"><h3 th:text="${dinerDto.name}"></h3></div>
+            <div class="row diner-name">
+              <h3 th:text="${dinerDto.name}"></h3>
+            </div>
             <div class="row diner-category">
               <h5 th:text="${dinerDto.categoryName}"></h5>
             </div>
-            <div class="row diner-phone"><h6 th:text="${dinerDto.phone}"></h6></div>
-            <div class="row diner-work-time"><h6 th:text="${dinerDto.workTime}"></h6></div>
+            <div class="row diner-phone">
+              <h6 th:text="${dinerDto.phone}"></h6>
+            </div>
+            <div class="row diner-work-time">
+              <h6 th:text="${dinerDto.workTime}"></h6>
+            </div>
           </div>
           <div class="diner-content-section col-lg-6">
-            <div class="diner-description-content p-3"><h4 th:text="${dinerDto.content}"></h4></div>
+            <div class="diner-description-content p-3">
+              <h4 th:text="${dinerDto.content}"></h4>
+            </div>
           </div>
           <div class="diner-menu-section col-lg-3">
-            <div class="diner-menu-list"><h5 th:text="${dinerDto.menu}"></h5></div>
+            <div class="diner-menu-list">
+              <h5 th:text="${dinerDto.menu}"></h5>
+            </div>
           </div>
         </div>
       </div>
@@ -81,14 +76,7 @@
           <div class="col">
             <button class="btn btn-info" id="modBtn">수정</button>
             <button class="btn btn-primary" id="listBtn">목록</button>
-            <button
-              class="btn btn-success"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#reviewCollapse"
-              aria-expanded="false"
-              aria-controls="reviewCollapse"
-            >
+            <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#reviewCollapse" aria-expanded="false" aria-controls="reviewCollapse">
               리뷰쓰기
             </button>
           </div>
@@ -108,7 +96,7 @@
                   <span class="star" data-value="4"></span>
                   <span class="star" data-value="5"></span>
                 </div>
-                <input type="hidden" name="tasteScore" id="tasteScore" value="" />
+                <input type="hidden" name="tasteScore" id="tasteScore" value=""/>
               </div>
               <div class="score-area col-lg-3">
                 <span>가격</span>
@@ -119,7 +107,7 @@
                   <span class="star" data-value="4"></span>
                   <span class="star" data-value="5"></span>
                 </div>
-                <input type="hidden" name="priceScore" id="priceScore" value="" />
+                <input type="hidden" name="priceScore" id="priceScore" value=""/>
               </div>
               <div class="score-area col-lg-3">
                 <span>서비스</span>
@@ -130,38 +118,22 @@
                   <span class="star" data-value="4"></span>
                   <span class="star" data-value="5"></span>
                 </div>
-                <input type="hidden" name="serviceScore" id="serviceScore" value="" />
+                <input type="hidden" name="serviceScore" id="serviceScore" value=""/>
               </div>
             </div>
             <div class="row">
               <div class="comment-area col-lg-12">
                 <div class="input-group">
-                  <textarea
-                    class="review-comment-input form-control"
-                    name="content"
-                    id="reviewCommentInput"
-                    rows="4"
-                  ></textarea>
+                  <textarea class="review-comment-input form-control" name="content" id="reviewCommentInput" rows="4"></textarea>
                 </div>
               </div>
             </div>
             <div class="row mt-2">
               <div class="input-group col-lg-10">
-                <input
-                  type="file"
-                  name="uploadFiles"
-                  class="form-control"
-                  id="reviewFile"
-                  accept="image/png, image/jpg, image/jpeg"
-                  multiple
-                />
+                <input type="file" name="uploadFiles" class="form-control" id="reviewFile" accept="image/png, image/jpg, image/jpeg" multiple="multiple"/>
               </div>
               <div class="col-lg-2">
-                <input
-                  type="hidden"
-                  name="mid"
-                  th:value="${#authentication.principal.memberDto.mid}"
-                />
+                <input type="hidden" name="mid" th:value="${#authentication.principal.memberDto.mid}"/>
                 <button type="submit" class="btn btn-success">리뷰 등록</button>
               </div>
             </div>
@@ -180,25 +152,73 @@
         </div>
       </div>
       <form action="" method="post" id="actionForm">
-        <input type="hidden" name="did" th:value="${dinerDto.did}" />
-        <input type="hidden" name="page" th:value="${requestDto.page}" />
-        <input type="hidden" name="size" th:value="${requestDto.size}" />
-        <input type="hidden" name="type" th:value="${requestDto.type}" />
-        <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
+        <input type="hidden" name="did" th:value="${dinerDto.did}"/>
+        <input type="hidden" name="page" th:value="${requestDto.page}"/>
+        <input type="hidden" name="size" th:value="${requestDto.size}"/>
+        <input type="hidden" name="type" th:value="${requestDto.type}"/>
+        <input type="hidden" name="keyword" th:value="${requestDto.keyword}"/>
       </form>
     </div>
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
+    <script id="kakaoMapApi" src="//dapi.kakao.com/v2/maps/sdk.js?appkey='[[${kakaoMap}]]'&libraries=services"></script>
     <script>
       const csrfValue = "[[${_csrf.token}]]";
       const did = "[[${dinerDto.did}]]";
+      const dinerAddr = "[[${dinerDto.address}]]";
+      const kakaoMap = "[[${kakaoMap}]]";
+
+      document
+        .getElementById("kakaoMapApi")
+        .src = kakaoMap;
+
+      //지도를 담을 영역
+      var mapContainer = document.getElementById("map");
+
+      // 지도 생성 옵션
+      var mapOptions = {
+        // 지도의 중심좌표
+        center: new kakao
+          .maps
+          .LatLng(33.450701, 126.570667),
+
+        // 지도의 레벨(확대, 축소 정도)
+        level: 3
+      };
+
+      //지도 생성
+      var map = new kakao
+        .maps
+        .Map(mapContainer, mapOptions);
+
+      // 주소-좌표 변환 객체
+      var geocoder = new kakao
+        .maps
+        .services
+        .Geocoder();
+
+      // 주소로 좌표를 검색합니다
+      geocoder.addressSearch(dinerAddr, function (result, status) {
+
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+
+          var coords = new kakao
+            .maps
+            .LatLng(result[0].y, result[0].x);
+
+          // 결과값으로 받은 위치를 마커로 표시합니다
+          var marker = new kakao
+            .maps
+            .Marker({map: map, position: coords});
+
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          map.setCenter(coords);
+        }
+      });
     </script>
     <script th:src="@{/js/diner/read.js}"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </th:block>
 </html>

@@ -1,6 +1,7 @@
 @font-face {
-  font-family: 'JalnanGothic';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+  font-family: "JalnanGothic";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff")
+    format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -13,11 +14,36 @@
   white-space: nowrap;
 }
 
-h4, label{
-  font-family: 'JalnanGothic';
+h4,
+label {
+  font-family: "JalnanGothic";
 }
 
-label{
+label {
   padding: 0;
   margin: 0;
+}
+
+#imageFilesDiv ul {
+  display: flex;
+  vertical-align: top;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  overflow: auto;
+}
+
+#imageFilesDiv ul li {
+  list-style-type: none;
+  margin-right: 30px;
+  margin-bottom: 10px;
+  display: inline;
+  cursor: pointer;
+}
+
+#imageFilesDiv ul li img {
+  cursor: pointer;
+}
+#imageFilesDiv ul li a {
+  text-decoration: none;
+  color: red;
 }

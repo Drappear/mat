@@ -10,7 +10,6 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerCategoryDto;
 import com.example.mat.dto.diner.DinerDto;
 import com.example.mat.dto.diner.DinerImageDto;
-import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerCategory;
@@ -32,7 +31,12 @@ public interface DinerService {
     // 식당 삭제
     void deleteDiner(Long did);
 
+    // 식당 이미지 삭제
+    void deleteDinerImage(String filePath);
+
     List<DinerCategoryDto> getCategoryList();
+
+    String getCategoryName(String dcid);
 
     public default DinerCategoryDto entityToDto(DinerCategory entity) {
         return DinerCategoryDto.builder().dcid(entity.getDcid()).name(entity.getName()).build();
@@ -48,23 +52,19 @@ public interface DinerService {
                 .name(diner.getName())
                 .address(diner.getAddress())
                 .addressDetail(diner.getAddressDetail())
-                .categoryName(diner.getDinerCategory().getName())
+                .categoryName(Long.toString(diner.getDinerCategory().getDcid()))
                 .content(diner.getContent())
                 .menu(diner.getMenu())
                 .workTime(diner.getWorkTime())
                 .phone(diner.getPhone())
                 .regNum(diner.getRegNum())
                 .regDate(diner.getRegDate())
-                // .viewCount(viewCount)
                 .build();
 
         List<DinerImageDto> dinerImageDtos = dinerImages.stream().map(dinerImage -> {
             return DinerImageDto.builder()
                     .inum(dinerImage.getInum())
-                    .uuid(dinerImage.getUuid())
-                    .imgName(dinerImage.getImgName())
                     .path(dinerImage.getPath())
-                    .imgCate(dinerImage.getImgCate())
                     .build();
         }).collect(Collectors.toList());
 
@@ -97,10 +97,7 @@ public interface DinerService {
         if (dinerImageDtos != null && dinerImageDtos.size() > 0) {
             List<Image> images = dinerImageDtos.stream().map(dto -> {
                 Image image = Image.builder()
-                        .uuid(dto.getUuid())
-                        .imgName(dto.getImgName())
                         .path(dto.getPath())
-                        .imgCate(dto.getImgCate())
                         .diner(diner)
                         .build();
                 return image;
@@ -111,4 +108,7 @@ public interface DinerService {
 
         return resultMap;
     }
+
+    void createDinerImage(DinerImageDto dinerImageDto);
+
 }
