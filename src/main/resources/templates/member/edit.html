@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{/layouts/layout}">
   <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/profile.css}" />
+    <link rel="stylesheet" th:href="@{/css/profile.css}"/>
   </th:block>
 
   <div th:replace="~{/fragments/header::header}"></div>
@@ -13,62 +13,25 @@
           <div class="profile-photo">
             <!-- 업로드한 이미지를 보여줄 img 태그 -->
 
-            <img
-              alt=""
-              th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|"
-              loading="lazy"
-              th:if="${#authentication.principal.memberDto.memberImageDto != null}"
-              id="profilePhoto"
-            />
-            <img
-              alt=""
-              th:src="@{/images/default-profile.png}"
-              loading="lazy"
-              th:if="${#authentication.principal.memberDto.memberImageDto == null}"
-              id="profilePhoto"
-            />
+            <img alt="" th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto != null}" id="profilePhoto"/>
+            <img alt="" th:src="@{/images/default-profile.png}" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto == null}" id="profilePhoto"/>
 
             <!-- 실제 파일 입력 요소는 숨김 처리 -->
 
-            <input
-              type="file"
-              name="profileImage"
-              id="profileImage"
-              accept="image/*"
-              style="display: none"
-            />
-            <button
-              type="button"
-              id="uploadBtn"
-              class="photo-upload-btn"
-              onclick="document.getElementById('profileImage').click();"
-            >
+            <input type="file" name="profileImage" id="profileImage" accept="image/*" style="display: none"/>
+            <button type="button" id="uploadBtn" class="photo-upload-btn" onclick="document.getElementById('profileImage').click();">
               +
             </button>
           </div>
         </form>
 
         <div class="profile-info">
-          <form
-            th:action="@{/member/edit/profile}"
-            method="post"
-            onsubmit="return validateForm();"
-          >
+          <form th:action="@{/member/edit/profile}" method="post" onsubmit="return validateForm();">
             <div class="form-group">
               <label for="nickname">닉네임</label>
-              <input
-                type="text"
-                id="nickname"
-                name="nickname"
-                th:value="${#authentication.principal.memberDto.nickname}"
-                th:data-current-nickname="${#authentication.principal.memberDto.nickname}"
-              />
+              <input type="text" id="nickname" name="nickname" th:value="${#authentication.principal.memberDto.nickname}" th:data-current-nickname="${#authentication.principal.memberDto.nickname}"/>
               <span class="input-group-btn">
-                <button
-                  type="button"
-                  class="btn btn-default"
-                  onclick="checkDuplicateNickname()"
-                >
+                <button type="button" class="btn btn-default" onclick="checkDuplicateNickname()">
                   중복 확인
                 </button>
               </span>
@@ -78,12 +41,7 @@
 
             <div class="form-group">
               <label for="bio">소개</label>
-              <textarea
-                id="bio"
-                name="bio"
-                rows="3"
-                th:text="${#authentication.principal.memberDto.bio}"
-              ></textarea>
+              <textarea id="bio" name="bio" rows="3" th:text="${#authentication.principal.memberDto.bio}"></textarea>
             </div>
             <div class="form-actions">
               <button class="submit-btn">저장</button>
@@ -93,7 +51,6 @@
       </div>
     </div>
   </div>
-  >
 
   <th:block layout:fragment="js">
     <script>
