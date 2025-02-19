@@ -100,9 +100,6 @@ const reviewLoaded = () => {
   fetch(`/review/${did}/all`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-      console.log("전체 리뷰 ", data.dtoList);
-
       // 도착한 data 화면에 보여주기
 
       //document.querySelector(".review-cnt").innerHTML = data.length;

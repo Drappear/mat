@@ -56,13 +56,6 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
 
         JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
-        // JPQLQuery<Long> rCnt =
-        // JPAExpressions.select(review.countDistinct()).from(review)
-        // .where(review.movie.eq(movieImage.movie));
-        // JPQLQuery<Double> rAvg =
-        // JPAExpressions.select(review.grade.avg().round()).from(review)
-        // .where(review.movie.eq(movieImage.movie));
-
         JPQLQuery<Long> inum = JPAExpressions.select(
                 image.inum.max()).from(
                         image)
@@ -161,5 +154,11 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
 
         return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
                 count);
+    }
+
+    @Override
+    public void deleteByPath(String path) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteByPath'");
     }
 }

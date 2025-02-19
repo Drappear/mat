@@ -60,6 +60,7 @@ public class DinerController {
             Model model) {
         log.info("get diner read 페이지 요청");
         DinerDto dinerDto = dinerService.getDinerDetail(did);
+        dinerDto.setCategoryName(dinerService.getCategoryName(dinerDto.getCategoryName()));
         model.addAttribute("dinerDto", dinerDto);
     }
 
@@ -115,8 +116,8 @@ public class DinerController {
                 dinerService.deleteDiner(did);
                 removeFolder("diner", did);
             }
-            
-          }
+
+        }
 
         dinerDto.setDinerImageDtos(dinerImageDtos);
         dinerDto.setDid(did);
@@ -147,6 +148,10 @@ public class DinerController {
     public String postDinerModify(DinerDto dinerDto, @ModelAttribute("requestDto") PageRequestDto pageRequestDto,
             RedirectAttributes rttr) {
         log.info("식당 정보 수정 {}", dinerDto);
+
+        List<DinerImageDto> dinerImageDtos = dinerService.getDinerDetail(dinerDto.getDid()).getDinerImageDtos();
+
+        dinerDto.setDinerImageDtos(dinerImageDtos);
 
         Long did = dinerService.updateDiner(dinerDto);
 

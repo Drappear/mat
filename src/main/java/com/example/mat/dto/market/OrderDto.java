@@ -1,5 +1,7 @@
 package com.example.mat.dto.market;
 
+import java.util.List;
+
 import com.example.mat.entity.constant.OrderStatus;
 import com.example.mat.entity.market.Product;
 
@@ -29,11 +31,11 @@ public class OrderDto {
     private String addr;
 
     private String detailAddr;
-    
     private String email;
 
     private OrderStatus orderStatus;
 
     private Product product;
-    
+    private List<OrderItemDto> orderItems; // ✅ DTO 리스트로 변경
+
 }

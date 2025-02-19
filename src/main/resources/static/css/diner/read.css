@@ -79,9 +79,6 @@ h7 {
   background-color: white;
   padding: 5px;
 }
-.review-input-section {
-  border: 1px solid;
-}
 
 .review-comment-input {
   resize: none;
@@ -91,7 +88,6 @@ h7 {
 
 .review-image-section {
   padding: 5px;
-  border: 1px solid;
   max-height: 220px;
 }
 .review-input-img-preview ul {
