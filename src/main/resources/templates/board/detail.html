@@ -1,179 +1,237 @@
 <!DOCTYPE html>
 <html lang="zxx" layout:decorate="~{/layouts/board/detailLayout}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Board Content</title>
+    <link rel="stylesheet" th:href="@{/css/board/detail.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Board Content</title>
-  <link rel="stylesheet" th:href="@{/css/board/detail.css}" />
-  <meta name="_csrf" th:content="${_csrf.token}" />
-  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-</head>
-
-<body>
-  <div layout:fragment="content">
-    <div class="container">
+  <body>
+    <div layout:fragment="content">
       <div class="container">
-        <div class="row align-center">
-          <div class="custom-col m-15px-tb">
-            <article class="blog-article">
-              <div class="blog-article-header">
-                <h4>
-                  <a th:href="@{/board/list(category=${board.categoryId})}" 
-                     th:text="${board.categoryId == 1 ? 'Free' : (board.categoryId == 2 ? 'Q&A' : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}">
-                    Category
-                  </a>
-                </h4>
-                <h2 th:text="${board.title}">제목</h2>
-
-                <!-- 조회 수 및 댓글 수 추가 -->
-                <div class="meta-info">
-                  <span><i class="fa-solid fa-eye"></i> 조회수: <span th:text="${board.viewCount}"></span></span>
-                  <span><i class="fa-solid fa-comment"></i> 댓글: <span th:text="${commentCount}"></span></span>
-                </div>
-
-                <div class="media">
-                  <div class="avatar">
-                    <img src="/sampleimg/hr1.jpg" title="My Avatar" alt="My Avatar" />
-                  </div>
-                  <div class="media-body">
-                    <label th:text="${board.userid}">Nickname</label>
-                    <span th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}">작성 시간</span>
-                  </div>
-                  <div class="post-buttons">
-                    <a th:if="${board.userid == #authentication.name}" 
-                       th:href="@{/board/modify/{bno}(bno=${board.bno})}" class="btn btn-secondary modify-btn">
-                      Modify
+        <div class="container">
+          <div class="row align-center">
+            <div class="custom-col m-15px-tb">
+              <article class="blog-article">
+                <div class="blog-article-header">
+                  <h4>
+                    <a
+                      th:href="@{/board/list(category=${board.categoryId})}"
+                      th:text="${board.categoryId == 1 ? 'Free' : (board.categoryId == 2 ? 'Q&A' : (board.categoryId == 3 ? 'TIP' : 'Unknown'))}"
+                    >
+                      Category
                     </a>
-                    <form th:if="${board.userid == #authentication.name}" 
-                          th:action="@{/board/delete/{bno}(bno=${board.bno})}" method="post" style="display: inline">
-                      <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                      <button type="submit" class="btn btn-danger delete-btn">Delete</button>
-                    </form>
+                  </h4>
+                  <h2 th:text="${board.title}">제목</h2>
+
+                  <!-- 조회 수 및 댓글 수 추가 -->
+                  <div class="meta-info">
+                    <span
+                      ><i class="fa-solid fa-eye"></i> 조회수:
+                      <span th:text="${board.viewCount}"></span
+                    ></span>
+                    <span
+                      ><i class="fa-solid fa-comment"></i> 댓글:
+                      <span th:text="${commentCount}"></span
+                    ></span>
                   </div>
-                </div>
-              </div>
-              
-              <div th:if="${board.imageFileName}" class="article-img">
-                <img th:src="@{/upload/{filename}(filename=${board.imageFileName})}" alt="첨부 이미지" style="max-width: 100%; height: auto" />
-              </div>
-              
-              <div class="blog-article-body">
-                <p th:utext="${board.content}" class="content-text"></p>
-              </div>
-            </article>
 
-            <!-- 댓글 작성 폼 -->
-            <div class="blog-comment-form">
-              <textarea id="comment" name="content" rows="4" class="form-control" placeholder="댓글을 입력하세요."></textarea>
-              <input type="hidden" id="boardId" th:value="${board.bno}" />
-              <button type="button" class="btn btn-primary" id="submitComment">Submit</button>
-            </div>
-
-            <!-- 댓글 목록 -->
-            <article class="blog-reply-content">
-              <div class="container bootstrap snippets bootdey">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="blog-comment">
-                      <ul class="comments">
-                        <li th:each="comment : ${comments}" class="clearfix">
-                          <img src="/sampleimg/hr3.jpg" class="avatar" alt="" />
-                          <div class="post-comments" data-comment-id="${comment.id}">
-                            <p class="meta">
-                              <span th:text="${comment.userid}">작성자</span>
-                              <span th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}">작성 시간</span>
-                              <i class="pull-right">
-                                <a th:if="${comment.userid == #authentication.name}" href="#" class="delete-link" th:data-comment-id="${comment.id}">
-                                  <small>Delete</small>
-                                </a>
-                              </i>
-                            </p>
-                            <p th:text="${comment.content}">댓글 내용</p>
-                          </div>
-                        </li>
-                      </ul>
+                  <div class="media">
+                    <div class="avatar">
+                      <!-- 🔥 게시글 작성자의 프로필 이미지 표시 -->
+                      <img
+                        th:src="${board.profileImage}"
+                        alt="작성자 프로필 이미지"
+                      />
+                    </div>
+                    <div class="media-body">
+                      <label th:text="${board.userid}">Nickname</label>
+                      <span
+                        th:text="${#temporals.format(board.regDate, 'yyyy년 MM월 dd일 HH시 mm분')}"
+                        >작성 시간</span
+                      >
+                    </div>
+                    <div class="post-buttons">
+                      <a
+                        th:if="${board.userid == #authentication.name}"
+                        th:href="@{/board/modify/{bno}(bno=${board.bno})}"
+                        class="btn btn-secondary modify-btn"
+                      >
+                        Modify
+                      </a>
+                      <form
+                        th:if="${board.userid == #authentication.name}"
+                        th:action="@{/board/delete/{bno}(bno=${board.bno})}"
+                        method="post"
+                        style="display: inline"
+                      >
+                        <input
+                          type="hidden"
+                          name="_csrf"
+                          th:value="${_csrf.token}"
+                        />
+                        <button type="submit" class="btn btn-danger delete-btn">
+                          Delete
+                        </button>
+                      </form>
                     </div>
                   </div>
                 </div>
+
+                <div th:if="${board.imageFileName}" class="article-img">
+                  <img
+                    th:src="@{/upload/{filename}(filename=${board.imageFileName})}"
+                    alt="첨부 이미지"
+                    style="max-width: 100%; height: auto"
+                  />
+                </div>
+
+                <div class="blog-article-body">
+                  <p th:utext="${board.content}" class="content-text"></p>
+                </div>
+              </article>
+
+              <!-- 댓글 작성 폼 -->
+              <div class="blog-comment-form">
+                <textarea
+                  id="comment"
+                  name="content"
+                  rows="4"
+                  class="form-control"
+                  placeholder="댓글을 입력하세요."
+                ></textarea>
+                <input type="hidden" id="boardId" th:value="${board.bno}" />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="submitComment"
+                >
+                  Submit
+                </button>
               </div>
-            </article>
+
+              <!-- 댓글 목록 -->
+              <article class="blog-reply-content">
+                <div class="container bootstrap snippets bootdey">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="blog-comment">
+                        <ul class="comments">
+                          <li th:each="comment : ${comments}" class="clearfix">
+                            <!-- 🔥 댓글 작성자의 프로필 이미지 표시 -->
+                            <img
+                              th:src="${comment.profileImage}"
+                              class="avatar"
+                              alt="댓글 작성자 프로필 이미지"
+                            />
+                            <div
+                              class="post-comments"
+                              data-comment-id="${comment.id}"
+                            >
+                              <p class="meta">
+                                <span th:text="${comment.userid}">작성자</span>
+                                <span
+                                  th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"
+                                  >작성 시간</span
+                                >
+                                <i class="pull-right">
+                                  <a
+                                    th:if="${comment.userid == #authentication.name}"
+                                    href="#"
+                                    class="delete-link"
+                                    th:data-comment-id="${comment.id}"
+                                  >
+                                    <small>Delete</small>
+                                  </a>
+                                </i>
+                              </p>
+                              <p th:text="${comment.content}">댓글 내용</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // 댓글 작성 AJAX
-      $("#submitComment").click(function () {
-        const commentContent = $("#comment").val();
-        const boardId = $("#boardId").val();
+      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        // 댓글 작성 AJAX
+        $("#submitComment").click(function () {
+          const commentContent = $("#comment").val();
+          const boardId = $("#boardId").val();
 
-        if (!commentContent.trim()) {
-          alert("댓글을 입력하세요.");
-          return;
-        }
+          if (!commentContent.trim()) {
+            alert("댓글을 입력하세요.");
+            return;
+          }
 
-        console.log("Submitting comment:", { commentContent, boardId });
+          console.log("Submitting comment:", { commentContent, boardId });
 
-        const csrfToken = $("meta[name='_csrf']").attr("content");
-        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-
-        fetch("/board/comment", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            [csrfHeader]: csrfToken
-          },
-          body: JSON.stringify({ content: commentContent, boardId: boardId })
-        })
-          .then((response) => {
-            if (response.ok) {
-              alert("댓글이 등록되었습니다.");
-              location.reload(); // 페이지 새로고침
-            } else {
-              response.json().then((err) => {
-                console.error("Error response from server:", err);
-                alert("댓글 등록 중 오류가 발생했습니다.");
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error during submission:", error);
-            alert("댓글 등록에 실패했습니다.");
-          });
-      });
-
-      // 댓글 삭제 AJAX
-      $(".delete-link").click(function (event) {
-        event.preventDefault();
-        const commentId = $(this).attr("data-comment-id");
-
-        if (confirm("이 댓글을 삭제하시겠습니까?")) {
           const csrfToken = $("meta[name='_csrf']").attr("content");
           const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-          fetch(`/board/comment/${commentId}`, {
-            method: "DELETE",
-            headers: { [csrfHeader]: csrfToken }
+          fetch("/board/comment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              [csrfHeader]: csrfToken,
+            },
+            body: JSON.stringify({ content: commentContent, boardId: boardId }),
           })
             .then((response) => {
               if (response.ok) {
-                alert("댓글이 삭제되었습니다.");
-                $(this).closest(".post-comments").parent().remove();
+                alert("댓글이 등록되었습니다.");
+                location.reload(); // 페이지 새로고침
               } else {
-                alert("댓글 삭제 중 오류가 발생했습니다.");
+                response.json().then((err) => {
+                  console.error("Error response from server:", err);
+                  alert("댓글 등록 중 오류가 발생했습니다.");
+                });
               }
             })
             .catch((error) => {
-              console.error("Error during deletion:", error);
-              alert("댓글 삭제에 실패했습니다.");
+              console.error("Error during submission:", error);
+              alert("댓글 등록에 실패했습니다.");
             });
-        }
-      });
-    </script>
-  </div>
-</body>
+        });
 
+        // 댓글 삭제 AJAX
+        $(".delete-link").click(function (event) {
+          event.preventDefault();
+          const commentId = $(this).attr("data-comment-id");
+
+          if (confirm("이 댓글을 삭제하시겠습니까?")) {
+            const csrfToken = $("meta[name='_csrf']").attr("content");
+            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+            fetch(`/board/comment/${commentId}`, {
+              method: "DELETE",
+              headers: { [csrfHeader]: csrfToken },
+            })
+              .then((response) => {
+                if (response.ok) {
+                  alert("댓글이 삭제되었습니다.");
+                  $(this).closest(".post-comments").parent().remove();
+                } else {
+                  alert("댓글 삭제 중 오류가 발생했습니다.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error during deletion:", error);
+                alert("댓글 삭제에 실패했습니다.");
+              });
+          }
+        });
+      </script>
+    </div>
+  </body>
 </html>

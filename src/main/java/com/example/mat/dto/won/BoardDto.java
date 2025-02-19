@@ -28,9 +28,9 @@ public class BoardDto {
     @NotBlank(message = "내용은 필수 항목입니다.")
     private String content; // 게시물 내용
 
-    private Long memberId; // 클라이언트로부터 전달받을 Member ID
+    private Long memberId; // 작성자 ID
 
-    private String userid; // 작성자의 사용자 ID
+    private String userid; // 작성자 아이디
 
     private Long viewCount; // 조회수
 
@@ -44,6 +44,8 @@ public class BoardDto {
     private String imageFileName; // 저장된 파일 경로
 
     private Long commentCount; // 댓글 개수 추가
+
+    private String profileImage; // 추가: 작성자의 프로필 이미지 URL
 
     public String getContentPreview() {
         if (content == null) {

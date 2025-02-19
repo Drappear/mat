@@ -3,12 +3,17 @@ package com.example.mat.service;
 import com.example.mat.dto.won.BoardCommentDto;
 import com.example.mat.entity.won.Board;
 import com.example.mat.entity.won.BoardComment;
+import com.example.mat.entity.shin.Member;
+import com.example.mat.entity.shin.MemberImage;
 import com.example.mat.repository.BoardCommentRepository;
 import com.example.mat.repository.BoardRepository;
+import com.example.mat.repository.MemberRepository;
+import com.example.mat.repository.shin.MemberImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +24,8 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
         private final BoardCommentRepository boardCommentRepository;
         private final BoardRepository boardRepository;
+        private final MemberRepository memberRepository;
+        private final MemberImageRepository memberImageRepository;
 
         @Override
         @Transactional
@@ -30,21 +37,11 @@ public class BoardCommentServiceImpl implements BoardCommentService {
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "게시글을 찾을 수 없습니다. ID: " + boardCommentDto.getBoardId()));
 
-                // // 부모 댓글 확인 (대댓글인 경우)
-                // BoardComment parentComment = null;
-                // if (boardCommentDto.getParentId() != null) {
-                // parentComment =
-                // boardCommentRepository.findById(boardCommentDto.getParentId())
-                // .orElseThrow(() -> new IllegalArgumentException(
-                // "부모 댓글을 찾을 수 없습니다. ID: " + boardCommentDto.getParentId()));
-                // }
-
                 // 댓글 엔티티 생성
                 BoardComment comment = BoardComment.builder()
                                 .content(boardCommentDto.getContent())
                                 .userid(boardCommentDto.getUserid())
                                 .board(board)
-                                // .parent(parentComment) // 부모 댓글 설정
                                 .build();
 
                 // 저장 및 ID 반환
@@ -88,11 +85,31 @@ public class BoardCommentServiceImpl implements BoardCommentService {
                                                 .content(comment.getContent())
                                                 .userid(comment.getUserid())
                                                 .boardId(comment.getBoard().getBno())
-                                                // .parentId(comment.getParent() != null ? comment.getParent().getId()
-                                                // : null)
                                                 .regDate(comment.getRegDate())
                                                 .updateDate(comment.getUpdateDate())
+                                                .profileImage(getProfileImageByUserid(comment.getUserid())) // 추가:
+                                                                                                            // 프로필 이미지
+                                                                                                            // 설정
                                                 .build())
                                 .collect(Collectors.toList());
+        }
+
+        private String getProfileImageByUserid(String userid) {
+                if (userid == null) {
+                        return "/images/default-profile.png"; // 기본 이미지
+                }
+
+                Member member = memberRepository.findByUserid(userid)
+                                .orElse(null);
+
+                if (member != null) {
+                        MemberImage memberImage = memberImageRepository.findByMember(member);
+                        if (memberImage != null) {
+                                return "/member/display?fileName=" + memberImage.getUuid() + "_"
+                                                + memberImage.getImgName();
+                        }
+                }
+
+                return "/images/default-profile.png"; // 기본 이미지
         }
 }
