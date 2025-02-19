@@ -1,5 +1,7 @@
 package com.example.mat.service;
 
+import com.example.mat.entity.market.Cart;
+
 public interface PaymentService {
 
     // 결제 검증 메서드

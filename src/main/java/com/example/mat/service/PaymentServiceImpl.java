@@ -1,9 +1,14 @@
 package com.example.mat.service;
 
 import com.example.mat.config.ImportConfig;
+import com.example.mat.entity.market.Cart;
+import com.example.mat.entity.market.CartItem;
 import com.example.mat.entity.market.Order;
 import com.example.mat.entity.market.Payment;
+import com.example.mat.entity.shin.Member;
 import com.example.mat.entity.constant.PaymentStatus;
+import com.example.mat.repository.CartItemRepository;
+import com.example.mat.repository.CartRepository;
 import com.example.mat.repository.OrderRepository;
 import com.example.mat.repository.PaymentRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,9 +19,12 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -27,9 +35,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final ImportConfig importConfig;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper; // ✅ Jackson ObjectMapper 사용
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // ✅ 아임포트 액세스 토큰 가져오기
     private String getAccessToken() {
@@ -119,8 +132,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     // ✅ 결제 정보 저장 및 주문 상태 변경
+    @Transactional
     @Override
     public void savePayment(String impUid, Long orderId, int paidAmount) {
+        log.info("🛒 savePayment() 호출됨 - 주문 ID: {}, 결제 UID: {}, 결제 금액: {}", orderId, impUid, paidAmount);
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("🚨 주문을 찾을 수 없습니다. orderId=" + orderId));
 
@@ -128,6 +144,8 @@ public class PaymentServiceImpl implements PaymentService {
         if (!isValid) {
             throw new IllegalStateException("❌ 결제 검증 실패: 결제 금액 불일치");
         }
+
+        log.info("✅ 결제 검증 완료! 결제 저장 시작...");
 
         // ✅ member_mid 및 order_oid 값 검증
         if (order.getMember() == null || order.getMember().getMid() == null) {
@@ -140,6 +158,8 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("✅ 결제 저장 시작 - 주문 ID: {}, 결제 UID: {}, 결제 금액: {}", orderId, impUid, paidAmount);
 
         try {
+
+            // ✅ 결제 정보 저장
             Payment payment = Payment.builder()
                     .member(order.getMember())
                     .order(order)
@@ -152,17 +172,44 @@ public class PaymentServiceImpl implements PaymentService {
             log.info("✅ 결제 객체 생성 완료: {}", payment);
             paymentRepository.save(payment);
 
+            // ✅ 장바구니 삭제
+            deleteCartItemsAfterPayment(order.getMember());
+
             // ✅ 주문 상태 업데이트
             order.setPayment(payment);
             order.setOrderStatus(com.example.mat.entity.constant.OrderStatus.ORDER);
             orderRepository.save(order);
 
-            log.info("✅ 결제 저장 완료! 결제 ID: {}, 주문 ID: {}", payment.getId(), order.getOid());
-
         } catch (Exception e) {
             log.error("❌ 결제 저장 중 오류 발생: {}", e.getMessage(), e);
             throw new RuntimeException("결제 저장 실패");
         }
+
+    }
+
+    @Transactional
+    public void deleteCartItemsAfterPayment(Member member) {
+        log.info("🛒 deleteCartItemsAfterPayment() 호출됨 - 회원 ID: {}", member.getMid());
+
+        // ✅ 장바구니 조회
+        Cart cart = cartRepository.findByMember(member);
+        if (cart == null) { // 🎯 NULL 체크 후 예외 처리
+            log.error("❌ 장바구니를 찾을 수 없습니다! 회원 ID: {}", member.getMid());
+            throw new EntityNotFoundException("❌ 장바구니를 찾을 수 없습니다!");
+        }
+        // ✅ 장바구니 아이템 조회
+        List<CartItem> cartItems = cartItemRepository.findByCartItems(cart.getCartid());
+        if (cartItems.isEmpty()) {
+            log.warn("⚠️ 삭제할 장바구니 아이템이 없음 - 장바구니 ID: {}", cart.getCartid());
+            return;
+        }
+
+        // ✅ 장바구니 아이템 삭제
+        cartItemRepository.deleteAll(cartItems);
+        entityManager.flush(); // 🚀 즉시 반영
+        entityManager.clear(); // 🚀 캐시 정리
+
+        log.info("✅ 장바구니 아이템 삭제 완료 - 삭제된 개수: {}", cartItems.size());
     }
 
 }

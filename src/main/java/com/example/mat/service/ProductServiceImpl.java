@@ -46,34 +46,33 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("pid").descending());
 
         // 데이터 조회
-        Page<Product> result = productRepository.findAll(pageable);
+        Page<Product> result = productRepository
+                .findAll(productRepository.makePredicate(requestDto.getType(), requestDto.getKeyword()), pageable);
 
         // Entity -> DTO 변환 함수
         Function<Product, ProductDto> fn = (product -> entityToDto(product));
 
         // PageResultDto 반환
         return new PageResultDto<>(result, fn);
-                
-        }
 
-        @Override
-        public PageResultDto<ProductDto, Product> getProductsByCategory(Long cateid, PageRequestDto requestDto) {
-            int page = (requestDto.getPage() > 0) ? requestDto.getPage() - 1 : 0;
-            int size = 9; // 한 페이지에 9개씩 표시
-        
-            // Pageable 객체 생성
-            Pageable pageable = PageRequest.of(page, size, Sort.by("pid").descending());
-        
-            // 특정 카테고리에 해당하는 상품 조회 (페이징 포함)
-            Page<Product> result = productRepository.findByProductCategory_Cateid(cateid, pageable);
-        
-            // Entity -> DTO 변환 함수
-            Function<Product, ProductDto> fn = this::entityToDto;
-        
-            // PageResultDto 반환
-            return new PageResultDto<>(result, fn);
-        }
+    }
 
+    @Override
+    public PageResultDto<ProductDto, Product> getProductsByCategory(Long cateid, PageRequestDto requestDto) {
+        int page = (requestDto.getPage() > 0) ? requestDto.getPage() - 1 : 0;
+        int size = 9; // 한 페이지에 9개씩 표시
 
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by("pid").descending());
+
+        // 특정 카테고리에 해당하는 상품 조회 (페이징 포함)
+        Page<Product> result = productRepository.findByProductCategory_Cateid(cateid, pageable);
+
+        // Entity -> DTO 변환 함수
+        Function<Product, ProductDto> fn = this::entityToDto;
+
+        // PageResultDto 반환
+        return new PageResultDto<>(result, fn);
+    }
 
 }
