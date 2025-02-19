@@ -85,9 +85,13 @@ public class BoardController {
         try {
             BoardDto boardDto = boardService.getDetail(bno);
             List<BoardCommentDto> comments = boardCommentService.getCommentsByBoard(bno);
-            log.debug("[COMMENTS]: {}", comments); // 댓글 확인
+            int commentCount = comments.size(); // 댓글 개수 추가
+            log.debug("[COMMENTS]: {}, [COMMENT COUNT]: {}", comments, commentCount);
+
             model.addAttribute("board", boardDto);
-            model.addAttribute("comments", comments); // 댓글 추가
+            model.addAttribute("comments", comments);
+            model.addAttribute("commentCount", commentCount); // 댓글 수 추가
+
             return "board/detail";
         } catch (Exception e) {
             log.error("[ERROR] 게시물 상세보기 중 오류 발생", e);
