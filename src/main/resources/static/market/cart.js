@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 장바구니 페이지에서만 실행
   if (!document.querySelector(".shoping-cart")) return;
 
-  console.log("cart-page.js 실행됨");
+  console.log("cart.js 실행됨");
 
   // 장바구니의 모든 상품 행을 가져옴
   const cartItems = document.querySelectorAll("tr[data-cart-id]");
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(
           `"${
             item.querySelector("h5").innerText
-          }" 상품은 최대 ${maxQuantity}개까지 구매할 수 있습니다.`
+          }" 최대 ${maxQuantity}개까지 구매할 수 있습니다.`
         );
         return; // 조건 충족 시 동작 중단
       }

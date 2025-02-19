@@ -43,6 +43,9 @@ public interface MemberService {
 
     boolean checkDuplicateNickname(String nickname);
 
+    // 결제 시, 멤버 정보 가져오기
+    MemberDto getMemberById(Long mid);
+
     // dtoToEntity
     default Member dtoToEntity(MemberDto memberDto) {
         return Member.builder()
