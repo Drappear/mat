@@ -17,6 +17,9 @@ public interface CartService {
     // mid 이용하여 카트 리스트 조회
     public List<CartDetailDto> getCartList(Long mid);
 
+    // 카트 수량 업데이트
+    public void updateCartItemQuantity(Long cartItemId, int quantity);
+
     // 카트 아이템 제거
     public void deleteCartItem(Long cartitemid);
 

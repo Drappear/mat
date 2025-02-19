@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="zxx" >
+   
   <head>
+    
     <meta charset="UTF-8" />
     <meta name="description" content="Ogani Template" />
     <meta name="keywords" content="Ogani, unica, creative, html" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Oganic | Template</title>
+    <title>MatDongSan</title>
 
     <!-- Google Font -->
     <link
@@ -55,95 +57,285 @@
       <div class="loader"></div>
     </div>
 
-    <!-- Header Section Begin -->
-    <header class="header">
-      <div class="header__top">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="header__top__left">
-                <ul>
-                  <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                  <li>Free Shipping for all Order of $99</li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="header__top__right">
-                <div class="header__top__right__social">
-                  <a href="#"><i class="fa fa-facebook"></i></a>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                  <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                </div>
-                <div class="header__top__right__language">
-                  <img src="/assets/img/language.png" alt="" />
-                  <div>English</div>
-                  <span class="arrow_carrot-down"></span>
-                  <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                  </ul>
-                </div>
-                <div class="header__top__right__auth">
-                  <a href="#"><i class="fa fa-user"></i> Login</a>
-                </div>
-              </div>
-            </div>
-          </div>
+<!-- Header Section Begin -->
+<header class="header" th:fragment="header">
+  <link rel="stylesheet" th:href="@{/css/headerLogo.css}" />
+  <style>
+    .header-member-container {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 헤더 카트 영역 스타일링 */
+    .header__cart {
+      position: relative;
+      display: flex;
+      align-items: center;
+      text-align: justify;
+      padding: 0;
+    }
+
+    .header__cart ul {
+      margin: 0;
+    }
+
+    /* 메인 프로필 컨테이너 */
+    .header__top__right__auth {
+      position: relative;
+    }
+
+    /* 비로그인 상태 로그인 버튼 */
+    .header-member-login > a.login-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 15px;
+      padding: 10px;
+      background: linear-gradient(to right, #7fad39, #95c24d);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(127, 173, 57, 0.2);
+    }
+
+    .header-member-login > a.login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(127, 173, 57, 0.3);
+    }
+
+    /* 로그인 상태 프로필 박스 */
+    .header__top__right__auth > a:has(div) {
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      min-width: 280px;
+      background: white;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .header__top__right__auth > a:has(div):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    /* 프로필 상단 텍스트 */
+    .header__top__right__auth > a > div {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    /* 프로필 사진 및 정보 영역 */
+    .profile-photo {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      margin-left: 5px;
+    }
+
+    /* 프로필 이름 링크 */
+    .profile-photo a {
+      color: #333;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      margin-left: 12px;
+      transition: color 0.3s ease;
+    }
+
+    .profile-photo a:hover {
+      color: #7fad39;
+    }
+
+    /* 로그아웃 버튼 */
+    .header-member-login > a.logout-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 5px;
+      padding: 10px;
+      color: #666;
+      font-size: 14px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .header-member-login > a.logout-button:hover {
+      background: #f0f0f0;
+      color: #333;
+      transform: translateY(-1px);
+    }
+
+    .header-member-login > a.logout-button i {
+      font-size: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .header-member-login > a.logout-button i {
+      transform: translateX(3px);
+    }
+
+    /* 반응형 스타일링 */
+    @media (max-width: 768px) {
+      .header__top__right__auth {
+        margin: 15px 0;
+      }
+
+      .header__top__right__auth > a:has(div) {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+      }
+
+      .profile-photo {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .profile-photo a {
+        margin-left: 0;
+      }
+    }
+
+    /* 애니메이션 효과 */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header__top__right__auth > a {
+      animation: slideIn 0.3s ease;
+    }
+  </style>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="header__logo">
+          <a th:href="@{/main}">
+            <img th:src="@{/assets/img/logo.png}" class="logo" alt="" />
+          </a>
         </div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="header__logo">
-              <a href="./main.html"
-                ><img src="/assets/img/logo.png" alt=""
-              /></a>
-            </div>
-          </div>
           <div class="col-lg-6">
             <nav class="header__menu">
               <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li class="active"><a href="./shop-grid.html">Shop</a></li>
+                <li class="active">
+                  <a th:href="@{/main}">Home</a>
+                </li>
                 <li>
-                  <a href="#">Pages</a>
+                  <a th:href="@{/market/list}">Market</a>
                   <ul class="header__menu__dropdown">
-                    <li><a href="./shop-details.html">Shop Details</a></li>
-                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                    <li><a href="./checkout.html">Check Out</a></li>
-                    <li><a href="./blog-details.html">Blog Details</a></li>
+                    <li>
+                      <a th:href="@{/market/orderComplete}">Order</a>
+                    </li>
                   </ul>
                 </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
+                <li>
+                  <a th:href="@{/recipe/list}">Recipe</a>
+                </li>
+                <li>
+                  <a th:href="@{/diner/list}">Diner</a>
+                  <ul class="header__menu__dropdown">
+                    <li>
+                      <a th:href="@{/diner/list}">식당 목록</a>
+                    </li>
+                    <li>
+                      <a th:href="@{/diner/register}">식당 등록</a>
+                    </li>
+                  </ul>
+                </li>
+                <!-- <li> <a href="#">Pages</a> <ul class="header__menu__dropdown"> <li> <a href="./shop-details.html">Shop Details</a> </li> <li> <a href="./shoping-cart.html">Shoping Cart</a> </li> <li> <a href="./checkout.html">Check Out</a> </li> <li> <a href="./blog-details.html">Blog Details</a> </li> </ul> </li> -->
+                <li>
+                  <a th:href="@{/board/list}">Forum</a>
+                  <ul class="header__menu__dropdown">
+                    <li>
+                      <a th:href="@{/board/list?category=1}">Free Category</a>
+                    </li>
+                    <li>
+                      <a th:href="@{/board/list?category=2}">Q&A Category</a>
+                    </li>
+                    <li>
+                      <a th:href="@{/board/list?category=3}">Tip Category</a>
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </nav>
           </div>
           <div class="col-lg-3">
-            <div class="header__cart">
-              <ul>
-                <li>
-                  <a href="#"><i class="fa fa-heart"></i> <span>1</span></a>
-                </li>
-                <li>
-                  <a href="#"
-                    ><i class="fa fa-shopping-bag"></i> <span>3</span></a
-                  >
-                </li>
-              </ul>
+            <div class="header-member-container">
+              <div class="header__cart" sec:authorize="isAuthenticated()">
+                <ul>
+                  <li>
+                    <a th:href="@{/market/cart}">
+                      <i class="fa fa-shopping-bag"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="header__top__right__auth">
+                <a sec:authorize="isAuthenticated()">
+                  <div>
+                    <div id="profileForm" class="profile-photo" style="display: flex; align-items: center; gap: 5px">
+                      <img alt="" th:src="|/member/display?fileName=${#authentication.principal.memberDto.memberImageDto.getImageURL()}|" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto != null}" style="
+                      width: 50px;
+                      height: 50px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                      "/>
+                      <img alt="" th:src="@{/images/default-profile.png}" loading="lazy" th:if="${#authentication.principal.memberDto.memberImageDto == null}" style="
+                      width: 50px;
+                      height: 50px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                      "/>
+                      <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                      <a th:href="@{/member/profile}" th:text="${#authentication.principal.memberDto.nickname + ' 님'}" style="margin-left: 5px"></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="header-member-login">
+                  <!-- 로그인하지 않은 사용자를 위한 Login 버튼 -->
+                  <a class="login-button" th:href="@{/member/login}" sec:authorize="!isAuthenticated()">
+                    <i class="fa fa-user"></i>
+                    Login
+                  </a>
+  
+                  <!-- 로그인한 사용자를 위한 Log out 버튼 -->
+                  <a class="logout-button" th:href="@{/member/logout}" sec:authorize="isAuthenticated()">
+                    <i class="fa fa-sign-out"></i>
+                    Log out
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
         <div class="humberger__open">
           <i class="fa fa-bars"></i>
         </div>
       </div>
     </header>
     <!-- Header Section End -->
-
+   
     <!-- Hero Section Begin -->
+
     <section class="hero hero-normal">
       <div class="container">
         <div class="row">
@@ -170,6 +362,7 @@
         </div>
       </div>
     </section>
+    </div>
     <!-- Hero Section End -->
 
     <!-- Breadcrumb Section Begin -->
@@ -194,7 +387,7 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Product Section Begin -->
-    <section class="product spad">
+    <div class="product spad">
       <div class="container">
         <div class="row">
           <div class="col-lg-3 col-md-5">
@@ -212,11 +405,11 @@
                   <li>
                     <a th:href="@{/market/list(cateid=2)}">과일 • 견과 • 쌀</a>
                   </li>
-                  <li><a href="#">수산 • 해산 • 건어물</a></li>
-                  <li><a href="#">면 • 양념 • 오일</a></li>
-                  <li><a href="#">생수 • 음료</a></li>
-                  <li><a href="#">간식 • 베이커리</a></li>
-                  <li><a href="#">유제품</a></li>
+                  <li><a th:href="@{/market/list(cateid=4)}">수산 • 해산 • 건어물</a></li>
+                  <li><a th:href="@{/market/list(cateid=5)}">면 • 양념 • 오일</a></li>
+                  <li><a th:href="@{/market/list(cateid=6)}">생수 • 음료</a></li>
+                  <li><a th:href="@{/market/list(cateid=7)}">간식 • 베이커리</a></li>
+                  <li><a th:href="@{/market/list(cateid=8)}">유제품</a></li>
                 </ul>
               </div>
             </div>
@@ -235,14 +428,18 @@
                     <div class="product__item__pic set-bg">
                       <a th:href="@{/market/details(pid=${dto.pid})}"
                         ><img
-                          th:src="@{/assets/img/product/fruits/product-__${dto.pid}__.jpg}"
+                          th:src="@{/assets/img/product/product/product-__${dto.pid}__.jpg}"
                         />
                       </a>
                       <ul class="product__item__pic__hover">
                         <li>
-                          <a th:href="@{/market/cart}"
-                            ><i class="fa fa-shopping-cart"></i
-                          ></a>
+                          <a
+                            href="#"
+                            class="add-to-cart"
+                            th:data-pid="${dto.pid}"
+                          >
+                            <i class="fa fa-shopping-cart"></i>
+                          </a>
                         </li>
                       </ul>
                     </div>
@@ -255,7 +452,7 @@
                       </h6>
                       <h5
                         th:href="@{details(pid=${dto.pid})}"
-                        th:text="${dto.price}"
+                        th:text="${#numbers.formatInteger(dto.price, 3, 'COMMA')}"
                       ></h5>
                     </div>
                   </div>
@@ -294,6 +491,7 @@
           </div>
         </div>
       </div>
+    </div>
     </section>
     <!-- Product Section End -->
 
@@ -307,4 +505,26 @@
     <script src="/assets/js/owl.carousel.min.js"></script>
     <script src="/assets/js/main.js"></script>
   </body>
+  <th:block layout:fragment="script">
+    <script>
+      $(document).ready(function () {
+        $(".add-to-cart").click(function (e) {
+          e.preventDefault(); // 기본 이동 방지
+          var pid = $(this).data("pid");
+
+          $.ajax({
+            type: "POST",
+            url: "/market/cart",
+            data: { pid: pid, quantity: 1 },
+            success: function () {
+              window.location.href = "/market/cart";
+            },
+            error: function () {
+              alert("장바구니 추가에 실패했습니다.");
+            },
+          });
+        });
+      });
+    </script>
+  </th:block>
 </html>

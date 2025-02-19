@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.example.mat.dto.PageRequestDto;
 import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.market.CartDetailDto;
@@ -37,6 +39,7 @@ import com.example.mat.service.MemberService;
 import com.example.mat.service.OrderService;
 import com.example.mat.service.ProductService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,13 +90,24 @@ public class MarketController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/cart")
-    public String cart(@ModelAttribute CartItemDto cartItemDto) {
-        log.info("카트 추가 정보 {}", cartItemDto);
+    public ResponseEntity<?> addToCart(@ModelAttribute CartItemDto cartItemDto,
+            HttpServletRequest request) {
+        log.info("📌 장바구니 추가 요청 - 상품 ID: {}, 수량: {}", cartItemDto.getPid(), cartItemDto.getQuantity());
 
         MemberDto memberDto = MemberDto.builder().mid(getAuthentication().getMemberDto().getMid()).build();
         cartService.addCart(cartItemDto, memberDto);
-        return "redirect:cart";
 
+        // list 페이지에서 AJAX 요청
+        String requestType = request.getHeader("X-Requested-With");
+        if ("XMLHttpRequest".equals(requestType)) {
+            // JAX 요청일 경우 JSON 응답 반환
+            return ResponseEntity.ok(Map.of("message", "상품이 장바구니에 추가되었습니다!"));
+        }
+
+        // detail 페이지에서 form 사용
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/market/cart")
+                .build();
     }
 
     @PreAuthorize("isAuthenticated()")
