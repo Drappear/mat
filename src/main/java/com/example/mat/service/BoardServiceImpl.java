@@ -7,6 +7,7 @@ import com.example.mat.entity.shin.Member;
 import com.example.mat.repository.BoardCategoryRepository;
 import com.example.mat.repository.BoardRepository;
 import com.example.mat.repository.BoardImageRepository;
+import com.example.mat.repository.BoardCommentRepository;
 import com.example.mat.repository.MemberRepository;
 import com.example.mat.util.HtmlUtil;
 
@@ -36,6 +37,7 @@ public class BoardServiceImpl implements BoardService {
         private final BoardCategoryRepository boardCategoryRepository;
         private final MemberRepository memberRepository;
         private final BoardImageRepository boardImageRepository;
+        private final BoardCommentRepository boardCommentRepository;
 
         @Value("${com.example.mat.upload.path}")
         private String uploadPath;
@@ -69,20 +71,10 @@ public class BoardServiceImpl implements BoardService {
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "수정하려는 게시물을 찾을 수 없습니다. ID: " + boardDto.getBno()));
 
-                // 기존 이미지 삭제
-                if (deleteImage && board.getImage() != null) {
-                        BoardImage existingImage = board.getImage();
-                        try {
-                                Path existingFilePath = Paths.get(uploadPath, existingImage.getImgName());
-                                Files.deleteIfExists(existingFilePath);
-                        } catch (IOException e) {
-                                throw new RuntimeException("기존 이미지를 삭제하지 못했습니다.", e);
-                        }
-                        boardImageRepository.delete(existingImage);
-                        board.setImage(null); // 이미지 연결 해제
+                if (deleteImage) {
+                        deleteExistingImage(board);
                 }
 
-                // 새 이미지 처리
                 if (file != null && !file.isEmpty()) {
                         handleImageProcessing(board, file);
                 }
@@ -101,24 +93,18 @@ public class BoardServiceImpl implements BoardService {
                 Board board = boardRepository.findById(bno)
                                 .orElseThrow(() -> new IllegalArgumentException("삭제하려는 게시물을 찾을 수 없습니다. ID: " + bno));
 
-                if (board.getImage() != null) {
-                        BoardImage existingImage = board.getImage();
-                        try {
-                                Files.deleteIfExists(Paths.get(uploadPath, existingImage.getImgName()));
-                        } catch (IOException e) {
-                                throw new RuntimeException("이미지를 삭제하지 못했습니다.", e);
-                        }
-                        boardImageRepository.delete(existingImage);
-                }
-
+                deleteExistingImage(board);
                 boardRepository.delete(board);
         }
 
         @Override
-        @Transactional(readOnly = true)
+        @Transactional
         public BoardDto getDetail(Long bno) {
                 Board board = boardRepository.findById(bno)
                                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다. ID: " + bno));
+
+                board.setViewCount(board.getViewCount() + 1);
+                boardRepository.save(board);
 
                 return BoardDto.builder()
                                 .bno(board.getBno())
@@ -126,12 +112,13 @@ public class BoardServiceImpl implements BoardService {
                                 .content(HtmlUtil.convertNewlinesToHtml(board.getContent()))
                                 .memberId(board.getMember().getMid())
                                 .userid(board.getMember().getUserid())
-                                .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
+                                .viewCount(board.getViewCount())
                                 .regDate(board.getRegDate())
                                 .updateDate(board.getUpdateDate())
                                 .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo()
                                                 : null)
                                 .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
+                                .commentCount(boardCommentRepository.countByBoardId(board.getBno()))
                                 .build();
         }
 
@@ -139,42 +126,14 @@ public class BoardServiceImpl implements BoardService {
         @Transactional(readOnly = true)
         public Page<BoardDto> getList(String keyword, Long category, Pageable pageable) {
                 return boardRepository.findByKeywordAndCategory(keyword, category, pageable)
-                                .map(board -> BoardDto.builder()
-                                                .bno(board.getBno())
-                                                .title(board.getTitle())
-                                                .content(board.getContent())
-                                                .memberId(board.getMember().getMid())
-                                                .userid(board.getMember().getUserid())
-                                                .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
-                                                .regDate(board.getRegDate())
-                                                .updateDate(board.getUpdateDate())
-                                                .categoryId(board.getBoardCategory() != null
-                                                                ? board.getBoardCategory().getBoardCNo()
-                                                                : null)
-                                                .imageFileName(board.getImage() != null ? board.getImage().getImgName()
-                                                                : null)
-                                                .build());
+                                .map(board -> convertToDto(board));
         }
 
         @Override
         @Transactional(readOnly = true)
         public Page<BoardDto> getListByUserid(String userid, Pageable pageable) {
                 return boardRepository.findByUserid(userid, pageable)
-                                .map(board -> BoardDto.builder()
-                                                .bno(board.getBno())
-                                                .title(board.getTitle())
-                                                .content(board.getContent())
-                                                .memberId(board.getMember().getMid())
-                                                .userid(board.getMember().getUserid())
-                                                .viewCount(board.getViewCount() != null ? board.getViewCount() : 0L)
-                                                .regDate(board.getRegDate())
-                                                .updateDate(board.getUpdateDate())
-                                                .categoryId(board.getBoardCategory() != null
-                                                                ? board.getBoardCategory().getBoardCNo()
-                                                                : null)
-                                                .imageFileName(board.getImage() != null ? board.getImage().getImgName()
-                                                                : null)
-                                                .build());
+                                .map(board -> convertToDto(board));
         }
 
         @Override
@@ -186,36 +145,48 @@ public class BoardServiceImpl implements BoardService {
         }
 
         private void handleImageProcessing(Board board, MultipartFile imageFile) {
-                // 기존 이미지 삭제
-                if (board.getImage() != null) {
-                        BoardImage existingImage = board.getImage();
-                        try {
-                                Path existingFilePath = Paths.get(uploadPath, existingImage.getImgName());
-                                boolean deleted = Files.deleteIfExists(existingFilePath); // 파일 삭제
-                                if (deleted) {
-                                        log.info("기존 이미지 파일 삭제 성공: " + existingFilePath);
-                                } else {
-                                        log.warn("기존 이미지 파일을 찾을 수 없습니다: " + existingFilePath);
-                                }
-                        } catch (IOException e) {
-                                log.error("기존 이미지를 삭제하는 중 에러 발생: " + existingImage.getImgName(), e);
-                                throw new RuntimeException("기존 이미지를 삭제하지 못했습니다.", e);
-                        }
-                        boardImageRepository.delete(existingImage); // 데이터베이스에서 이미지 삭제
-                        log.info("기존 이미지 데이터베이스 삭제 성공");
-                }
-
-                // 새 이미지 저장
+                deleteExistingImage(board);
                 String savedFilePath = saveFile(imageFile);
                 String uniqueUuid = generateUniqueUuid();
+
                 BoardImage newImage = BoardImage.builder()
                                 .imgName(savedFilePath)
                                 .uuid(uniqueUuid)
                                 .board(board)
                                 .path(uploadPath)
                                 .build();
-                board.setImage(newImage); // 새 이미지 설정
-                log.info("새 이미지 저장 성공: " + savedFilePath);
+                board.setImage(newImage);
+                boardImageRepository.save(newImage);
+        }
+
+        private void deleteExistingImage(Board board) {
+                if (board.getImage() != null) {
+                        try {
+                                Path imagePath = Paths.get(uploadPath, board.getImage().getImgName());
+                                Files.deleteIfExists(imagePath);
+                                boardImageRepository.delete(board.getImage());
+                                board.setImage(null); // 삭제 후 이미지 참조 해제
+                        } catch (IOException e) {
+                                throw new RuntimeException("기존 이미지를 삭제하지 못했습니다.", e);
+                        }
+                }
+        }
+
+        private String saveFile(MultipartFile file) {
+                if (file == null || file.isEmpty()) {
+                        throw new IllegalArgumentException("업로드된 파일이 없습니다.");
+                }
+
+                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadPath, fileName);
+
+                try {
+                        Files.createDirectories(filePath.getParent());
+                        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                        return fileName;
+                } catch (IOException e) {
+                        throw new RuntimeException("파일 저장 중 오류 발생: " + e.getMessage(), e);
+                }
         }
 
         private String generateUniqueUuid() {
@@ -223,33 +194,23 @@ public class BoardServiceImpl implements BoardService {
                 do {
                         uuid = UUID.randomUUID().toString();
                 } while (boardImageRepository.existsByUuid(uuid));
-                log.info("생성된 UUID: " + uuid);
                 return uuid;
         }
 
-        private String saveFile(MultipartFile file) {
-                if (file == null || file.isEmpty()) {
-                        log.warn("파일이 비어 있습니다.");
-                        return null;
-                }
-
-                String fileName;
-                do {
-                        String uuid = UUID.randomUUID().toString();
-                        fileName = uuid + "_" + file.getOriginalFilename();
-                } while (boardImageRepository.existsByUuid(fileName.split("_")[0]));
-
-                Path filePath = Paths.get(uploadPath, fileName);
-
-                try {
-                        Files.createDirectories(filePath.getParent()); // 경로가 없으면 생성
-                        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        log.info("파일 저장 성공: " + filePath);
-                        return fileName;
-                } catch (IOException e) {
-                        log.error("파일 저장 실패: " + filePath, e);
-                        throw new RuntimeException("파일 업로드 실패: " + e.getMessage(), e);
-                }
+        private BoardDto convertToDto(Board board) {
+                return BoardDto.builder()
+                                .bno(board.getBno())
+                                .title(board.getTitle())
+                                .content(board.getContent())
+                                .memberId(board.getMember().getMid())
+                                .userid(board.getMember().getUserid())
+                                .viewCount(board.getViewCount())
+                                .regDate(board.getRegDate())
+                                .updateDate(board.getUpdateDate())
+                                .categoryId(board.getBoardCategory() != null ? board.getBoardCategory().getBoardCNo()
+                                                : null)
+                                .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
+                                .commentCount(boardCommentRepository.countByBoardId(board.getBno()))
+                                .build();
         }
-
 }

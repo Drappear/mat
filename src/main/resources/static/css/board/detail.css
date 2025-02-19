@@ -14,10 +14,11 @@ body {
   padding-bottom: 5px;
   margin: 15px 0 30px;
 
-  min-width: 888px; /* 최소 너비 */
-  min-height: 444px; /* 최소 높이 */
+  min-width: 888px;
+  min-height: 444px;
   max-width: 888px;
 }
+
 .blog-article-header {
   padding: 15px 0 20px;
 }
@@ -60,7 +61,7 @@ body {
 }
 .blog-article-body {
   color: #20247b;
-  line-height: 1.8; /* Readability improvement */
+  line-height: 1.8;
 }
 img {
   max-width: 100%;
@@ -82,6 +83,18 @@ img {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding-left: 3%;
   padding-right: 3%;
+}
+
+/* 조회 수 및 댓글 수 스타일 */
+.meta-info {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+}
+.meta-info i {
+  margin-right: 5px;
 }
 
 /* Content Placeholder */
@@ -147,19 +160,19 @@ img {
   gap: 10px;
 }
 .blog-comment ul.comments li .meta i a.modify-link {
-  color: #1d7117; /* Modify: 녹색 유지 */
+  color: #1d7117;
 }
 .blog-comment ul.comments li .meta i a.modify-link:hover {
   text-decoration: underline;
 }
 .blog-comment ul.comments li .meta i a.delete-link {
-  color: #c3303f; /* Delete: 빨강 */
+  color: #c3303f;
 }
 .blog-comment ul.comments li .meta i a.delete-link:hover {
   text-decoration: underline;
 }
 .blog-comment ul.comments li .meta i a.reply-link {
-  color: #ff8c00; /* Reply: 주황 */
+  color: #ff8c00;
 }
 .blog-comment ul.comments li .meta i a.reply-link:hover {
   text-decoration: underline;
@@ -224,7 +237,7 @@ img {
   font-size: 12px;
 }
 .modify-btn:hover {
-  background-color: #7fad39;
+  background-color: #6b9932;
   border-color: #fff;
 }
 .delete-btn {
@@ -236,7 +249,7 @@ img {
   font-size: 12px;
 }
 .delete-btn:hover {
-  background-color: c3303f(134, 38, 47);
+  background-color: #a12b34;
   border-color: #fff;
 }
 .blog-comment ul.comments li .meta i a.reply-link {
@@ -245,6 +258,6 @@ img {
   border-color: #fff;
 }
 .blog-comment ul.comments li .meta i a.reply-link:hover {
-  color: orange;
+  color: darkorange;
   border-color: #fff;
 }

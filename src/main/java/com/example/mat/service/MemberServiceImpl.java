@@ -30,6 +30,7 @@ import com.example.mat.repository.RecipeRepository;
 import com.example.mat.repository.diner.DinerReviewRepository;
 import com.example.mat.repository.shin.MemberImageRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -196,6 +197,21 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
         memberImageRepository.save(memberImage);
 
+    }
+
+    // 결제 시, 멤버 정보 가져오기
+    @Override
+    public MemberDto getMemberById(Long mid) {
+        Member member = memberRepository.findById(mid)
+                .orElseThrow(() -> new EntityNotFoundException("회원 정보를 찾을 수 없습니다."));
+        return MemberDto.builder()
+                .mid(member.getMid())
+                .username(member.getUsername())
+                .email(member.getEmail())
+                .tel(member.getTel())
+                .addr(member.getAddr())
+                .detailAddr(member.getDetailAddr())
+                .build();
     }
 
 }
