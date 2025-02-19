@@ -76,20 +76,16 @@ public class DinerUploadController {
                 // 폴더 저장
                 multipartFile.transferTo(savePath);
                 log.info("uploadCon 이미지 파일 저장 완료");
+                DinerImageDto dinerImageDto = new DinerImageDto();
+                dinerImageDto.setDid(did);
+                dinerImageDto.setPath(savePath.toString());
+                dinerService.createDinerImage(dinerImageDto);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            DinerImageDto dinerImageDto = new DinerImageDto();
-            dinerImageDto.setDid(did);
-            dinerImageDto.setPath(savePath.toString());
-            dinerImageDtos.add(dinerImageDto);
-
         }
-        DinerDto dinerDto = dinerService.getDinerDetail(did);
-        dinerDto.setDinerImageDtos(dinerImageDtos);
-        dinerService.updateDiner(dinerDto);
         return new ResponseEntity<List<DinerImageDto>>(dinerImageDtos, HttpStatus.OK);
     }
 

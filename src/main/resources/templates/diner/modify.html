@@ -19,7 +19,7 @@
                     <div class="col col-lg-1">
                       <select class="form-select" name="categoryName" id="categoryName">
                         <option>분류</option>
-                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.name}"></option>
+                        <option th:each="category : ${categories}" th:value="${category.dcid}" th:text="${category.name}" th:selected="${dinerDto.categoryName} == ${category.dcid}"></option>
                       </select>
                     </div>
                   </div>

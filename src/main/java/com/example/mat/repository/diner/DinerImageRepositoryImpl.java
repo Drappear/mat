@@ -162,4 +162,10 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
         return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
                 count);
     }
+
+    @Override
+    public void deleteByPath(String path) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteByPath'");
+    }
 }

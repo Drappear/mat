@@ -26,15 +26,17 @@ label {
 
 #imageFilesDiv ul {
   display: flex;
-  justify-content: center;
-  align-items: center;
   vertical-align: top;
+  flex-wrap: wrap;
+  white-space: nowrap;
   overflow: auto;
 }
 
 #imageFilesDiv ul li {
   list-style-type: none;
   margin-right: 30px;
+  margin-bottom: 10px;
+  display: inline;
   cursor: pointer;
 }
 

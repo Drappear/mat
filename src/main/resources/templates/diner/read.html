@@ -28,10 +28,10 @@
             </div>
             <div class="adress mt-3">
               <div class="row diner-address p-3">
-                <h4 th:text="${dinerDto.address}"></h4>
+                <h5 th:text="${dinerDto.address}"></h5>
               </div>
               <div class="row diner-detail-address p-3">
-                <h5 th:text="${dinerDto.addressDetail}"></h5>
+                <h6 th:text="${dinerDto.addressDetail}"></h6>
               </div>
             </div>
           </div>
@@ -162,11 +162,16 @@
   </div>
   <!-- 페이지 별 js 영역 -->
   <th:block layout:fragment="js">
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey='[[${kakaoApp}]]'&libraries=services"></script>
+    <script id="kakaoMapApi" src="//dapi.kakao.com/v2/maps/sdk.js?appkey='[[${kakaoMap}]]'&libraries=services"></script>
     <script>
       const csrfValue = "[[${_csrf.token}]]";
       const did = "[[${dinerDto.did}]]";
       const dinerAddr = "[[${dinerDto.address}]]";
+      const kakaoMap = "[[${kakaoMap}]]";
+
+      document
+        .getElementById("kakaoMapApi")
+        .src = kakaoMap;
 
       //지도를 담을 영역
       var mapContainer = document.getElementById("map");
