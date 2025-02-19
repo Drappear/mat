@@ -56,10 +56,9 @@ public interface BoardService {
     Page<BoardDto> getList(String keyword, Long category, Pageable pageable);
 
     /**
-     * 게시물 목록 조회
+     * 특정 사용자가 작성한 게시물 목록 조회
      *
-     * @param keyword  검색 키워드
-     * @param category 카테고리 ID
+     * @param userid   사용자 ID
      * @param pageable 페이징 정보
      * @return 페이징 처리된 게시물 데이터
      */
@@ -73,5 +72,4 @@ public interface BoardService {
      * @throws IllegalArgumentException 해당 사용자 ID가 없는 경우
      */
     Long getMemberIdByUserId(String userId);
-
 }

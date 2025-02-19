@@ -43,6 +43,8 @@ public class BoardDto {
     private MultipartFile imageFile; // 업로드된 파일
     private String imageFileName; // 저장된 파일 경로
 
+    private Long commentCount; // 댓글 개수 추가
+
     public String getContentPreview() {
         if (content == null) {
             return "";
@@ -56,5 +58,9 @@ public class BoardDto {
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return regDate.format(formatter);
+    }
+
+    public Long getCommentCount() {
+        return commentCount != null ? commentCount : 0L;
     }
 }
