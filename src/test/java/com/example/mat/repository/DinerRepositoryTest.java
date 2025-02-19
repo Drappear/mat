@@ -111,24 +111,15 @@ public class DinerRepositoryTest {
     IntStream.rangeClosed(1, 10).forEach(i -> {
 
       Image image1 = Image.builder()
-          .imgCate(1)
-          .imgName("diner" + i + ".jpg")
-          .path("2024/12/31")
-          .uuid("d" + i)
+          .path("C:\\upload\\diner\\" + i + "\\d" + i + "_diner" + i + ".jpg")
           .diner(Diner.builder().did(Long.valueOf(i)).build())
           .build();
       Image image2 = Image.builder()
-          .imgCate(1)
-          .imgName("food" + i + ".jpg")
-          .path("2024/12/31")
-          .uuid("f" + i)
+          .path("C:\\upload\\diner\\" + i + "\\f" + i + "_food" + i + ".jpg")
           .diner(Diner.builder().did(Long.valueOf(i)).build())
           .build();
       Image image3 = Image.builder()
-          .imgCate(1)
-          .imgName("food" + 11 * i + ".jpg")
-          .path("2024/12/31")
-          .uuid("f" + 11 * i)
+          .path("C:\\upload\\diner\\" + i + "\\f" + i + "_food" + 11 * i + ".jpg")
           .diner(Diner.builder().did(Long.valueOf(i)).build())
           .build();
 

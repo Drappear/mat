@@ -8,12 +8,14 @@ import com.example.mat.entity.market.Order;
 public interface OrderService {
 
     // 주문 생성
-    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> quantities, String recipientName, String phoneNumber, String zipcode, String addr, String detailAddr, String email);
+    public Long createOrder(Long mid, List<Long> selectedCartItemIds, List<Integer> selectedQuantities,
+            String recipientName, String phoneNumber, String email,
+            String zipcode, String addr, String detailAddr);
 
-    // 주문 정보 조회
+    // 주문 정보 단순 조회
     public OrderDto getOrder(Long orderId);
 
-    // 주문 정보 조회 (결제 및 상태 업데이트용)
+    // 주문 정보 조회 (결제 및 상태)
     public Order getOrderEntity(Long orderId);
 
     // dto > entity
@@ -22,7 +24,7 @@ public interface OrderService {
                 .oid(dto.getOid())
                 .price(dto.getPrice())
                 .quantity(dto.getQuantity())
-                .name(dto.getName())
+                .recipientName(dto.getName())
                 .phoneNumber(dto.getPhoneNumber())
                 .zipcode(dto.getZipcode())
                 .addr(dto.getAddr())
@@ -39,11 +41,11 @@ public interface OrderService {
                 .oid(order.getOid())
                 .price(order.getPrice())
                 .quantity(order.getQuantity())
-                .name(order.getName())
+                .name(order.getRecipientName())
                 .phoneNumber(order.getPhoneNumber())
                 .zipcode(order.getZipcode())
                 .addr(order.getAddr())
-                .detailAddr(order.getAddr())
+                .detailAddr(order.getDetailAddr())
                 .email(order.getEmail())
                 .orderStatus(order.getOrderStatus())
                 .product(order.getProduct())

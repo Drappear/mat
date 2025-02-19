@@ -34,3 +34,5 @@ build/
 mvnw
 mvnw.cmd
 .mvn/wrapper/maven-wrapper.properties
+src/main/resources/application.properties
+src/main/resources/static/js/diner/config.js

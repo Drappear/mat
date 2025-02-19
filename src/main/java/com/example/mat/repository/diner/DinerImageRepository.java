@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.example.mat.entity.Image;
 import com.example.mat.entity.diner.Diner;
 
 public interface DinerImageRepository {
@@ -25,5 +24,9 @@ public interface DinerImageRepository {
   @Query("DELETE FROM Image di WHERE di.diner = :diner")
   void deleteByDiner(Diner diner);
 
-  
+  // path 제거
+  @Modifying
+  @Query("DELETE FROM Image di WHERE di.path = :path")
+  void deleteByPath(String path);
+
 }

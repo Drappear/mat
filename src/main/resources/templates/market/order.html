@@ -5,6 +5,9 @@
     <meta name="description" content="Ogani Template" />
     <meta name="keywords" content="Ogani, unica, creative, html" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -236,7 +239,7 @@
       <div class="container">
         <div class="checkout__form">
           <h4>주문 상품</h4>
-          <form th:action="@{/market/order}" method="post" id="orderForm">
+          <!-- <form th:action="@{/market/order}" method="post" id="orderForm"> -->
               <table class="table">
                 <thead>
                   <tr>
@@ -274,37 +277,40 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="checkout__input">
-                    <p>이름<span>*</span></p>
+                    <p><strong>이름<span>*</span></strong></p>
                     <input
                       type="text"
                       name="recipientName"
-                      th:value="${member.name}"
+                      th:value="${member.username}"
                       placeholder="이름"
                       required
+                      font-weight: bold
                     />
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="checkout__input">
-                    <p>휴대폰 번호<span>*</span></p>
+                    <p><strong>휴대폰 번호<span>*</span></strong></p>
                     <input
                       type="text"
                       name="phoneNumber"
-                      th:value="${member.phoneNumber}"
+                      th:value="${member.tel}"
                       placeholder="연락처"
                       required
+                      font-weight: bold
                     />
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="checkout__input">
-                    <p>이메일<span>*</span></p>
+                    <p><strong>이메일<span>*</span></strong></p>
                     <input
                       type="email"
                       name="email"
                       th:value="${member.email}"
                       placeholder="이메일"
                       required
+                      font-weight: bold
                     />
                   </div>
                 </div>
@@ -319,7 +325,8 @@
                     <p>이름<span>*</span></p>
                     <input
                       type="text"
-                      name="customerName"
+                      id="recipientName"
+                      name="recipientName"
                       placeholder="이름"
                       required
                     />
@@ -330,6 +337,7 @@
                     <p>휴대폰 번호<span>*</span></p>
                     <input
                       type="text"
+                      id="phoneNumber"
                       name="phoneNumber"
                       placeholder="연락처"
                       required
@@ -341,6 +349,7 @@
                     <p>이메일<span>*</span></p>
                     <input
                       type="email"
+                      id="email"
                       name="email"
                       placeholder="이메일"
                       required
@@ -352,7 +361,8 @@
                     <p>우편 번호<span>*</span></p>
                     <input
                       type="text"
-                      name="phoneNumber"
+                      id="zipcode"
+                      name="zipcode"
                       placeholder="우편 번호"
                       required
                     />
@@ -363,7 +373,8 @@
                     <p>주소<span>*</span></p>
                     <input
                       type="text"
-                      name="phoneNumber"
+                      id="addr"
+                      name="addr"
                       placeholder="주소"
                       required
                     />
@@ -374,7 +385,8 @@
                     <p>상세 주소<span>*</span></p>
                     <input
                       type="text"
-                      name="phoneNumber"
+                      id="detailAddr"
+                      name="detailAddr"
                       placeholder="상세 주소"
                       required
                     />
@@ -388,9 +400,14 @@
               <div class="checkout__order__products">
                 총 금액 <span id="totalAmount">[[${#numbers.formatInteger(totalOrderPrice,3,'COMMA')}]]</span>
               </div>
-              <button type="submit" class="site-btn">PLACE ORDER</button>
+              
+              <button id="orderBtn" class="site-btn">PLACE ORDER</button>
+              <input type="hidden" id="selectedCartItemIds" name="selectedCartItemIds" th:value="${selectedCartItemIds}" />
+              <input type="hidden" id="selectedQuantities" name="selectedQuantities" th:value="${selectedQuantities}" />
+              <input type="hidden" id="orderUid" th:value="${orderUid}" />
+
             </div>
-          </form>
+
         </div>
       </div>
     </section>
@@ -408,7 +425,8 @@
     <script th:src="@{/market/js/order.js}"></script>
   </body>
   <th:block layout:fragment="script"> 
-    <script th:src="@{/market/payment.js}"></script>
+
+    <script th:src="@{/market/orderRequest.js}"></script>
 
   </th:block>
   
