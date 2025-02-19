@@ -1,17 +1,13 @@
 package com.example.mat.entity.market;
 
-<<<<<<<HEAD=======
-
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>>a75399ed05997c06800ff87847bf1af7d7a6002a
 import com.example.mat.entity.BaseEntity;
 import com.example.mat.entity.constant.OrderStatus;
 import com.example.mat.entity.shin.Member;
 
-<<<<<<<HEAD=======
-import jakarta.persistence.CascadeType;>>>>>>>a75399ed05997c06800ff87847bf1af7d7a6002a
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,8 +16,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;<<<<<<<HEAD=======
-import jakarta.persistence.OneToMany;>>>>>>>a75399ed05997c06800ff87847bf1af7d7a6002a
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -49,20 +45,12 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private int quantity;
 
-<<<<<<< HEAD
-    private String orderUid; // 주문번호
-
-    // 주문자 이름
-    @Column(nullable = false)
-    private String name;
-=======
     @Column(unique = true)
     private String orderUid; // 주문 unique
 
     // 주문자 이름
     @Column(name = "recipient_name", nullable = false)
     private String recipientName;
->>>>>>> a75399ed05997c06800ff87847bf1af7d7a6002a
 
     private String phoneNumber;
 

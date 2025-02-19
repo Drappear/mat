@@ -1,10 +1,7 @@
 package com.example.mat.entity.diner;
 
-<<<<<<< HEAD
-=======
 import org.hibernate.annotations.ColumnDefault;
 
->>>>>>> a75399ed05997c06800ff87847bf1af7d7a6002a
 import com.example.mat.entity.BaseEntity;
 
 import jakarta.persistence.Entity;
