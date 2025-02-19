@@ -16,6 +16,7 @@ import com.example.mat.dto.PageResultDto;
 import com.example.mat.dto.diner.DinerImageDto;
 import com.example.mat.dto.diner.DinerReviewDto;
 import com.example.mat.entity.Image;
+import com.example.mat.entity.diner.Diner;
 import com.example.mat.entity.diner.DinerReview;
 import com.example.mat.repository.ImageRepository;
 import com.example.mat.repository.diner.DinerReviewRepository;
@@ -86,8 +87,18 @@ public class DinerReviewServiceImpl implements DinerReviewService {
 
     @Override
     public Long updateDinerReview(DinerReviewDto dinerReviewDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateDinerReview'");
+       Map<String, Object> entityMap = dtoToEntity(dinerReviewDto);
+
+    DinerReview dinerReview = (DinerReview) entityMap.get("dinerReview");
+    List<Image> dinerReviewImages = (List<Image>) entityMap.get("dinerReviewImages");
+
+    dinerReviewRepository.save(dinerReview);
+
+    imageRepository.deleteByDinerReview(dinerReview);
+
+    dinerReviewImages.forEach(dinerReviewImage -> imageRepository.save(dinerReviewImage));
+
+    return dinerReview.getRvid();
     }
 
     @Override

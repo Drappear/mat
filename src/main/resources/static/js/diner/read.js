@@ -48,6 +48,8 @@ reviewFileInput.addEventListener("change", (e) => {
   for (let index = 0; index < files.length; index++) {
     formData.append("uploadFiles", files[index]);
   }
+  formData.append("uploadPage", "review");
+  formData.append("did", did);
 
   fetch("/dfup/upload", {
     method: "post",
@@ -167,7 +169,6 @@ reviewForm.addEventListener("submit", (e) => {
       path: obj.dataset.path,
       uuid: obj.dataset.uuid,
       imgName: obj.dataset.name,
-      imgCate: 2,
       did: did,
     };
   });
@@ -190,7 +191,7 @@ reviewForm.addEventListener("submit", (e) => {
     dinerImageDtos: dinerImageDtos,
   };
   // 신규 작성
-  fetch(`/review/${did}`, {
+  fetch("/diner/review", {
     headers: {
       "content-type": "application/json",
       "X-CSRF-TOKEN": csrfValue,

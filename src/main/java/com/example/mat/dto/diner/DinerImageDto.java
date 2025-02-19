@@ -19,6 +19,7 @@ public class DinerImageDto {
     private String path;
 
     private Long did;
+    private Long rvid;
 
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
@@ -43,4 +44,5 @@ public class DinerImageDto {
         }
         return fullPath;
     }
+
 }
