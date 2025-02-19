@@ -38,7 +38,8 @@ public class SecurityConfig {
 
                 // CSRF 설정: 게시물 등록 경로에서 비활성화
                 http.csrf(csrf -> csrf
-                                .ignoringRequestMatchers("/board/register", "/board/modify", "/market/cart"));
+                                .ignoringRequestMatchers("/board/register", "/board/modify", "/market/cart",
+                                                "/market/order"));
 
                 return http.build();
         }
