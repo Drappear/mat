@@ -37,9 +37,6 @@ public class DinerController {
     @Value("${com.example.mat.upload.path}")
     private String uploadPath;
 
-    @Value("${kakao-app-key-js}")
-    private String kakaoMap;
-
     private final DinerService dinerService;
 
     @GetMapping("/list")
@@ -65,7 +62,6 @@ public class DinerController {
         DinerDto dinerDto = dinerService.getDinerDetail(did);
         dinerDto.setCategoryName(dinerService.getCategoryName(dinerDto.getCategoryName()));
         model.addAttribute("dinerDto", dinerDto);
-        model.addAttribute("kakaoMap", kakaoMap);
     }
 
     @GetMapping("/register")
