@@ -56,13 +56,6 @@ public class DinerImageRepositoryImpl extends QuerydslRepositorySupport
 
         JPQLQuery<Image> query = from(image).leftJoin(diner).on(diner.eq(image.diner));
 
-        // JPQLQuery<Long> rCnt =
-        // JPAExpressions.select(review.countDistinct()).from(review)
-        // .where(review.movie.eq(movieImage.movie));
-        // JPQLQuery<Double> rAvg =
-        // JPAExpressions.select(review.grade.avg().round()).from(review)
-        // .where(review.movie.eq(movieImage.movie));
-
         JPQLQuery<Long> inum = JPAExpressions.select(
                 image.inum.max()).from(
                         image)
