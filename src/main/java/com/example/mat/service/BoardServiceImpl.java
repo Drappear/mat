@@ -60,11 +60,15 @@ public class BoardServiceImpl implements BoardService {
                                                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID입니다.")))
                                 .build();
 
+                // **게시글 먼저 저장**
+                board = boardRepository.save(board);
+
+                // **이미지 처리**
                 if (file != null && !file.isEmpty()) {
                         handleImageProcessing(board, file);
                 }
 
-                return boardRepository.save(board).getBno();
+                return board.getBno();
         }
 
         @Override
@@ -148,13 +152,13 @@ public class BoardServiceImpl implements BoardService {
                                                 : null)
                                 .imageFileName(board.getImage() != null ? board.getImage().getImgName() : null)
                                 .commentCount(boardCommentRepository.countByBoardId(board.getBno()))
-                                .profileImage(getProfileImageByMember(board.getMember())) // 추가: 프로필 이미지 설정
+                                .profileImage(getProfileImageByMember(board.getMember()))
                                 .build();
         }
 
         private String getProfileImageByMember(Member member) {
                 if (member == null) {
-                        return "/images/default-profile.png"; // 기본 이미지
+                        return "/images/default-profile.png";
                 }
 
                 MemberImage memberImage = memberImageRepository.findByMember(member);
@@ -162,7 +166,7 @@ public class BoardServiceImpl implements BoardService {
                         return "/member/display?fileName=" + memberImage.getUuid() + "_" + memberImage.getImgName();
                 }
 
-                return "/images/default-profile.png"; // 기본 이미지
+                return "/images/default-profile.png";
         }
 
         private void handleImageProcessing(Board board, MultipartFile imageFile) {
@@ -186,7 +190,7 @@ public class BoardServiceImpl implements BoardService {
                                 Path imagePath = Paths.get(uploadPath, board.getImage().getImgName());
                                 Files.deleteIfExists(imagePath);
                                 boardImageRepository.delete(board.getImage());
-                                board.setImage(null); // 삭제 후 이미지 참조 해제
+                                board.setImage(null);
                         } catch (IOException e) {
                                 throw new RuntimeException("기존 이미지를 삭제하지 못했습니다.", e);
                         }
