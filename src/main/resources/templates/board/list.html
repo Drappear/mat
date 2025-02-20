@@ -94,7 +94,11 @@
                       >
                     </p>
 
-                    <p class="text-sm op-5" th:text="${post.contentPreview}">
+                    <!-- HTML 태그 제거 후 미리보기 표시 -->
+                    <p
+                      class="text-sm op-5"
+                      th:text="${#strings.unescapeJava(#strings.replace(post.contentPreview, '<br>', ' '))}"
+                    >
                       Sample content...
                     </p>
                   </div>

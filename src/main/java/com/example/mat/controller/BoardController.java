@@ -36,14 +36,12 @@ public class BoardController {
     public String list(@RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long category,
             @RequestParam(required = false) String userid,
-            @RequestParam(defaultValue = "0") int page, // 기본값 0
+            @RequestParam(defaultValue = "0") int page,
             Model model) {
         log.info("[REQUEST] board list page");
         List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
-        // 페이지 크기 4로 설정
         Pageable pageable = PageRequest.of(page, 4);
-
         var boards = (userid != null && !userid.isEmpty())
                 ? boardService.getListByUserid(userid, pageable)
                 : boardService.getList(keyword, category, pageable);
@@ -65,18 +63,14 @@ public class BoardController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute BoardDto boardDto, @RequestParam("imageFile") MultipartFile file) {
+    public String register(@ModelAttribute BoardDto boardDto) {
         log.info("[REQUEST] board register process");
 
         try {
-            // 현재 로그인된 사용자 ID 설정
             setMemberIdFromAuth(boardDto);
+            Long bno = boardService.register(boardDto, boardDto.getImageFile());
 
-            // 게시물 등록 후 생성된 게시물 ID 반환
-            Long bno = boardService.register(boardDto, file);
             log.info("[SUCCESS] 게시물 등록 성공, bno: {}", bno);
-
-            // 작성된 게시물의 상세 페이지로 이동
             return "redirect:/board/detail/" + bno;
         } catch (Exception e) {
             log.error("[ERROR] 게시물 등록 중 오류 발생", e);
@@ -90,12 +84,12 @@ public class BoardController {
         try {
             BoardDto boardDto = boardService.getDetail(bno);
             List<BoardCommentDto> comments = boardCommentService.getCommentsByBoard(bno);
-            int commentCount = comments.size(); // 댓글 개수 추가
-            log.debug("[COMMENTS]: {}, [COMMENT COUNT]: {}", comments, commentCount);
+            int commentCount = comments.size();
 
+            log.debug("[COMMENTS]: {}, [COMMENT COUNT]: {}", comments, commentCount);
             model.addAttribute("board", boardDto);
             model.addAttribute("comments", comments);
-            model.addAttribute("commentCount", commentCount); // 댓글 수 추가
+            model.addAttribute("commentCount", commentCount);
 
             return "board/detail";
         } catch (Exception e) {
@@ -110,7 +104,7 @@ public class BoardController {
 
         try {
             BoardDto boardDto = boardService.getDetail(bno);
-            boardDto.setContent(HtmlUtil.convertHtmlToText(boardDto.getContent())); // <br> -> 줄바꿈 복원
+            boardDto.setContent(HtmlUtil.convertHtmlToText(boardDto.getContent()));
             List<BoardCategoryDto> categories = boardCategoryService.getAllCategories();
 
             model.addAttribute("boardDto", boardDto);
@@ -124,19 +118,17 @@ public class BoardController {
 
     @PostMapping("/modify")
     public String modify(@ModelAttribute BoardDto boardDto,
-            @RequestParam("imageFile") MultipartFile file,
             @RequestParam(value = "deleteImage", required = false) String deleteImage) {
         log.info("[REQUEST] board modify process");
 
         boolean deleteFlag = "true".equals(deleteImage);
+        MultipartFile file = boardDto.getImageFile();
 
-        // 파일과 체크박스 상태 확인
-        if (!file.isEmpty()) {
-            log.info("File uploaded: " + file.getOriginalFilename());
-            deleteFlag = true; // 파일이 업로드된 경우, 기존 이미지 삭제
+        if (file != null && !file.isEmpty()) {
+            log.info("File uploaded: {}", file.getOriginalFilename());
+            deleteFlag = true;
         } else {
             log.info("No file uploaded.");
-            deleteFlag = false; // 파일이 없으면 삭제하지 않음
         }
 
         try {

@@ -59,12 +59,13 @@
 
             <!-- 이미지 업로드 -->
             <div class="mb-3">
-              <label for="image" class="form-label"></label>
+              <label for="imageFile" class="form-label"></label>
               <input
                 type="file"
                 class="form-control"
-                id="image"
+                id="imageFile"
                 name="imageFile"
+                th:field="*{imageFile}"
               />
             </div>
 
